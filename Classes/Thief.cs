@@ -9,43 +9,45 @@ namespace Flipper.Classes
 {
     public class Thief : Jobs
     {
-        private FFACE fface;
+        private FFACE _fface;
+        private Content _content;
 
-        public Thief(FFACE instance)
+        public Thief(FFACE instance, Content content)
         {
-            fface = instance;
+            _content = content;
+            _fface = instance;
         }
 
 
-        public override void UseClaim(Content content)
+        public override void UseClaim()
         {
             // if we have access to warrior abilities, let's try them first.
-            if (fface.Player.SubJob == Job.WAR)
+            if (_fface.Player.SubJob == Job.WAR)
             {
                 if (base.Ready(AbilityList.Provoke))
                     base.UseAbility(AbilityList.Provoke, 2, true);
             }
 
             // then let's try bully
-            if (base.Ready(AbilityList.Bully) && fface.NPC.Distance(fface.Target.ID) < 6.9)
+            if (base.Ready(AbilityList.Bully) && _fface.NPC.Distance(_fface.Target.ID) < 6.9)
                 base.UseAbility(AbilityList.Bully, 2, true);
 
         }
 
 
-        public override void Stagger(Content content)
+        public override void Stagger()
         {
             
         }
 
-        public override void UseAbilities(Content content)
+        public override void UseAbilities()
         {
             // use flee on cool down, no idea why.
             if (!IsAfflicted(StatusEffect.Flee) && Ready(AbilityList.Flee))
                 base.UseAbility(AbilityList.Flee, 2, false);
 
             // check for war abilities
-            if (fface.Player.SubJob == Job.WAR)
+            if (_fface.Player.SubJob == Job.WAR)
             {
                 // use warcry
                 if (!IsAfflicted(StatusEffect.Warcry) && Ready(AbilityList.Warcry))
@@ -57,14 +59,19 @@ namespace Flipper.Classes
             }
         }
 
-        public override void UseHeals(Content content)
+        public override void UseHeals()
         {
+
         }
 
-        public override void UseSpells(Content content)
+        public override void UseSpells()
         {
+
         }
 
+        public override void UseWeaponskills()
+        {
+        }
 
         #region Add other methods here that aren't overrides, such as calculating finishing moves, etc
 

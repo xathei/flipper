@@ -10,6 +10,7 @@ namespace Flipper.Classes
     public class Jobs
     {
         private FFACE fface;
+        private Content _content;
 
         /// <summary>
         /// The current event the player is participating in.
@@ -27,8 +28,7 @@ namespace Flipper.Classes
         /// Called to attempt to make a claim on the current target immediately.
         /// This will not be called once the target is claimed or is in range.
         /// </summary>
-        /// <param name="content">The content the user is currently particpating in, to help you decisions.</param>
-        public virtual void UseClaim(Content content)
+        public virtual void UseClaim()
         {
 
         }
@@ -36,18 +36,7 @@ namespace Flipper.Classes
         /// <summary>
         /// Called continually in content where a monster needs staggering, and hasn't been staggered yet.
         /// </summary>
-        /// <param name="content"></param>
-        public virtual void Stagger(Content content)
-        {
-            
-        }
-
-
-        /// <summary>
-        /// Called during battle.
-        /// </summary>
-        /// <param name="content">The content the user is currently particpating in, to help you decisions.</param>
-        public virtual void UseAbilities(Content content)
+        public virtual void Stagger()
         {
             
         }
@@ -56,8 +45,16 @@ namespace Flipper.Classes
         /// <summary>
         /// Called continually during battle.
         /// </summary>
-        /// <param name="content">The content the user is currently particpating in, to help you decisions.</param>
-        public virtual void UseSpells(Content content)
+        public virtual void UseAbilities()
+        {
+            
+        }
+
+
+        /// <summary>
+        /// Called continually during battle.
+        /// </summary>
+        public virtual void UseSpells()
         {
             
         }
@@ -65,8 +62,15 @@ namespace Flipper.Classes
         /// <summary>
         /// Called continually with priority if the player's HP is below 75%.
         /// </summary>
-        /// <param name="content">The content the user is currently particpating in, to help you decisions.</param>
-        public virtual void UseHeals(Content content)
+        public virtual void UseHeals()
+        {
+            
+        }
+
+        /// <summary>
+        /// Called continually when the player has over 1000 TP.
+        /// </summary>
+        public virtual void UseWeaponskills()
         {
             
         }
