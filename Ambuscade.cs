@@ -66,14 +66,14 @@ namespace Flipper
             {
                 // #1 - FETCH AMBUSCADE KI
 
-                if (!fface.Player.HasKeyitem(KeyItem.Ambuscade_Primter_Volume_Two))
-                {
+                //if (!fface.Player.HasKeyitem(KeyItem.Ambuscade_Primter_Volume_Two))
+                //{
                     // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
                     DoRoute(_route2);
                     NavigateToZone(_zone, _townHomepoint);
                     DoRoute(_route3, false);
                     _ambuscade = false;
-                }
+                //}
 
 
                 Thread.Sleep(1);
