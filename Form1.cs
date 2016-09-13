@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
@@ -820,6 +821,70 @@ namespace FlipperD
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Process.GetCurrentProcess().Kill();
+        }
+
+
+
+
+
+        private void ambStartRecording_Click(object sender, EventArgs e)
+        {
+            if (ambStartRecording.Text == "Start")
+            {
+                ambStartRecording.Text = "Stop";
+                _waypointRecordingThread = true;
+                Thread record = new Thread(DoRecordWaypoints);
+                record.Start();
+            }
+            else
+            {
+                ambStartRecording.Text = "Start";
+                _waypointRecordingThread = false;
+            }
+        }
+
+        public volatile bool _waypointRecordingThread;
+        public List<string> waypoints = new List<string>();
+
+
+        public void DoRecordWaypoints()
+        {
+            float pX = 0;
+            float pZ = 0;
+            while (_waypointRecordingThread)
+            {
+                if (fface.Navigator.DistanceTo(pX, pZ) > 1)
+                {
+
+                    ambWaypointList.Invoke((MethodInvoker) delegate
+                    {
+                        ambWaypointList.Items.Add($"{Math.Round(fface.Player.PosX, 2)},{Math.Round(fface.Player.PosZ, 2)}");
+                    });
+                    waypoints.Add($"{Math.Round(fface.Player.PosX, 2)},{Math.Round(fface.Player.PosZ, 2)}");
+                    pX = fface.Player.PosX;
+                    pZ = fface.Player.PosZ;
+                }
+
+                Thread.Sleep(5);
+            }
+
+
+
+        }
+
+        private void ambClearButton_Click(object sender, EventArgs e)
+        {
+            _waypointRecordingThread = false;
+            ambStartRecording.Text = "Start";
+            waypoints.Clear();
+            ambWaypointList.Items.Clear();
+        }
+
+        private void ambSaveWaypoints_Click(object sender, EventArgs e)
+        {
+            _waypointRecordingThread = false;
+            File.WriteAllLines(ambFilename.Text, waypoints);
+            MessageBox.Show($"File {ambFilename.Text} has been saved.", "Save OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 

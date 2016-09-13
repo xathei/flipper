@@ -107,6 +107,13 @@
             this.UnityItemStop2 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
+            this.AmbuscadeTab = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.ambClearButton = new System.Windows.Forms.Button();
+            this.ambFilename = new System.Windows.Forms.TextBox();
+            this.ambStartRecording = new System.Windows.Forms.Button();
+            this.ambSaveWaypoints = new System.Windows.Forms.Button();
+            this.ambWaypointList = new System.Windows.Forms.ListBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.Dualbox = new System.Windows.Forms.GroupBox();
             this.uxButtonDBox = new System.Windows.Forms.Button();
@@ -138,7 +145,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.AmbuscadeTab = new System.Windows.Forms.TabPage();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -154,6 +160,8 @@
             this.tabPage6.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.AmbuscadeTab.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.Dualbox.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -167,7 +175,7 @@
             // chkVerboseLogging
             // 
             this.chkVerboseLogging.AutoSize = true;
-            this.chkVerboseLogging.Location = new System.Drawing.Point(221, 40);
+            this.chkVerboseLogging.Location = new System.Drawing.Point(99, 28);
             this.chkVerboseLogging.Name = "chkVerboseLogging";
             this.chkVerboseLogging.Size = new System.Drawing.Size(147, 21);
             this.chkVerboseLogging.TabIndex = 0;
@@ -1018,6 +1026,79 @@
             this.UnityItemStop1.Size = new System.Drawing.Size(260, 24);
             this.UnityItemStop1.TabIndex = 3;
             // 
+            // AmbuscadeTab
+            // 
+            this.AmbuscadeTab.Controls.Add(this.groupBox9);
+            this.AmbuscadeTab.Location = new System.Drawing.Point(4, 26);
+            this.AmbuscadeTab.Name = "AmbuscadeTab";
+            this.AmbuscadeTab.Padding = new System.Windows.Forms.Padding(3);
+            this.AmbuscadeTab.Size = new System.Drawing.Size(640, 465);
+            this.AmbuscadeTab.TabIndex = 7;
+            this.AmbuscadeTab.Text = "Ambuscade";
+            this.AmbuscadeTab.UseVisualStyleBackColor = true;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.ambClearButton);
+            this.groupBox9.Controls.Add(this.ambFilename);
+            this.groupBox9.Controls.Add(this.ambStartRecording);
+            this.groupBox9.Controls.Add(this.ambSaveWaypoints);
+            this.groupBox9.Controls.Add(this.ambWaypointList);
+            this.groupBox9.Location = new System.Drawing.Point(6, 149);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(325, 310);
+            this.groupBox9.TabIndex = 5;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Pathing";
+            // 
+            // ambClearButton
+            // 
+            this.ambClearButton.Location = new System.Drawing.Point(187, 29);
+            this.ambClearButton.Name = "ambClearButton";
+            this.ambClearButton.Size = new System.Drawing.Size(129, 41);
+            this.ambClearButton.TabIndex = 4;
+            this.ambClearButton.Text = "Clear";
+            this.ambClearButton.UseVisualStyleBackColor = true;
+            this.ambClearButton.Click += new System.EventHandler(this.ambClearButton_Click);
+            // 
+            // ambFilename
+            // 
+            this.ambFilename.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ambFilename.Location = new System.Drawing.Point(6, 273);
+            this.ambFilename.Name = "ambFilename";
+            this.ambFilename.Size = new System.Drawing.Size(219, 28);
+            this.ambFilename.TabIndex = 0;
+            this.ambFilename.Text = "points.path";
+            // 
+            // ambStartRecording
+            // 
+            this.ambStartRecording.Location = new System.Drawing.Point(6, 29);
+            this.ambStartRecording.Name = "ambStartRecording";
+            this.ambStartRecording.Size = new System.Drawing.Size(175, 41);
+            this.ambStartRecording.TabIndex = 3;
+            this.ambStartRecording.Text = "Start";
+            this.ambStartRecording.UseVisualStyleBackColor = true;
+            this.ambStartRecording.Click += new System.EventHandler(this.ambStartRecording_Click);
+            // 
+            // ambSaveWaypoints
+            // 
+            this.ambSaveWaypoints.Location = new System.Drawing.Point(231, 273);
+            this.ambSaveWaypoints.Name = "ambSaveWaypoints";
+            this.ambSaveWaypoints.Size = new System.Drawing.Size(85, 28);
+            this.ambSaveWaypoints.TabIndex = 1;
+            this.ambSaveWaypoints.Text = "Save";
+            this.ambSaveWaypoints.UseVisualStyleBackColor = true;
+            this.ambSaveWaypoints.Click += new System.EventHandler(this.ambSaveWaypoints_Click);
+            // 
+            // ambWaypointList
+            // 
+            this.ambWaypointList.FormattingEnabled = true;
+            this.ambWaypointList.ItemHeight = 17;
+            this.ambWaypointList.Location = new System.Drawing.Point(6, 76);
+            this.ambWaypointList.Name = "ambWaypointList";
+            this.ambWaypointList.Size = new System.Drawing.Size(310, 191);
+            this.ambWaypointList.TabIndex = 2;
+            // 
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.Dualbox);
@@ -1147,9 +1228,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(20, 36);
+            this.button4.Location = new System.Drawing.Point(6, 28);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(133, 32);
+            this.button4.Size = new System.Drawing.Size(87, 43);
             this.button4.TabIndex = 6;
             this.button4.Text = "Get Position";
             this.button4.UseVisualStyleBackColor = true;
@@ -1342,16 +1423,6 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
             // 
-            // AmbuscadeTab
-            // 
-            this.AmbuscadeTab.Location = new System.Drawing.Point(4, 26);
-            this.AmbuscadeTab.Name = "AmbuscadeTab";
-            this.AmbuscadeTab.Padding = new System.Windows.Forms.Padding(3);
-            this.AmbuscadeTab.Size = new System.Drawing.Size(640, 465);
-            this.AmbuscadeTab.TabIndex = 7;
-            this.AmbuscadeTab.Text = "Ambuscade";
-            this.AmbuscadeTab.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1395,6 +1466,9 @@
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            this.AmbuscadeTab.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.Dualbox.ResumeLayout(false);
             this.Dualbox.PerformLayout();
@@ -1523,6 +1597,12 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button uxButtonDBox;
         private System.Windows.Forms.TabPage AmbuscadeTab;
+        public System.Windows.Forms.Button ambStartRecording;
+        public System.Windows.Forms.ListBox ambWaypointList;
+        public System.Windows.Forms.Button ambSaveWaypoints;
+        public System.Windows.Forms.TextBox ambFilename;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Button ambClearButton;
     }
 }
 
