@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Ambuscade.cs" />
     <Compile Include="Battle.cs" />
+    <Compile Include="Classes\Paladin.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

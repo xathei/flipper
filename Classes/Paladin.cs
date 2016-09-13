@@ -7,60 +7,55 @@ using FFACETools;
 
 namespace Flipper.Classes
 {
-    public class Thief : Jobs
+    public class Paladin : Jobs
     {
         private FFACE _fface;
         private Content _content;
 
-        public Thief(FFACE instance, Content content)
+        public Paladin(FFACE instance, Content content)
         {
             _content = content;
             _fface = instance;
         }
 
+        /// <summary>
+        /// Abilities and Spells to use when trying to claim while standing still from a distance
+        /// </summary>
         public override void UseRangedClaim()
         {
-            SendCommand("/ra <t>", 8);
-        }
+            // Standard PLD abilities
+            if (Ready(SpellList.Flash) && _fface.NPC.Distance(_fface.Target.ID) < 14)
+                UseSpell(SpellList.Flash, 6, true);
 
-        public override void UseClaim()
-        {
-            // if we have access to warrior abilities, let's try them first.
+            // /WAR49 specific abilities.
             if (_fface.Player.SubJob == Job.WAR)
             {
                 if (Ready(AbilityList.Provoke))
                     UseAbility(AbilityList.Provoke, 2, true);
             }
+        }
 
-            // then let's try bully
-            if (Ready(AbilityList.Bully) && _fface.NPC.Distance(_fface.Target.ID) < 6.9)
-                UseAbility(AbilityList.Bully, 2, true);
-
+        /// <summary>
+        /// Attempts to claim while running towards the mob
+        /// </summary>
+        public override void UseClaim()
+        {
+            if (_fface.Player.SubJob == Job.WAR)
+            {
+                if (Ready(AbilityList.Provoke))
+                    UseAbility(AbilityList.Provoke, 2, true);
+            }
         }
 
 
         public override void Stagger()
         {
-            
+
         }
 
         public override void UseAbilities()
         {
-            // use flee on cool down, no idea why.
-            if (!IsAfflicted(StatusEffect.Flee) && Ready(AbilityList.Flee))
-                UseAbility(AbilityList.Flee, 2, false);
 
-            // check for war abilities
-            if (_fface.Player.SubJob == Job.WAR)
-            {
-                // use warcry
-                if (!IsAfflicted(StatusEffect.Warcry) && Ready(AbilityList.Warcry))
-                    UseAbility(AbilityList.Warcry, 2, false);
-
-
-                if (Ready(AbilityList.Berserk))
-                   UseAbility(AbilityList.Berserk, 2, false);
-            }
         }
 
         public override void UseHeals()
@@ -75,6 +70,8 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
+            if (_fface.Player.HasWeaponSkill((uint)WeaponSkillList.Savage_Blade))
+                SendCommand("/ws \"Savage Blade\" <t>", 3, false);
         }
 
         #region Add other methods here that aren't overrides, such as calculating finishing moves, etc

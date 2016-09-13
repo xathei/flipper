@@ -25,6 +25,14 @@ namespace Flipper.Classes
         }
 
         /// <summary>
+        /// Called when the user is following a strict path, but needs to claim a monster.
+        /// </summary>
+        public virtual void UseRangedClaim()
+        {
+            
+        }
+
+        /// <summary>
         /// Called to attempt to make a claim on the current target immediately.
         /// This will not be called once the target is claimed or is in range.
         /// </summary>

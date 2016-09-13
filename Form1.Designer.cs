@@ -107,7 +107,7 @@
             this.UnityItemStop2 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
-            this.AmbuscadeTab = new System.Windows.Forms.TabPage();
+            this.tabMisc2 = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.ambClearButton = new System.Windows.Forms.Button();
             this.ambFilename = new System.Windows.Forms.TextBox();
@@ -145,6 +145,20 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.tabAmbuscade = new System.Windows.Forms.TabPage();
+            this.ambRoETargetEdit = new System.Windows.Forms.TextBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.ambRoETargetLabel = new System.Windows.Forms.Label();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.ambRoleTank = new System.Windows.Forms.RadioButton();
+            this.ambRoleSupport = new System.Windows.Forms.RadioButton();
+            this.ambRoleDamage = new System.Windows.Forms.RadioButton();
+            this.ambLeaderCheckbox = new System.Windows.Forms.CheckBox();
+            this.ambTrustCheckbox = new System.Windows.Forms.CheckBox();
+            this.ambRoleLabel = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.ambStartButton = new System.Windows.Forms.Button();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -160,7 +174,7 @@
             this.tabPage6.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            this.AmbuscadeTab.SuspendLayout();
+            this.tabMisc2.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.Dualbox.SuspendLayout();
@@ -170,6 +184,9 @@
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.tabAmbuscade.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.groupBox11.SuspendLayout();
             this.SuspendLayout();
             // 
             // chkVerboseLogging
@@ -221,8 +238,9 @@
             this.uxTabs.Controls.Add(this.tabPage2);
             this.uxTabs.Controls.Add(this.tabPage3);
             this.uxTabs.Controls.Add(this.tabPage6);
-            this.uxTabs.Controls.Add(this.AmbuscadeTab);
+            this.uxTabs.Controls.Add(this.tabAmbuscade);
             this.uxTabs.Controls.Add(this.tabPage5);
+            this.uxTabs.Controls.Add(this.tabMisc2);
             this.uxTabs.Controls.Add(this.tabPage4);
             this.uxTabs.Location = new System.Drawing.Point(12, 12);
             this.uxTabs.Name = "uxTabs";
@@ -1026,16 +1044,16 @@
             this.UnityItemStop1.Size = new System.Drawing.Size(260, 24);
             this.UnityItemStop1.TabIndex = 3;
             // 
-            // AmbuscadeTab
+            // tabMisc2
             // 
-            this.AmbuscadeTab.Controls.Add(this.groupBox9);
-            this.AmbuscadeTab.Location = new System.Drawing.Point(4, 26);
-            this.AmbuscadeTab.Name = "AmbuscadeTab";
-            this.AmbuscadeTab.Padding = new System.Windows.Forms.Padding(3);
-            this.AmbuscadeTab.Size = new System.Drawing.Size(640, 465);
-            this.AmbuscadeTab.TabIndex = 7;
-            this.AmbuscadeTab.Text = "Ambuscade";
-            this.AmbuscadeTab.UseVisualStyleBackColor = true;
+            this.tabMisc2.Controls.Add(this.groupBox9);
+            this.tabMisc2.Location = new System.Drawing.Point(4, 26);
+            this.tabMisc2.Name = "tabMisc2";
+            this.tabMisc2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMisc2.Size = new System.Drawing.Size(640, 465);
+            this.tabMisc2.TabIndex = 7;
+            this.tabMisc2.Text = "Misc. 2";
+            this.tabMisc2.UseVisualStyleBackColor = true;
             // 
             // groupBox9
             // 
@@ -1423,6 +1441,159 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
             // 
+            // tabAmbuscade
+            // 
+            this.tabAmbuscade.Controls.Add(this.ambStartButton);
+            this.tabAmbuscade.Controls.Add(this.groupBox11);
+            this.tabAmbuscade.Controls.Add(this.groupBox10);
+            this.tabAmbuscade.Location = new System.Drawing.Point(4, 26);
+            this.tabAmbuscade.Name = "tabAmbuscade";
+            this.tabAmbuscade.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAmbuscade.Size = new System.Drawing.Size(640, 465);
+            this.tabAmbuscade.TabIndex = 8;
+            this.tabAmbuscade.Text = "Ambuscade";
+            this.tabAmbuscade.UseVisualStyleBackColor = true;
+            // 
+            // ambRoETargetEdit
+            // 
+            this.ambRoETargetEdit.Location = new System.Drawing.Point(150, 39);
+            this.ambRoETargetEdit.Name = "ambRoETargetEdit";
+            this.ambRoETargetEdit.Size = new System.Drawing.Size(464, 24);
+            this.ambRoETargetEdit.TabIndex = 0;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.ambRoETargetLabel);
+            this.groupBox10.Controls.Add(this.ambRoETargetEdit);
+            this.groupBox10.Location = new System.Drawing.Point(6, 6);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(628, 93);
+            this.groupBox10.TabIndex = 1;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Ambuscade Settings";
+            // 
+            // ambRoETargetLabel
+            // 
+            this.ambRoETargetLabel.AutoSize = true;
+            this.ambRoETargetLabel.Location = new System.Drawing.Point(42, 42);
+            this.ambRoETargetLabel.Name = "ambRoETargetLabel";
+            this.ambRoETargetLabel.Size = new System.Drawing.Size(93, 17);
+            this.ambRoETargetLabel.TabIndex = 1;
+            this.ambRoETargetLabel.Text = "RoE Target:";
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.comboBox1);
+            this.groupBox11.Controls.Add(this.label18);
+            this.groupBox11.Controls.Add(this.ambRoleLabel);
+            this.groupBox11.Controls.Add(this.ambTrustCheckbox);
+            this.groupBox11.Controls.Add(this.ambLeaderCheckbox);
+            this.groupBox11.Controls.Add(this.ambRoleDamage);
+            this.groupBox11.Controls.Add(this.ambRoleSupport);
+            this.groupBox11.Controls.Add(this.ambRoleTank);
+            this.groupBox11.Location = new System.Drawing.Point(6, 105);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(628, 165);
+            this.groupBox11.TabIndex = 2;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Network Settings";
+            // 
+            // ambRoleTank
+            // 
+            this.ambRoleTank.AutoSize = true;
+            this.ambRoleTank.Location = new System.Drawing.Point(150, 69);
+            this.ambRoleTank.Name = "ambRoleTank";
+            this.ambRoleTank.Size = new System.Drawing.Size(63, 21);
+            this.ambRoleTank.TabIndex = 0;
+            this.ambRoleTank.TabStop = true;
+            this.ambRoleTank.Text = "Tank";
+            this.ambRoleTank.UseVisualStyleBackColor = true;
+            // 
+            // ambRoleSupport
+            // 
+            this.ambRoleSupport.AutoSize = true;
+            this.ambRoleSupport.Location = new System.Drawing.Point(150, 96);
+            this.ambRoleSupport.Name = "ambRoleSupport";
+            this.ambRoleSupport.Size = new System.Drawing.Size(87, 21);
+            this.ambRoleSupport.TabIndex = 1;
+            this.ambRoleSupport.TabStop = true;
+            this.ambRoleSupport.Text = "Support";
+            this.ambRoleSupport.UseVisualStyleBackColor = true;
+            // 
+            // ambRoleDamage
+            // 
+            this.ambRoleDamage.AutoSize = true;
+            this.ambRoleDamage.Location = new System.Drawing.Point(150, 123);
+            this.ambRoleDamage.Name = "ambRoleDamage";
+            this.ambRoleDamage.Size = new System.Drawing.Size(86, 21);
+            this.ambRoleDamage.TabIndex = 2;
+            this.ambRoleDamage.TabStop = true;
+            this.ambRoleDamage.Text = "Damage";
+            this.ambRoleDamage.UseVisualStyleBackColor = true;
+            // 
+            // ambLeaderCheckbox
+            // 
+            this.ambLeaderCheckbox.AutoSize = true;
+            this.ambLeaderCheckbox.Location = new System.Drawing.Point(317, 69);
+            this.ambLeaderCheckbox.Name = "ambLeaderCheckbox";
+            this.ambLeaderCheckbox.Size = new System.Drawing.Size(174, 21);
+            this.ambLeaderCheckbox.TabIndex = 3;
+            this.ambLeaderCheckbox.Text = "I\'m the group leader";
+            this.ambLeaderCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // ambTrustCheckbox
+            // 
+            this.ambTrustCheckbox.AutoSize = true;
+            this.ambTrustCheckbox.Location = new System.Drawing.Point(317, 96);
+            this.ambTrustCheckbox.Name = "ambTrustCheckbox";
+            this.ambTrustCheckbox.Size = new System.Drawing.Size(185, 21);
+            this.ambTrustCheckbox.TabIndex = 4;
+            this.ambTrustCheckbox.Text = "Fill spaces with Trusts";
+            this.ambTrustCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // ambRoleLabel
+            // 
+            this.ambRoleLabel.AutoSize = true;
+            this.ambRoleLabel.Location = new System.Drawing.Point(147, 43);
+            this.ambRoleLabel.Name = "ambRoleLabel";
+            this.ambRoleLabel.Size = new System.Drawing.Size(86, 17);
+            this.ambRoleLabel.TabIndex = 5;
+            this.ambRoleLabel.Text = "My Role Is:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(314, 43);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(101, 17);
+            this.label18.TabIndex = 6;
+            this.label18.Text = "Misc Settings";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Very Easy",
+            "Easy",
+            "Normal",
+            "Difficult",
+            "Very Difficult"});
+            this.comboBox1.Location = new System.Drawing.Point(317, 122);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(185, 25);
+            this.comboBox1.TabIndex = 3;
+            // 
+            // ambStartButton
+            // 
+            this.ambStartButton.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ambStartButton.Location = new System.Drawing.Point(470, 404);
+            this.ambStartButton.Name = "ambStartButton";
+            this.ambStartButton.Size = new System.Drawing.Size(163, 55);
+            this.ambStartButton.TabIndex = 3;
+            this.ambStartButton.Text = "Start Ambuscade";
+            this.ambStartButton.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1466,7 +1637,7 @@
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            this.AmbuscadeTab.ResumeLayout(false);
+            this.tabMisc2.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.tabPage5.ResumeLayout(false);
@@ -1480,6 +1651,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.tabAmbuscade.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1596,13 +1772,27 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button uxButtonDBox;
-        private System.Windows.Forms.TabPage AmbuscadeTab;
+        private System.Windows.Forms.TabPage tabMisc2;
         public System.Windows.Forms.Button ambStartRecording;
         public System.Windows.Forms.ListBox ambWaypointList;
         public System.Windows.Forms.Button ambSaveWaypoints;
         public System.Windows.Forms.TextBox ambFilename;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Button ambClearButton;
+        private System.Windows.Forms.TabPage tabAmbuscade;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Label ambRoETargetLabel;
+        private System.Windows.Forms.TextBox ambRoETargetEdit;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label ambRoleLabel;
+        private System.Windows.Forms.CheckBox ambTrustCheckbox;
+        private System.Windows.Forms.CheckBox ambLeaderCheckbox;
+        private System.Windows.Forms.RadioButton ambRoleDamage;
+        private System.Windows.Forms.RadioButton ambRoleSupport;
+        private System.Windows.Forms.RadioButton ambRoleTank;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button ambStartButton;
     }
 }
 
