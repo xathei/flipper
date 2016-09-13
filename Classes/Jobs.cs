@@ -7,22 +7,10 @@ using FFACETools;
 
 namespace Flipper.Classes
 {
-    public class Jobs
+    public class Jobs : IJob
     {
-        private FFACE fface;
+        private FFACE _fface;
         private Content _content;
-
-        /// <summary>
-        /// The current event the player is participating in.
-        /// </summary>
-        public enum Content
-        {
-            Dynamis,
-            Farming,
-            Ambuscade,
-            Voidwatch,
-            Unity
-        }
 
         /// <summary>
         /// Called when the user is following a strict path, but needs to claim a monster.
@@ -106,7 +94,7 @@ namespace Flipper.Classes
                 else
                     NextCommandAllowed = DateTime.MinValue;
 
-                fface.Windower.SendString(command);
+                _fface.Windower.SendString(command);
             }
         }
 
@@ -165,7 +153,7 @@ namespace Flipper.Classes
         /// <returns></returns>
         public bool Ready(SpellList spell)
         {
-            if (fface.Timer.GetSpellRecast(spell) == 0)
+            if (_fface.Timer.GetSpellRecast(spell) == 0)
                 return true;
 
             return false;
@@ -179,7 +167,7 @@ namespace Flipper.Classes
         /// <returns></returns>
         public bool Ready(AbilityList ability)
         {
-            if (fface.Timer.GetAbilityRecast(ability) == 0)// && fface.Player.HasAbility(ability))
+            if (_fface.Timer.GetAbilityRecast(ability) == 0)// && fface.Player.HasAbility(ability))
                 return true;
 
             return false;
@@ -192,7 +180,7 @@ namespace Flipper.Classes
         /// <returns>True if afflicted, else false.</returns>
         public bool IsAfflicted(StatusEffect effect)
         {
-            foreach (StatusEffect status in fface.Player.StatusEffects)
+            foreach (StatusEffect status in _fface.Player.StatusEffects)
             {
                 if (status == effect)
                 {

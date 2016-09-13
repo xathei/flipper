@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using Flipper;
 
 namespace FlipperD
 {
@@ -189,14 +190,27 @@ namespace FlipperD
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int i = fface.Target.ID;
-            var TargetHeading = (int)(fface.Navigator.PosHToDegrees(fface.NPC.PosH(i)));
-            var MyHeading = (int)(fface.Navigator.GetPlayerPosHInDegrees());
-            double targetHeading = RadianToDegree(fface.NPC.PosH(i));
+            fface.Windower.SendString("/echo Target ID: " + fface.Target.ID);
+            fface.Windower.SendString("/echo Menu DialogID: " + fface.Menu.DialogID);
+            fface.Windower.SendString("/echo OptionCount: " + fface.Menu.DialogOptionCount);
+            fface.Windower.SendString("/echo OptionIndex: " + fface.Menu.DialogOptionIndex);
 
-            double lineAngle = PointAngle(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(i), Y = fface.NPC.PosZ(i) });
-            double difference = (targetHeading + lineAngle) % 360;
-            fface.Windower.SendString("/echo Target: " + TargetHeading + "  Player: " + MyHeading + "  Calc: " + (TargetHeading - MyHeading) + "  Angle: " + lineAngle + " / " + difference);
+            try
+            {
+                fface.Windower.SendString("/echo SelectedText: " + fface.Menu.DialogText.Options[fface.Menu.DialogOptionIndex]);
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            //int i = fface.Target.ID;
+            //var TargetHeading = (int)(fface.Navigator.PosHToDegrees(fface.NPC.PosH(i)));
+            //var MyHeading = (int)(fface.Navigator.GetPlayerPosHInDegrees());
+            //double targetHeading = RadianToDegree(fface.NPC.PosH(i));
+
+            //double lineAngle = PointAngle(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(i), Y = fface.NPC.PosZ(i) });
+            //double difference = (targetHeading + lineAngle) % 360;
+            //fface.Windower.SendString("/echo Target: " + TargetHeading + "  Player: " + MyHeading + "  Calc: " + (TargetHeading - MyHeading) + "  Angle: " + lineAngle + " / " + difference);
         }
 
         private double RadianToDegree(double angle)
@@ -885,6 +899,13 @@ namespace FlipperD
             _waypointRecordingThread = false;
             File.WriteAllLines(ambFilename.Text, waypoints);
             MessageBox.Show($"File {ambFilename.Text} has been saved.", "Save OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ambStartButton_Click(object sender, EventArgs e)
+        {
+            Ambuscade ambuscade = new Ambuscade();
+
+            ambuscade.Start(fface);
         }
     }
 
