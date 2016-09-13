@@ -138,6 +138,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.AmbuscadeTab = new System.Windows.Forms.TabPage();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -212,6 +213,7 @@
             this.uxTabs.Controls.Add(this.tabPage2);
             this.uxTabs.Controls.Add(this.tabPage3);
             this.uxTabs.Controls.Add(this.tabPage6);
+            this.uxTabs.Controls.Add(this.AmbuscadeTab);
             this.uxTabs.Controls.Add(this.tabPage5);
             this.uxTabs.Controls.Add(this.tabPage4);
             this.uxTabs.Location = new System.Drawing.Point(12, 12);
@@ -1340,6 +1342,16 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
             // 
+            // AmbuscadeTab
+            // 
+            this.AmbuscadeTab.Location = new System.Drawing.Point(4, 26);
+            this.AmbuscadeTab.Name = "AmbuscadeTab";
+            this.AmbuscadeTab.Padding = new System.Windows.Forms.Padding(3);
+            this.AmbuscadeTab.Size = new System.Drawing.Size(640, 465);
+            this.AmbuscadeTab.TabIndex = 7;
+            this.AmbuscadeTab.Text = "Ambuscade";
+            this.AmbuscadeTab.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1510,6 +1522,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button uxButtonDBox;
+        private System.Windows.Forms.TabPage AmbuscadeTab;
     }
 }
 
