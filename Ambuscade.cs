@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FFACETools;
 using Flipper.Classes;
+using FlipperD;
 
 namespace Flipper
 {
@@ -24,6 +26,7 @@ namespace Flipper
         private string _target;
         private volatile bool _interruptRoute;
         public volatile int _townHomepoint = 41;
+        public volatile int _targetId = 0;
 
         #region Bulk
         private string _route1 = "1-amb-homepoint-book.list";
@@ -71,7 +74,8 @@ namespace Flipper
                     // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
                     DoRoute(_route2);
                     NavigateToZone(_zone, _townHomepoint);
-                    DoRoute(_route3, false);
+                    DoRoute(_route3);
+
                     _ambuscade = false;
                 //}
 
@@ -162,9 +166,16 @@ namespace Flipper
 
                 if (targets)
                 {
-                    //find a target
+                    _targetId = FindTarget();
                 }
 
+                if (_targetId > 0)
+                {
+                    fface.Navigator.Reset();
+                    Thread.Sleep(100);
+                    Fight(_targetId);
+                }
+                
                 Node n = path[0];
                 path.RemoveAt(0);
                 fface.Navigator.DistanceTolerance = 0.2;
@@ -174,6 +185,204 @@ namespace Flipper
             }
 
             return true;
+        }
+
+        public bool TargetAlive(int targetId)
+        {
+            if (fface.NPC.HPPCurrent(targetId) > 0)
+                return true;
+
+            return false;
+        }
+
+
+        public bool Fight(int target)
+        {
+            while (CanStillAttack(target) && fface.Navigator.DistanceTo(target) < 20 && _ambuscade)
+            {
+                // attempt to retarget always
+                Target(target);
+
+                // if not claimed, attempt to claim with a ranged attack
+                if (!fface.NPC.IsClaimed(target))
+                    job.UseRangedClaim();
+
+                // if not engaged, engaged
+                if ((fface.NPC.IsClaimed(target) || fface.Navigator.DistanceTo(target) <= 6) &&
+                    fface.Player.Status != Status.Fighting && fface.Target.ID == target && _ambuscade)
+                {
+                    fface.Windower.SendString("/attack <t>");
+                    Thread.Sleep(3000);
+                }
+
+                // Move closer if too far away.
+                if (fface.Navigator.DistanceTo(target) > 6 && fface.Player.Status == Status.Fighting && _ambuscade)
+                {
+                    fface.Navigator.Reset();
+                    fface.Navigator.HeadingTolerance = 7;
+                    fface.Navigator.DistanceTolerance = 4;
+                    fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
+                }
+
+                if (fface.Navigator.DistanceTo(target) < 2.5 && _ambuscade)
+                {
+                    fface.Windower.SendKey(KeyCode.NP_Number2, true);
+                    Thread.Sleep(100);
+                    fface.Windower.SendKey(KeyCode.NP_Number2, false);
+                }
+
+                if (fface.Player.Status == Status.Fighting)
+                {
+                    if (fface.Player.HPPCurrent <= 75)
+                        job.UseHeals();
+
+                    if (fface.Player.TPCurrent >= 1000)
+                        job.UseWeaponskills();
+
+                    job.UseAbilities();
+                    job.UseSpells();
+                } 
+                Thread.Sleep(10);
+            }
+            return false;
+        }
+
+        public bool Target(int id)
+        {
+            if (fface.Target.ID == 0 || fface.Target.ID != id)
+            {
+                // Some how we ended up on the wrong target, disengage....
+                if (fface.Target.ID != id && fface.Player.Status == Status.Fighting)
+                {
+                    fface.Windower.SendString("/attackoff");
+                    Thread.Sleep(2000);
+                    return true;
+                }
+                else
+                {
+                    fface.Target.SetNPCTarget(id);
+                    Thread.Sleep(50);
+                    fface.Windower.SendString("/target <t>");
+                    Thread.Sleep(50);
+                    return true;
+                }
+            }
+            return true;
+        }
+
+
+        public bool CanStillAttack(int id)
+        {
+
+            if (!IsRendered(id))
+            {
+                return false;
+            }
+
+            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id) && !IsFacingMe(id)) // fface.NPC.ClaimedID(id) != playerServerId))
+            {
+                return false;
+            }
+
+            // Skip if the mob more than 7 yalms above or below us
+            if (Math.Abs(Math.Abs(fface.NPC.PosY(id)) - Math.Abs(fface.Player.PosY)) > 20)
+            {
+                return false;
+            }
+
+            //if (!fface.NPC.IsRendered(id))
+            //    return false;
+
+            // Skip if the NPC's HP is 0
+            if (fface.NPC.HPPCurrent(id) == 0 || !IsRendered(id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool IsFacingMe(int i)
+        {
+
+            double targetHeading = RadianToDegree(fface.NPC.PosH(i));
+            double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(i), Y = fface.NPC.PosZ(i) });
+            double difference = (targetHeading + lineAngle) - 180;
+            if (difference < 3.5 && difference > -3.5)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private double RadianToDegree(double angle)
+        {
+            return angle * (180.0 / Math.PI);
+        }
+
+
+        /// <summary>
+        /// Gets the angle of a line between two points.
+        /// </summary>
+        /// <param name="p1">Player's Coordinates</param>
+        /// <param name="p2">Target's Coordinates</param>
+        /// <returns></returns>
+        private double GetAngleOfLineBetweenTwoPoints(PointF p1, PointF p2)
+        {
+            float xDiff = p2.X - p1.X;
+            float yDiff = p2.Y - p1.Y;
+            return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
+        }
+
+
+        public int FindTarget()
+        {
+            int bestTarget = 0;
+            double bestDistance = 20.0;
+
+            for (short i = 0; i < 768; i++)
+            {
+                if (!IsRendered(i))
+                    continue;
+
+                if (fface.NPC.IsClaimed(i) && !PartyHasHate(i))
+                    continue;
+
+                if (fface.NPC.Distance(i) < 15 && fface.NPC.Status(i) == Status.Standing)
+                {
+                    if (fface.NPC.Distance(i) < bestDistance)
+                    {
+                        bestDistance = fface.NPC.Distance(i);
+                        bestTarget = i;
+                    }
+                }
+            }
+
+            return bestTarget;
+        }
+
+        public bool IsRendered(int id)
+        {
+            byte[] b;
+            b = fface.NPC.GetRawNPCData(id, 0x120, 4);
+            if (b != null)
+                return (BitConverter.ToInt32(b, 0) & 0x200) != 0;
+            return false;
+        }
+
+        public bool PartyHasHate(int id)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                var members = fface.PartyMember[Convert.ToByte(i)];
+
+                if (fface.NPC.ClaimedID(id) == members.ServerID && fface.NPC.HPPCurrent(id) > 0 && fface.NPC.Status(id) != Status.Dead1 && fface.NPC.Status(id) != Status.Dead2)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
