@@ -75,7 +75,7 @@ namespace Flipper
                     _ambuscade = false;
                 //}
 
-
+                //wat
                 Thread.Sleep(1);
             }
         }
