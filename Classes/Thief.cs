@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FFACETools;
 
@@ -9,18 +10,17 @@ namespace Flipper.Classes
 {
     public class Thief : Jobs
     {
-        private FFACE _fface;
-        private Content _content;
-
         public Thief(FFACE instance, Content content)
         {
-            _content = content;
-            _fface = instance;
+            base._content = content;
+            base._fface = instance;
         }
 
         public override void UseRangedClaim()
         {
-            SendCommand("/ra <t>", 8);
+            _fface.Navigator.FaceHeading(_fface.Target.ID);
+            Thread.Sleep(1000);
+            SendCommand("/ra <t>", 5);
         }
 
         public override void UseClaim()
@@ -46,9 +46,11 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
-            // use flee on cool down, no idea why.
-            if (!IsAfflicted(StatusEffect.Flee) && Ready(AbilityList.Flee))
-                UseAbility(AbilityList.Flee, 2, false);
+            if (Ready(AbilityList.Bully))
+                UseAbility(AbilityList.Bully, 2, true);
+
+            if (Ready(AbilityList.Conspirator))
+                UseAbility(AbilityList.Conspirator, 2, false);
 
             // check for war abilities
             if (_fface.Player.SubJob == Job.WAR)
@@ -61,11 +63,49 @@ namespace Flipper.Classes
                 if (Ready(AbilityList.Berserk))
                    UseAbility(AbilityList.Berserk, 2, false);
             }
+
+            // check for dnc abiliteis
+            if (_fface.Player.SubJob == Job.DNC)
+            {
+                if (IsAfflicted(StatusEffect.Haste_Samba) == false &&
+                    Ready(AbilityList.Sambas) == true &&
+                    _fface.Player.TPCurrent >= 350)
+                {
+                    UseAbility("Haste Samba", AbilityList.Sambas, 4, false);
+                }
+
+                if ((IsAfflicted(StatusEffect.Paralysis) ||
+                    IsAfflicted(StatusEffect.Poison) ||
+                    IsAfflicted(StatusEffect.Slow) ||
+                    IsAfflicted(StatusEffect.Blindness)) && _fface.Player.TPCurrent >= 200 && Ready(AbilityList.Waltzes))
+                {
+                    UseAbility("Healing Waltz", AbilityList.Waltzes, 3, false);
+                }
+            }
         }
 
         public override void UseHeals()
         {
+            if (_fface.Player.HPPCurrent < 25 && Ready(AbilityList.Two_Hour))
+            {
+                SendCommand("/ja \"Perfect Dodge\" <me>");
+            }
 
+            if (_fface.Player.SubJob == Job.DNC)
+            {
+                if (_fface.Player.TPCurrent >= 500)
+                {
+                    UseAbility("Curing Waltz III", AbilityList.Waltzes, 3, false);
+                }
+                else if (_fface.Player.TPCurrent >= 350)
+                {
+                    UseAbility("Curing Waltz II", AbilityList.Waltzes, 3, false);
+                }
+                else if (_fface.Player.TPCurrent >= 200)
+                {
+                    UseAbility("Curing Waltz", AbilityList.Waltzes, 3, false);
+                }
+            }
         }
 
         public override void UseSpells()
@@ -75,6 +115,7 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
+            SendCommand("/ws \"Rudra's Storm\" <t>", 3);
         }
 
         #region Add other methods here that aren't overrides, such as calculating finishing moves, etc

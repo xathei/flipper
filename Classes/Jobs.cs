@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FFACETools;
+using System.Threading;
 
 namespace Flipper.Classes
 {
     public class Jobs : IJob
     {
-        private FFACE _fface;
-        private Content _content;
+        public FFACE _fface;
+        public Content _content;
 
         /// <summary>
         /// Called when the user is following a strict path, but needs to claim a monster.
@@ -26,7 +27,7 @@ namespace Flipper.Classes
         /// </summary>
         public virtual void UseClaim()
         {
-
+            
         }
 
         /// <summary>

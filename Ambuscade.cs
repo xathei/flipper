@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FFACETools;
 using Flipper.Classes;
 using FlipperD;
@@ -74,7 +76,7 @@ namespace Flipper
                     // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
                     DoRoute(_route2);
                     NavigateToZone(_zone, _townHomepoint);
-                    DoRoute(_route3);
+                    DoRoute(_route3, true);
 
                     _ambuscade = false;
                 //}
@@ -167,12 +169,13 @@ namespace Flipper
                 if (targets)
                 {
                     _targetId = FindTarget();
+                    WriteLog("Target found was: " + _targetId);
                 }
 
                 if (_targetId > 0)
                 {
                     fface.Navigator.Reset();
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                     Fight(_targetId);
                 }
                 
@@ -185,6 +188,22 @@ namespace Flipper
             }
 
             return true;
+        }
+
+        public string lastLog = "";
+
+        public void WriteLog(string log, bool verbose = false)
+        {
+            if (lastLog != log)
+            {
+                lastLog = log;
+                Program.mainform.uxLog.Invoke((MethodInvoker)delegate
+                {
+                    Program.mainform.uxLog.Items.Add("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + log);
+                    int visibleItems = Program.mainform.uxLog.ClientSize.Height / Program.mainform.uxLog.ItemHeight;
+                    Program.mainform.uxLog.TopIndex = Math.Max(Program.mainform.uxLog.Items.Count - visibleItems + 1, 0);
+                });
+            }
         }
 
         public bool TargetAlive(int targetId)
@@ -208,7 +227,7 @@ namespace Flipper
                     job.UseRangedClaim();
 
                 // if not engaged, engaged
-                if ((fface.NPC.IsClaimed(target) || fface.Navigator.DistanceTo(target) <= 6) &&
+                if (((fface.NPC.IsClaimed(target) && PartyHasHate(target)) || fface.Navigator.DistanceTo(target) <= 5) &&
                     fface.Player.Status != Status.Fighting && fface.Target.ID == target && _ambuscade)
                 {
                     fface.Windower.SendString("/attack <t>");
@@ -216,7 +235,7 @@ namespace Flipper
                 }
 
                 // Move closer if too far away.
-                if (fface.Navigator.DistanceTo(target) > 6 && fface.Player.Status == Status.Fighting && _ambuscade)
+                if (fface.Navigator.DistanceTo(target) > 5 && fface.Player.Status == Status.Fighting && _ambuscade)
                 {
                     fface.Navigator.Reset();
                     fface.Navigator.HeadingTolerance = 7;
@@ -236,10 +255,11 @@ namespace Flipper
                     if (fface.Player.HPPCurrent <= 75)
                         job.UseHeals();
 
+                    job.UseAbilities();
+
                     if (fface.Player.TPCurrent >= 1000)
                         job.UseWeaponskills();
 
-                    job.UseAbilities();
                     job.UseSpells();
                 } 
                 Thread.Sleep(10);
@@ -349,7 +369,14 @@ namespace Flipper
                 if (fface.NPC.IsClaimed(i) && !PartyHasHate(i))
                     continue;
 
-                if (fface.NPC.Distance(i) < 15 && fface.NPC.Status(i) == Status.Standing)
+                if (fface.NPC.Distance(i) < 7 && fface.NPC.Status(i) == Status.Fighting &&
+                    (!fface.NPC.IsClaimed(i) || PartyHasHate(i) || IsFacingMe(i)))
+                {
+                    WriteLog("Aggroed mob, taking care of it...");
+                    return i;
+                }
+
+                if (fface.NPC.HPPCurrent(i) == 100 && fface.NPC.Name(i) == "Greater Manticore")
                 {
                     if (fface.NPC.Distance(i) < bestDistance)
                     {
