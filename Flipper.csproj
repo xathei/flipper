@@ -86,6 +86,7 @@
     <Compile Include="Classes\IJob.cs" />
     <Compile Include="Classes\Paladin.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="Combat.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
