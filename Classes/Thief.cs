@@ -12,8 +12,8 @@ namespace Flipper.Classes
     {
         public Thief(FFACE instance, Content content)
         {
-            base._content = content;
-            base._fface = instance;
+            _content = content;
+            _fface = instance;
         }
 
         public override void UseRangedClaim()

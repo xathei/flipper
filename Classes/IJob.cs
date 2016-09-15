@@ -17,5 +17,7 @@ namespace Flipper.Classes
         void UseWeaponskills();
         void DoHide();
         void Engage();
+        void Warp();
+        void SpawnTrusts();
     }
 }
