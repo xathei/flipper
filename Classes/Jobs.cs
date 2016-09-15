@@ -72,6 +72,11 @@ namespace Flipper.Classes
             
         }
 
+        public void Engage()
+        {
+            SendCommand("/attack <t>", 3);
+        }
+
         /// <summary>
         /// Called when the player needs to be under the status effect of Sneak and Invisible.
         /// </summary>
