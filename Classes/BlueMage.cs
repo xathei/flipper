@@ -32,8 +32,17 @@ namespace Flipper.Classes
                     UseAbility(AbilityList.Unbridled_Learning, 2, false);
                   
                 }
-
-              
+            }
+            if(_content == Content.Ambuscade)
+            {
+                if(Ready(AbilityList.Berserk))
+                {
+                    UseAbility(AbilityList.Berserk, 2, false);
+                }
+                if(Ready(AbilityList.Aggressor))
+                {
+                    UseAbility(AbilityList.Berserk, 2, false);
+                }
             }
         }
 
@@ -55,10 +64,30 @@ namespace Flipper.Classes
             }
             if(!IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent == 3000)
             {
+                if (Ready(AbilityList.Warcry))
+                    UseAbility(AbilityList.Warcry, 2, false);
                 SendCommand("/ws \"Expiacion\" <t>", 3, false);
+                
+
             }
         }
-        
+        public override void UseSpells()
+        {
+            if (!IsAfflicted(StatusEffect.Haste))
+            {
+                UseSpell(SpellList.Erratic_Flutter, 4, false);
+            }
+
+            if (!IsAfflicted(StatusEffect.Attack_Boost))
+            {
+                UseSpell(SpellList.Nat_Meditation, 3, false);
+            }
+
+            if (!IsAfflicted(StatusEffect.Defense_Boost))
+            {
+                UseSpell(SpellList.Cocoon, 3, false);
+            }
+        }
 
     }
 }
