@@ -133,7 +133,8 @@ namespace Flipper
                         case Mode.StrictPathing:
                         {
                             // We don't want to wonder too far from our strict path. Use Strict Pathing.
-                            job.UseRangedClaim();
+                            if (DistanceTo(target) >= monster.HitBox * 1.5)
+                                job.UseRangedClaim();
                             break;
                         }
                         case Mode.None:
@@ -146,7 +147,7 @@ namespace Flipper
 
                 // ENGAGE
                 if (((fface.NPC.IsClaimed(target) && PartyHasHate(target)) ||
-                    (DistanceTo(target) < 5 && !fface.NPC.IsClaimed(target)))
+                    (DistanceTo(target) < monster.HitBox * 1.5 && !fface.NPC.IsClaimed(target)))
                     && fface.Player.Status != Status.Fighting && fface.Target.ID == target && _fighting)
                 {
                     // IF ('TARGET IS CLAIMED && PARTY HAS HATE'
@@ -371,19 +372,5 @@ namespace Flipper
         #endregion
 
 
-    }
-
-    public class Monster
-    {
-        public string Name;
-        public double HitBox;
-        public bool TimeSpecific;
-
-        public Monster()
-        {
-            TimeSpecific = false;
-            HitBox = 3.4;
-            Name = "Default";
-        }
     }
 }

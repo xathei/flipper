@@ -23,6 +23,11 @@ namespace Flipper
         private Thread chatThread;
         private Thread taskThread;
 
+        private Monster RoETarget;
+        private Monster AmbuscadeTarget;
+
+        private string DifficultyMenu;
+
         private volatile bool _ambuscade;
         private volatile bool _leader;
         private string _target;
@@ -30,6 +35,7 @@ namespace Flipper
         public volatile int _townHomepoint = 41;
         public volatile int _targetId = 0;
         private volatile bool _hasKeyItem = false;
+        private volatile bool _initialKeyItem = false;
 
         #region Bulk
         private string _route1 = "1-amb-homepoint-book.list";
@@ -38,11 +44,15 @@ namespace Flipper
         private string _zone = "Cape Teriggan #1.";
         #endregion
 
-        public void Start(FFACE instance)
+        public void Start(FFACE instance, Monster roeTarget, Monster ambuscadeTarget, string homePoint, bool keyitem, string difficulty = "Easy. (Level: 114)")
         {
+            _initialKeyItem = keyitem;
+            DifficultyMenu = difficulty;
             fface = instance;
             fface.Navigator.UseNewMovement = true;
-
+            RoETarget = roeTarget;
+            AmbuscadeTarget = ambuscadeTarget;
+            _zone = homePoint;
 
             switch (fface.Player.MainJob)
             {
@@ -63,7 +73,6 @@ namespace Flipper
             _ambuscade = true;
             _leader = true;
             _interruptRoute = false;
-            _target = "Greater Manticore";
 
             taskThread = new Thread(DoTask);
             chatThread = new Thread(DoChat);
@@ -77,17 +86,29 @@ namespace Flipper
         {
             while (_ambuscade)
             {
+
                 // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
                 DoRoute(_route2);
 
-                // #2 - USE MENU TO TRAVEL TO APPROPRIATE ZONE
-                NavigateToZone(_zone, _townHomepoint);
 
-                // #3 - KILL MOSNTERS UNTIL KI IS OBTAINED
-                DoRoute(_route3, true);
+                if (!_initialKeyItem)
+                {
+                    // #2 - USE MENU TO TRAVEL TO APPROPRIATE ZONE
+                    NavigateToZone(_zone, _townHomepoint);
 
-                // #4 - RETURN HOME
-                ReturnHome();
+                    // #3 - KILL MOSNTERS UNTIL KI IS OBTAINED
+                    DoRoute(_route3, true);
+
+                    Thread.Sleep(3000);
+
+                    // #4 - RETURN HOME
+                    ReturnHome();
+                }
+                else
+                {
+                    _initialKeyItem = false;
+                    Thread.Sleep(1000);
+                }
 
                 // #4 - RUN UP TO AMBUSCADE BOOK
                 DoRoute(_route1);
@@ -96,25 +117,21 @@ namespace Flipper
 
                 while (fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion)
                 {
-                    fface.Windower.SendString("/echo Waiting...");
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
 
-                Thread.Sleep(9000);
+                Thread.Sleep(10000);
 
                 SpawnTrusts();
 
-                List<TargetInfo> targs = Combat.FindTarget("Lycaon");
+                List<TargetInfo> targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
 
                 while (!targs.Any())
-                    targs = Combat.FindTarget("Lycaon");
+                    targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
 
-                Combat.Fight(targs[0].Id, new Monster(), Combat.Mode.None, 50);
+                Combat.Fight(targs[0].Id, AmbuscadeTarget, Combat.Mode.None, 50);
 
-
-                fface.Windower.SendString("/echo Done first ambuscade, exiting routine...");
-                _ambuscade = false;
-
+                Thread.Sleep(15000);
                 //wat
                 Thread.Sleep(1);
             }
@@ -154,7 +171,7 @@ namespace Flipper
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             Thread.Sleep(1000);
 
-            while (!MenuSelectedText("Easy. (Level: 114)"))
+            while (!MenuSelectedText(DifficultyMenu))
             {
                 fface.Windower.SendKeyPress(KeyCode.DownArrow);
                 Thread.Sleep(400);
@@ -171,8 +188,10 @@ namespace Flipper
             while (fface.Player.Zone != Zone.Mhaura)
             {
                 job.Warp();
-                Thread.Sleep(1000);
+                Thread.Sleep(1);
             }
+            _hasKeyItem = false;
+            Thread.Sleep(10000);
         }
 
         public bool MenuSelectedText(string text)
@@ -238,7 +257,7 @@ namespace Flipper
 
         public bool DoRoute(string route, bool targets = false)
         {
-
+            fface.Windower.SendString("/echo running route: " + route);
             do
             {
                 List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();
@@ -260,13 +279,13 @@ namespace Flipper
 
                     if (targets)
                     {
-                        _targetId = Combat.FindTarget(20, "Greater Manticore");
+                        _targetId = Combat.FindTarget(20, RoETarget.MonsterName);
                         WriteLog("Target found was: " + _targetId);
                     }
 
                     if (_targetId > 0)
                     {
-                        Combat.Fight(_targetId, new Monster(), Combat.Mode.StrictPathing);
+                        Combat.Fight(_targetId, RoETarget, Combat.Mode.StrictPathing);
                     }
 
                     Node n = path[0];
@@ -279,6 +298,8 @@ namespace Flipper
 
                 Thread.Sleep(1);
             } while (!_hasKeyItem && targets);
+
+            fface.Navigator.Reset();
 
             return true;
         }
