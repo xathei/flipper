@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flipper.Classes
 {
-    class BlueMage:Jobs
+    public class BlueMage:Jobs
     {
         public BlueMage(FFACE instance, Content content)
         {
