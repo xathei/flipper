@@ -9,7 +9,6 @@ namespace Flipper.Classes
 {
     public class Paladin : Jobs
     {
-
         public Paladin(FFACE instance, Content content)
         {
             _content = content;
