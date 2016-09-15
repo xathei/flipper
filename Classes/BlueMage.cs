@@ -55,7 +55,7 @@ namespace Flipper.Classes
             }
             if(!IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent == 3000)
             {
-                SendCommand("/ws \"Savage Blade\" <t>", 3, false);
+                SendCommand("/ws \"Expiacion\" <t>", 3, false);
             }
         }
         
