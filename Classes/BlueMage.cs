@@ -28,5 +28,29 @@ namespace Flipper.Classes
               
             }
         }
+
+        public override void UseClaim()
+        {
+            if (_fface.Player.SubJob == Job.WAR)
+            {
+                if (Ready(AbilityList.Provoke))
+                    UseAbility(AbilityList.Provoke, 2, true);
+            }
+        }
+
+        public override void UseWeaponskills()
+        {
+            if (IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent >= 2000 )
+            {
+                SendCommand("/ws \"Savage Blade\" <t>", 3, false);
+
+            }
+            if(!IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent == 3000)
+            {
+                SendCommand("/ws \"Savage Blade\" <t>", 3, false);
+            }
+        }
+        
+
     }
 }
