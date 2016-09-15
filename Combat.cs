@@ -49,7 +49,7 @@ namespace Flipper
         /// </summary>
         /// <param name="monsterName">An array of monster names that we're looking to engage</param>
         /// <returns></returns>
-        public static int FindTarget(params string[] monsterName)
+        public static int FindTarget(double maxDistance = 50.0, params string[] monsterName)
         {
             int bestTarget = 0;
             double bestDistance = 20.0;
@@ -96,6 +96,9 @@ namespace Flipper
             {
                 // TARGET
                 Target(target);
+
+                // FACE TARGET
+                fface.Navigator.FaceHeading(target);
 
                 // CLAIM
                 if (!fface.NPC.IsClaimed(target) && _fighting)
@@ -276,7 +279,7 @@ namespace Flipper
         public static bool IsFacingMe(int id)
         {
             double targetHeading = RadianToDegree(fface.NPC.PosH(id));
-            double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(i), Y = fface.NPC.PosZ(i) });
+            double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(id), Y = fface.NPC.PosZ(id) });
             double difference = (targetHeading + lineAngle) - 180;
             return difference < 3.5 && difference > -3.5;
         }

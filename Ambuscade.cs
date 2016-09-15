@@ -172,7 +172,7 @@ namespace Flipper
 
                 if (targets)
                 {
-                    _targetId = Combat.FindTarget("Greater Manticore");
+                    _targetId = Combat.FindTarget(20, "Greater Manticore");
                     WriteLog("Target found was: " + _targetId);
                 }
 
