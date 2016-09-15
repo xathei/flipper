@@ -77,6 +77,28 @@ namespace Flipper.Classes
             SendCommand("/attack <t>", 3);
         }
 
+        public void SpawnTrusts()
+        {
+            SendCommand("/ma \"Zeid II\" <me>");
+            Thread.Sleep(7000);
+            SendCommand("/ma \"Tenzen\" <me>");
+            Thread.Sleep(7000);
+            SendCommand("/ma \"Koru-Moru\" <me>");
+            Thread.Sleep(7000);
+            SendCommand("/ma \"Apururu (UC)\" <me>");
+            Thread.Sleep(7000);
+            SendCommand("/ma \"Ulmia\" <me>");
+            Thread.Sleep(7000);
+        }
+
+        public void Warp()
+        {
+            SendCommand("/equip l.ring \"Warp ring\"", 9);
+            Thread.Sleep(12000);
+            SendCommand("/item \"Warp Ring\" <me>", 10);
+            Thread.Sleep(5000);
+        }
+
         /// <summary>
         /// Called when the player needs to be under the status effect of Sneak and Invisible.
         /// </summary>

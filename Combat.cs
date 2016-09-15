@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FFACETools;
 using Flipper.Classes;
+using FlipperD;
 
 namespace Flipper
 {
@@ -81,6 +82,29 @@ namespace Flipper
             return bestTarget;
         }
 
+        public static List<TargetInfo> FindTarget(string name)
+        {
+            List<TargetInfo> results = new List<TargetInfo>();
+
+            for (short i = 0; i < 768; i++)
+            {
+                if (fface.NPC.Name(i).ToLower().Contains(name.ToLower()) && fface.NPC.Distance(i) < 50 && IsRendered(i))
+                {
+                    TargetInfo found = new TargetInfo
+                    {
+                        Id = i,
+                        Name = fface.NPC.Name(i),
+                        Status = fface.NPC.Status(i),
+                        Distance = fface.NPC.Distance(i),
+                        IsRendered = IsRendered(i)
+                    };
+                    results.Add(found);
+                }
+            }
+
+            return results;
+        }
+
         /// <summary>
         /// Processes the routine of engaging & fighting an enemy.
         /// </summary>
@@ -88,12 +112,12 @@ namespace Flipper
         /// <param name="monster">The monster object for the monster you're engaging</param>
         /// <param name="mode">Special mode considerations for engaging this target.</param>
         /// <returns></returns>
-        public static bool Fight(int target, Monster monster, Mode mode = Mode.None)
+        public static bool Fight(int target, Monster monster, Mode mode = Mode.None, double maxDistance = 20.0)
         {
             _fighting = true;
             fface.Navigator.Reset();
 
-            while (CanStillAttack(target) && DistanceTo(target) < 20 &&  _fighting)
+            while (CanStillAttack(target) && DistanceTo(target) < maxDistance &&  _fighting)
             {
                 // TARGET
                 Target(target);
@@ -109,7 +133,8 @@ namespace Flipper
                         case Mode.StrictPathing:
                         {
                             // We don't want to wonder too far from our strict path. Use Strict Pathing.
-                            job.UseRangedClaim();
+                            if (DistanceTo(target) >= monster.HitBox * 1.5)
+                                job.UseRangedClaim();
                             break;
                         }
                         case Mode.None:
@@ -122,7 +147,7 @@ namespace Flipper
 
                 // ENGAGE
                 if (((fface.NPC.IsClaimed(target) && PartyHasHate(target)) ||
-                    (DistanceTo(target) < 5 && !fface.NPC.IsClaimed(target)))
+                    (DistanceTo(target) < monster.HitBox * 1.5 && !fface.NPC.IsClaimed(target)))
                     && fface.Player.Status != Status.Fighting && fface.Target.ID == target && _fighting)
                 {
                     // IF ('TARGET IS CLAIMED && PARTY HAS HATE'
@@ -145,7 +170,7 @@ namespace Flipper
                                 fface.Navigator.Reset();
                                 fface.Navigator.HeadingTolerance = 7;
                                 fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
-                                fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), true);
+                                fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
                             }
                             break;
                         }
@@ -153,7 +178,7 @@ namespace Flipper
                         {
                             fface.Navigator.Reset();
                             fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                            fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), true);
+                            fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
                             break;
                         }
                     }
@@ -167,7 +192,7 @@ namespace Flipper
                         default:
                         {
                             fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                            Thread.Sleep(100);
+                            Thread.Sleep(75);
                             fface.Windower.SendKey(KeyCode.NP_Number2, false);
                             break;
                         }
@@ -347,19 +372,5 @@ namespace Flipper
         #endregion
 
 
-    }
-
-    public class Monster
-    {
-        public string Name;
-        public double HitBox;
-        public bool TimeSpecific;
-
-        public Monster()
-        {
-            TimeSpecific = false;
-            HitBox = 2.5;
-            Name = "Default";
-        }
     }
 }

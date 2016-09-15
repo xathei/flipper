@@ -23,12 +23,19 @@ namespace Flipper
         private Thread chatThread;
         private Thread taskThread;
 
+        private Monster RoETarget;
+        private Monster AmbuscadeTarget;
+
+        private string DifficultyMenu;
+
         private volatile bool _ambuscade;
         private volatile bool _leader;
         private string _target;
         private volatile bool _interruptRoute;
         public volatile int _townHomepoint = 41;
         public volatile int _targetId = 0;
+        private volatile bool _hasKeyItem = false;
+        private volatile bool _initialKeyItem = false;
 
         #region Bulk
         private string _route1 = "1-amb-homepoint-book.list";
@@ -37,11 +44,15 @@ namespace Flipper
         private string _zone = "Cape Teriggan #1.";
         #endregion
 
-        public void Start(FFACE instance)
+        public void Start(FFACE instance, Monster roeTarget, Monster ambuscadeTarget, string homePoint, bool keyitem, string difficulty = "Easy. (Level: 114)")
         {
+            _initialKeyItem = keyitem;
+            DifficultyMenu = difficulty;
             fface = instance;
             fface.Navigator.UseNewMovement = true;
-
+            RoETarget = roeTarget;
+            AmbuscadeTarget = ambuscadeTarget;
+            _zone = homePoint;
 
             switch (fface.Player.MainJob)
             {
@@ -51,6 +62,9 @@ namespace Flipper
                 case Job.PLD:
                     job = new Paladin(instance, Content.Ambuscade);
                     break;
+                case Job.BLU:
+                    job = new BlueMage(instance, Content.Ambuscade);
+                    break;
             }
 
             Combat.SetInstance = fface;
@@ -59,7 +73,6 @@ namespace Flipper
             _ambuscade = true;
             _leader = true;
             _interruptRoute = false;
-            _target = "Greater Manticore";
 
             taskThread = new Thread(DoTask);
             chatThread = new Thread(DoChat);
@@ -73,21 +86,112 @@ namespace Flipper
         {
             while (_ambuscade)
             {
-                // #1 - FETCH AMBUSCADE KI
 
-                //if (!fface.Player.HasKeyitem(KeyItem.Ambuscade_Primter_Volume_Two))
-                //{
-                    // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
-                    DoRoute(_route2);
+                // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
+                DoRoute(_route2);
+
+
+                if (!_initialKeyItem)
+                {
+                    // #2 - USE MENU TO TRAVEL TO APPROPRIATE ZONE
                     NavigateToZone(_zone, _townHomepoint);
+
+                    // #3 - KILL MOSNTERS UNTIL KI IS OBTAINED
                     DoRoute(_route3, true);
 
-                    _ambuscade = false;
-                //}
+                    Thread.Sleep(3000);
 
+                    // #4 - RETURN HOME
+                    ReturnHome();
+                }
+                else
+                {
+                    _initialKeyItem = false;
+                    Thread.Sleep(1000);
+                }
+
+                // #4 - RUN UP TO AMBUSCADE BOOK
+                DoRoute(_route1);
+
+                DoEntry();
+
+                while (fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion)
+                {
+                    Thread.Sleep(100);
+                }
+
+                Thread.Sleep(10000);
+
+                SpawnTrusts();
+
+                List<TargetInfo> targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
+
+                while (!targs.Any())
+                    targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
+
+                Combat.Fight(targs[0].Id, AmbuscadeTarget, Combat.Mode.None, 50);
+
+                Thread.Sleep(15000);
                 //wat
                 Thread.Sleep(1);
             }
+        }
+
+        public void SpawnTrusts()
+        {
+            job.SpawnTrusts();
+        }
+
+        public void DoEntry()
+        {
+
+            int bookId = 146;
+
+            while ((fface.Target.ID != bookId || string.IsNullOrEmpty(fface.Target.Name)) && _ambuscade)
+            {
+                fface.Target.SetNPCTarget(bookId);
+                Thread.Sleep(100);
+                fface.Windower.SendString("/target <t>");
+                Thread.Sleep(500);
+            }
+
+
+            while (!fface.Menu.IsOpen)
+            {
+                fface.Windower.SendKeyPress(KeyCode.EnterKey);
+                Thread.Sleep(1000);
+            }
+
+            while (!MenuSelectedText("Regular Ambuscade."))
+            {
+                fface.Windower.SendKeyPress(KeyCode.DownArrow);
+                Thread.Sleep(400);
+            }
+
+            fface.Windower.SendKeyPress(KeyCode.EnterKey);
+            Thread.Sleep(1000);
+
+            while (!MenuSelectedText(DifficultyMenu))
+            {
+                fface.Windower.SendKeyPress(KeyCode.DownArrow);
+                Thread.Sleep(400);
+            }
+
+            fface.Windower.SendKeyPress(KeyCode.EnterKey);
+            Thread.Sleep(1000);
+
+            fface.Windower.SendKeyPress(KeyCode.EnterKey);
+        }
+
+        private void ReturnHome()
+        {
+            while (fface.Player.Zone != Zone.Mhaura)
+            {
+                job.Warp();
+                Thread.Sleep(1);
+            }
+            _hasKeyItem = false;
+            Thread.Sleep(10000);
         }
 
         public bool MenuSelectedText(string text)
@@ -95,7 +199,6 @@ namespace Flipper
             fface.Windower.SendString($"/echo {text} == {fface.Menu.DialogText.Options[fface.Menu.DialogOptionIndex]}");
             return (text == fface.Menu.DialogText.Options[fface.Menu.DialogOptionIndex]);
         }
-
 
         public bool NavigateToZone(string zone, int target)
         {
@@ -154,40 +257,49 @@ namespace Flipper
 
         public bool DoRoute(string route, bool targets = false)
         {
-            List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();
-            List<Node> path = new List<Node>();
-            foreach (string node in nodes)
+            fface.Windower.SendString("/echo running route: " + route);
+            do
             {
-                string[] token = node.Split(',');
-                var x = float.Parse((token[0]), CultureInfo.InvariantCulture);
-                var z = float.Parse((token[1]), CultureInfo.InvariantCulture);
-                path.Add(new Node() { X = x, Z = z });
-            }
+                List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();
+                List<Node> path = new List<Node>();
 
-            float X = 0;
-            float Y = 0;
-
-            while (path.Any() && !_interruptRoute)
-            {
-
-                if (targets)
+                foreach (string node in nodes)
                 {
-                    _targetId = Combat.FindTarget(20, "Greater Manticore");
-                    WriteLog("Target found was: " + _targetId);
+                    string[] token = node.Split(',');
+                    var x = float.Parse((token[0]), CultureInfo.InvariantCulture);
+                    var z = float.Parse((token[1]), CultureInfo.InvariantCulture);
+                    path.Add(new Node() {X = x, Z = z});
                 }
 
-                if (_targetId > 0)
+                float X = 0;
+                float Y = 0;
+
+                while (path.Any() && !_hasKeyItem && !_interruptRoute)
                 {
-                    Combat.Fight(_targetId, new Monster(), Combat.Mode.StrictPathing);
+
+                    if (targets)
+                    {
+                        _targetId = Combat.FindTarget(20, RoETarget.MonsterName);
+                        WriteLog("Target found was: " + _targetId);
+                    }
+
+                    if (_targetId > 0)
+                    {
+                        Combat.Fight(_targetId, RoETarget, Combat.Mode.StrictPathing);
+                    }
+
+                    Node n = path[0];
+                    path.RemoveAt(0);
+                    fface.Navigator.DistanceTolerance = 0.2;
+                    fface.Navigator.HeadingTolerance = 1;
+                    fface.Navigator.Goto(() => n.X, () => n.Z, path.Any());
+                    Thread.Sleep(1);
                 }
-                
-                Node n = path[0];
-                path.RemoveAt(0);
-                fface.Navigator.DistanceTolerance = 0.2;
-                fface.Navigator.HeadingTolerance = 1;
-                fface.Navigator.Goto(() => n.X, () => n.Z, path.Any());
+
                 Thread.Sleep(1);
-            }
+            } while (!_hasKeyItem && targets);
+
+            fface.Navigator.Reset();
 
             return true;
         }
@@ -210,10 +322,32 @@ namespace Flipper
 
         public void DoChat()
         {
+            string newChat = "";
+            string oldChat = "";
+
             while (_ambuscade)
             {
-                
+                try
+                {
+                    newChat = fface.Chat.GetNextLine().Text;
+                }
+                catch
+                {
 
+                }
+                if (!String.IsNullOrEmpty(newChat) && newChat != oldChat)
+                {
+                    oldChat = newChat;
+                    string[] token = newChat.Split(' ');
+
+                    // Watch for KeyItem obtainment
+
+                    if (newChat.Contains("obtained an Ambuscade Primer Volume Two"))
+                    {
+                        _hasKeyItem = true;
+                    }
+
+                }
                 Thread.Sleep(1);
             }
         }

@@ -226,8 +226,8 @@ namespace FlipperD
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Thread t = new Thread(Claim);
-            t.Start();
+            //Thread t = new Thread(Claim);
+            //t.Start();
 
         }
 
@@ -905,7 +905,19 @@ namespace FlipperD
         {
             Ambuscade ambuscade = new Ambuscade();
 
-            ambuscade.Start(fface);
+            Monster roe = new Monster()
+            {
+                MonsterName = ambRoETarget.Text,
+                HitBox = Double.Parse(ambRoEHitbox.Text)
+            };
+
+            Monster amb = new Monster()
+            {
+                MonsterName = ambTarget.Text,
+                HitBox = Double.Parse(ambHitbox.Text)
+            };
+
+            ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, ambDifficulty.SelectedItem.ToString());
         }
     }
 

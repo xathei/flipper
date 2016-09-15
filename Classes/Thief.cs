@@ -12,14 +12,14 @@ namespace Flipper.Classes
     {
         public Thief(FFACE instance, Content content)
         {
-            base._content = content;
-            base._fface = instance;
+            _content = content;
+            _fface = instance;
         }
 
         public override void UseRangedClaim()
         {
             _fface.Navigator.FaceHeading(_fface.Target.ID);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             SendCommand("/ra <t>", 5);
         }
 
@@ -93,21 +93,21 @@ namespace Flipper.Classes
                     SendCommand("/ja \"Perfect Dodge\" <me>");
                 }
 
-                if (_fface.Player.SubJob == Job.DNC)
-                {
-                    if (_fface.Player.TPCurrent >= 500)
-                    {
-                        UseAbility("Curing Waltz III", AbilityList.Waltzes, 3, false);
-                    }
-                    else if (_fface.Player.TPCurrent >= 350)
-                    {
-                        UseAbility("Curing Waltz II", AbilityList.Waltzes, 3, false);
-                    }
-                    else if (_fface.Player.TPCurrent >= 200)
-                    {
-                        UseAbility("Curing Waltz", AbilityList.Waltzes, 3, false);
-                    }
-                }
+                //if (_fface.Player.SubJob == Job.DNC)
+                //{
+                //    if (_fface.Player.TPCurrent >= 500)
+                //    {
+                //        UseAbility("Curing Waltz III", AbilityList.Waltzes, 3, false);
+                //    }
+                //    else if (_fface.Player.TPCurrent >= 350)
+                //    {
+                //        UseAbility("Curing Waltz II", AbilityList.Waltzes, 3, false);
+                //    }
+                //    else if (_fface.Player.TPCurrent >= 200)
+                //    {
+                //        UseAbility("Curing Waltz", AbilityList.Waltzes, 3, false);
+                //    }
+                //}
             }
         }
 
