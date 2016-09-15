@@ -91,6 +91,7 @@ namespace Flipper
         public static bool Fight(int target, Monster monster, Mode mode = Mode.None)
         {
             _fighting = true;
+            fface.Navigator.Reset();
 
             while (CanStillAttack(target) && DistanceTo(target) < 20 &&  _fighting)
             {
@@ -140,6 +141,7 @@ namespace Flipper
                              // if we're strict pathing, let the mob get close to us before we move to it.
                             if (DistanceTo(target) < monster.HitBox*2)
                             {
+                                fface.Windower.SendString("/echo Close enough, moving in...");
                                 fface.Navigator.Reset();
                                 fface.Navigator.HeadingTolerance = 7;
                                 fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
@@ -158,7 +160,7 @@ namespace Flipper
                 }
 
                 // MOVE BACK
-                if (DistanceTo(target) < (monster.HitBox * 0.75) && CanStillAttack(target) && _fighting)
+                if (DistanceTo(target) < (monster.HitBox * 0.50) && CanStillAttack(target) && _fighting)
                 {
                     switch (mode)
                     {

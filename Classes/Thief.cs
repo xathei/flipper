@@ -86,24 +86,27 @@ namespace Flipper.Classes
 
         public override void UseHeals()
         {
-            if (_fface.Player.HPPCurrent < 25 && Ready(AbilityList.Two_Hour))
+            if (_fface.Player.HPPCurrent < 75)
             {
-                SendCommand("/ja \"Perfect Dodge\" <me>");
-            }
+                if (_fface.Player.HPPCurrent < 25 && Ready(AbilityList.Two_Hour))
+                {
+                    SendCommand("/ja \"Perfect Dodge\" <me>");
+                }
 
-            if (_fface.Player.SubJob == Job.DNC)
-            {
-                if (_fface.Player.TPCurrent >= 500)
+                if (_fface.Player.SubJob == Job.DNC)
                 {
-                    UseAbility("Curing Waltz III", AbilityList.Waltzes, 3, false);
-                }
-                else if (_fface.Player.TPCurrent >= 350)
-                {
-                    UseAbility("Curing Waltz II", AbilityList.Waltzes, 3, false);
-                }
-                else if (_fface.Player.TPCurrent >= 200)
-                {
-                    UseAbility("Curing Waltz", AbilityList.Waltzes, 3, false);
+                    if (_fface.Player.TPCurrent >= 500)
+                    {
+                        UseAbility("Curing Waltz III", AbilityList.Waltzes, 3, false);
+                    }
+                    else if (_fface.Player.TPCurrent >= 350)
+                    {
+                        UseAbility("Curing Waltz II", AbilityList.Waltzes, 3, false);
+                    }
+                    else if (_fface.Player.TPCurrent >= 200)
+                    {
+                        UseAbility("Curing Waltz", AbilityList.Waltzes, 3, false);
+                    }
                 }
             }
         }
