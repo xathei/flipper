@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FFACETools;
 using Flipper.Classes;
+using FlipperD;
 
 namespace Flipper
 {
@@ -24,6 +28,7 @@ namespace Flipper
         private string _target;
         private volatile bool _interruptRoute;
         public volatile int _townHomepoint = 41;
+        public volatile int _targetId = 0;
 
         #region Bulk
         private string _route1 = "1-amb-homepoint-book.list";
@@ -37,6 +42,7 @@ namespace Flipper
             fface = instance;
             fface.Navigator.UseNewMovement = true;
 
+
             switch (fface.Player.MainJob)
             {
                 case Job.THF:
@@ -46,6 +52,9 @@ namespace Flipper
                     job = new Paladin(instance, Content.Ambuscade);
                     break;
             }
+
+            Combat.SetInstance = fface;
+            Combat.SetJob = job;
 
             _ambuscade = true;
             _leader = true;
@@ -71,7 +80,8 @@ namespace Flipper
                     // #1 - FOLLOW ROUTE TO HOME POINT CRYSTAL
                     DoRoute(_route2);
                     NavigateToZone(_zone, _townHomepoint);
-                    DoRoute(_route3, false);
+                    DoRoute(_route3, true);
+
                     _ambuscade = false;
                 //}
 
@@ -162,9 +172,15 @@ namespace Flipper
 
                 if (targets)
                 {
-                    //find a target
+                    _targetId = Combat.FindTarget(20, "Greater Manticore");
+                    WriteLog("Target found was: " + _targetId);
                 }
 
+                if (_targetId > 0)
+                {
+                    Combat.Fight(_targetId, new Monster(), Combat.Mode.StrictPathing);
+                }
+                
                 Node n = path[0];
                 path.RemoveAt(0);
                 fface.Navigator.DistanceTolerance = 0.2;
@@ -176,6 +192,21 @@ namespace Flipper
             return true;
         }
 
+        public string lastLog = "";
+
+        public void WriteLog(string log, bool verbose = false)
+        {
+            if (lastLog != log)
+            {
+                lastLog = log;
+                Program.mainform.uxLog.Invoke((MethodInvoker)delegate
+                {
+                    Program.mainform.uxLog.Items.Add("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + log);
+                    int visibleItems = Program.mainform.uxLog.ClientSize.Height / Program.mainform.uxLog.ItemHeight;
+                    Program.mainform.uxLog.TopIndex = Math.Max(Program.mainform.uxLog.Items.Count - visibleItems + 1, 0);
+                });
+            }
+        }
 
         public void DoChat()
         {

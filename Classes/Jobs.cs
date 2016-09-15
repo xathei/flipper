@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FFACETools;
+using System.Threading;
 
 namespace Flipper.Classes
 {
     public class Jobs : IJob
     {
-        private FFACE _fface;
-        private Content _content;
+        public FFACE _fface;
+        public Content _content;
 
         /// <summary>
         /// Called when the user is following a strict path, but needs to claim a monster.
@@ -26,7 +27,7 @@ namespace Flipper.Classes
         /// </summary>
         public virtual void UseClaim()
         {
-
+            
         }
 
         /// <summary>
@@ -71,6 +72,99 @@ namespace Flipper.Classes
             
         }
 
+        public void Engage()
+        {
+            SendCommand("/attack <t>", 3);
+        }
+
+        /// <summary>
+        /// Called when the player needs to be under the status effect of Sneak and Invisible.
+        /// </summary>
+        public void DoHide()
+        {
+            // Check if the player's MainJob or SubJob is set to Dancer.
+            if (_fface.Player.MainJob == Job.DNC || _fface.Player.SubJob == Job.DNC)
+            {
+                // Check if Spectral Jig is not on cooldown.
+                if (Ready(AbilityList.Spectral_Jig))
+                {
+                    // If the player is under the effect of 'Sneak', remove it.
+                    if (IsAfflicted(StatusEffect.Sneak))
+                    {
+                        _fface.Windower.SendString("//cancel sneak");
+                    }
+
+                    // If the player is not under the effect of 'Sneak' and 'Invisible', use 'Spectral Jig'.
+                    if (!IsAfflicted(StatusEffect.Sneak) && !IsAfflicted(StatusEffect.Invisible))
+                    {
+                        UseAbility(AbilityList.Spectral_Jig);
+                    }
+                }
+            }
+            // Check if the player's MainJob or SubJob is set to either White Mage, Red Mage or Scholar.
+            else if ((_fface.Player.MainJob == Job.WHM || _fface.Player.MainJob == Job.RDM || _fface.Player.MainJob == Job.SCH)
+                    || (_fface.Player.SubJob == Job.WHM || _fface.Player.SubJob == Job.RDM || _fface.Player.SubJob == Job.SCH))
+            {
+                // Check if the player is not under the effect of 'Sneak' has learned the spell 'Sneak' and 'Sneak' is not on cooldown.
+                if (!IsAfflicted(StatusEffect.Sneak) && HasSpell(SpellList.Sneak) && Ready(SpellList.Sneak))
+                {
+                    UseSpell(SpellList.Sneak, 5);
+                }
+
+                // Check if the player is not under the effect of 'Invisible' has learned the spell 'Invisible' and 'Invisible' is not on cooldown.
+                if (!IsAfflicted(StatusEffect.Invisible) && HasSpell(SpellList.Invisible) && Ready(SpellList.Invisible))
+                {
+                    UseSpell(SpellList.Invisible, 5);
+                }
+            }
+            // Check if the player's MainJob or SubJob is set to Ninja.
+            else if (_fface.Player.MainJob == Job.NIN || _fface.Player.SubJob == Job.NIN)
+            {
+                // Check if the player is not under the effect of 'Sneak' and has learned the spell 'Monomi: Ichi' and the spell 'Monomi: Ichi' is not on cooldown.
+                if (!IsAfflicted(StatusEffect.Sneak) && HasSpell(SpellList.Monomi_Ichi) && Ready(SpellList.Monomi_Ichi))
+                {
+                    // If the player's MainJob is Ninja, allow use of 'Shikanofuda'. Otherwise use 'Sanjaku-Tenugui'.
+                    if (_fface.Player.MainJob == Job.NIN && HasItem(2972) || HasItem(2553))
+                    {
+                        UseSpell(SpellList.Monomi_Ichi, 5);
+                    }
+                }
+
+                // Check if the player is not under the effect of 'Invisible' has learned the spell 'Tonko: Ni' and the spell 'Tonki: Ni' is not on cooldown.
+                if (!IsAfflicted(StatusEffect.Invisible) && HasSpell(SpellList.Tonko_Ni) && Ready(SpellList.Tonko_Ni))
+                {
+                    // If the player's MainJob is Ninja, allow use of 'Shikanofuda'. Otherwise use 'Shinobi-Tabi'.
+                    if (_fface.Player.MainJob == Job.NIN && HasItem(2972) || HasItem(1194))
+                    {
+                        UseSpell(SpellList.Tonko_Ni, 5);
+                    }
+                }
+                // Check if the player is not under the effect of 'Invisible' has learned the spell 'Tonko: Ichi' and the spell 'Tonki: Ichi' is not on cooldown.
+                else if (!IsAfflicted(StatusEffect.Invisible) && HasSpell(SpellList.Tonko_Ichi) && Ready(SpellList.Tonko_Ichi))
+                {
+                    // If the player's MainJob is Ninja, allow use of 'Shikanofuda'. Otherwise use 'Shinobi-Tabi'.
+                    if (_fface.Player.MainJob == Job.NIN && HasItem(2972) || HasItem(1194))
+                    {
+                        UseSpell(SpellList.Tonko_Ichi, 5);
+                    }
+                }
+            }
+            // Use 'Silent Oil' and 'Prism Powder' if none of the spells are abilities are able to be used.
+            else
+            {
+                // Check if the player  and if the player has any 'Silent Oil' in their inventory.
+                if (!IsAfflicted(StatusEffect.Sneak) && HasItem(4165))
+                {
+                    UseItem(4165, 5);
+                }
+
+                // Check if the player is not under the effect of 'Invisible' and if the player has any 'Prism Powder' in their inventory.
+                if (!IsAfflicted(StatusEffect.Invisible) && HasItem(4164))
+                {
+                    UseItem(4164, 5);
+                }
+            }
+        }
 
         #region Helper Methods
         public Dictionary<string, DateTime> CommandsLog = new Dictionary<string, DateTime>();
@@ -142,9 +236,36 @@ namespace Flipper.Classes
         /// <param name="Offensive">Is this ability used on me, or my target?</param>
         public void UseSpell(SpellList spell, int castTime, bool Offensive = false)
         {
-            SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"));
+            SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
         }
 
+        /// <summary>
+        /// Gets an item by it's passed item name and uses it.
+        /// </summary>
+        /// <param name="itemName">The name of the item.</param>
+        /// <param name="castTime">How long does it take to use this item?</param>
+        /// <param name="offensive">Is this item used on me, or my target?</param>
+        public void UseItem(string itemName, int castTime, bool offensive = false)
+        {
+            // Get the item by name from the Item list.
+            Item item = Items.GetItem(itemName);
+            // Send the command to use the item.
+            SendCommand("/item \"" + item.Name + "\" " + (offensive ? "<t>" : "<me>"), castTime);
+        }
+
+        /// <summary>
+        /// Gets an item by it's passed item id and uses it.
+        /// </summary>
+        /// <param name="itemId">The id of the item.</param>
+        /// <param name="castTime">How long does it take to use this item?</param>
+        /// <param name="offensive">Is this item used on me, or my target?</param>
+        public void UseItem(ushort itemId, int castTime, bool offensive = false)
+        {
+            // Get the item by id from the Item list.
+            Item item = Items.GetItem(itemId);
+            // Send the command to use the item.
+            SendCommand("/item \"" + item.Name + "\" " + (offensive ? "<t>" : "<me>"), castTime);
+        }
 
         /// <summary>
         /// Check if the provided spell is ready to use.
@@ -158,7 +279,6 @@ namespace Flipper.Classes
 
             return false;
         }
-
 
         /// <summary>
         /// Check if the provided ability is ready to use.
@@ -188,6 +308,40 @@ namespace Flipper.Classes
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Determines if a player has learned a specific spell.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <returns></returns>
+        public bool HasSpell(SpellList spell)
+        {
+            return _fface.Player.KnowsSpell(spell);
+        }
+
+        /// <summary>
+        /// Checks if the specified item is found in the player's inventory.
+        /// Will get the item through the itemlist via ItemName.
+        /// </summary>
+        /// <param name="itemName">The Name of the Item.</param>
+        /// <returns></returns>
+        public bool HasItem(string itemName)
+        {
+            // Get the item from the item list.
+            Item item = Items.GetItem(itemName);
+            // Check if the item is found in the player's inventory.
+            return _fface.Item.GetInventoryItemCount(item.Id) >= 1;
+        }
+
+        /// <summary>
+        /// Checks if the specified item is found in the player's inventory.
+        /// </summary>
+        /// <param name="itemId">The Id of the Item.</param>
+        /// <returns></returns>
+        public bool HasItem(ushort itemId)
+        {
+            return _fface.Item.GetInventoryItemCount(itemId) >= 1;
         }
         #endregion
     }

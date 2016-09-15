@@ -15,5 +15,7 @@ namespace Flipper.Classes
         void UseSpells();
         void UseHeals();
         void UseWeaponskills();
+        void DoHide();
+        void Engage();
     }
 }
