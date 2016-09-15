@@ -61,8 +61,8 @@ namespace Flipper.Classes
                     UseAbility(AbilityList.Warcry, 2, false);
 
 
-                if (Ready(AbilityList.Berserk))
-                    UseAbility(AbilityList.Berserk, 2, false);
+                //if (Ready(AbilityList.Berserk))
+                //    UseAbility(AbilityList.Berserk, 2, false);
             }
 
             if (Ready(AbilityList.Shield_Bash))
@@ -73,19 +73,22 @@ namespace Flipper.Classes
 
         public override void UseHeals()
         {
-            if (_fface.Player.HPPCurrent <= 50)
+            if (_fface.Player.HPPCurrent <= 75)
             {
                 if (Ready(AbilityList.Sentinel) && !IsAfflicted(StatusEffect.Invincible))
-                UseAbility(AbilityList.Sentinel, 3, false);
+                    UseAbility(AbilityList.Sentinel, 3, false);
 
                 if (Ready(AbilityList.Two_Hour) && !IsAfflicted(StatusEffect.Sentinel))
                     UseAbility("Invincible", AbilityList.Two_Hour, 3, false);
 
+            }
+            if (_fface.Player.HPPCurrent <= 60)
+            {
                 if (_fface.Player.MPCurrent >= 88 && Ready(SpellList.Cure_IV))
                     UseSpell(SpellList.Cure_IV, 8, false);
+
                 else if (_fface.Player.MPCurrent >= 46 && Ready(SpellList.Cure_III))
                     UseSpell(SpellList.Cure_III, 8, false);
-
             }
         }
 
@@ -99,6 +102,9 @@ namespace Flipper.Classes
 
             if (Ready(SpellList.Crusade) && !IsAfflicted(StatusEffect.Enmity_Boost))
                 UseSpell(SpellList.Crusade, 6, false);
+
+            if (!IsAfflicted(StatusEffect.Enlight))
+                SendCommand("/ma \"Enlight II\" <me>", 6);
         }
 
         public override void UseWeaponskills()
@@ -111,7 +117,15 @@ namespace Flipper.Classes
                 }
             }
 
-            SendCommand("/ws \"Savage Blade\" <t>", 3, false);
+            if (IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent >= 2000)
+            {
+                SendCommand("/ws \"Savage Blade\" <t>", 3, false);
+
+            }
+            if (!IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent == 3000)
+            {
+                SendCommand("/ws \"Atonement\" <t>", 3, false);
+            }
         }
 
         #region Add other methods here that aren't overrides, such as calculating finishing moves, etc

@@ -177,8 +177,9 @@ namespace Flipper
                 Thread.Sleep(400);
             }
 
+            Thread.Sleep(1500);
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
         }

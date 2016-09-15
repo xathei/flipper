@@ -64,7 +64,7 @@ namespace Flipper
                     continue;
 
                 if (fface.NPC.Distance(i) < 7 && fface.NPC.Status(i) == Status.Fighting &&
-                    (!fface.NPC.IsClaimed(i) || PartyHasHate(i) || IsFacingMe(i)))
+                    (!fface.NPC.IsClaimed(i) || PartyHasHate(i)) && IsFacingMe(i))
                 {
                     return i;
                 }
