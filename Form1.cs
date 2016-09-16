@@ -917,7 +917,28 @@ namespace FlipperD
                 HitBox = Double.Parse(ambHitbox.Text)
             };
 
-            ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, ambDifficulty.SelectedItem.ToString());
+            AmbuscadeSettings settings = new AmbuscadeSettings()
+            {
+                FillTrusts = ambTrustCheckbox.Checked,
+                Leader = ambLeaderCheckbox.Checked,
+                Network = ambNetworkMode.Checked,
+                Role = DetermineJobRole(),
+                PartyCount = Convert.ToInt32(ambPartyCount.Text)
+            };
+
+            ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, settings, ambDifficulty.SelectedItem.ToString());
+        }
+
+        public JobRole DetermineJobRole()
+        {
+            if (ambRoleDamage.Checked)
+                return JobRole.Damage;
+            if (ambRoleSupport.Checked)
+                return JobRole.Healer;
+            if (ambRoleTank.Checked)
+                return JobRole.Tank;
+
+            return JobRole.Damage;
         }
     }
 
