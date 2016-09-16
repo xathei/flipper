@@ -41,7 +41,7 @@ namespace Flipper.Classes
                 }
                 if(Ready(AbilityList.Aggressor))
                 {
-                    UseAbility(AbilityList.Berserk, 2, false);
+                    UseAbility(AbilityList.Aggressor, 2, false);
                 }
             }
         }
@@ -62,10 +62,12 @@ namespace Flipper.Classes
                 SendCommand("/ws \"Savage Blade\" <t>", 3, false);
 
             }
-            if(!IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent == 3000)
+            if(!IsAfflicted(StatusEffect.Aftermath_lvl3) && (_fface.Player.TPCurrent == 3000))
             {
                 if (Ready(AbilityList.Warcry))
-                    UseAbility(AbilityList.Warcry, 2, false);
+                {
+                    UseAbility(AbilityList.Warcry, 3, false);
+                }
                 SendCommand("/ws \"Expiacion\" <t>", 3, false);
                 
 
