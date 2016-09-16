@@ -85,7 +85,7 @@ namespace Flipper.Classes
                 if (Ready(SpellList.Haste))
                 {
                     // Search for the party member's key in the dictionary and check to see if the value is false.
-                    if (!_hasteStates.SingleOrDefault(x => x.Key == partyMember.Key).Value || _hasteStates.SingleOrDefault(x => x.Key == partyMember.Key).Key == 0)
+                    if (!_hasteStates.SingleOrDefault(x => x.Key == partyMember.Key).Value)
                     {
                         // Cast the spell on the target party member.
                         UseSpell(SpellList.Haste, 7, partyMember.Value.Name);
