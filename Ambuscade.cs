@@ -407,8 +407,10 @@ namespace Flipper
             while (!fface.Menu.IsOpen)
             {
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                Thread.Sleep(1000);
+                Thread.Sleep(3000);
             }
+
+            Thread.Sleep(1000);
 
             if (MenuSelectedText("Travel to another home point."))
             {
@@ -467,11 +469,9 @@ namespace Flipper
         public bool DoRoute(string route, bool targets = false)
         {
             fface.Windower.SendString("/echo running route: " + route);
-            if ((_netMode && _initialKeyItem && _keyItemCount == _partyCount) || (!_netMode && _hasKeyItem))
+            if (_initialKeyItem)
             {
                 _hasKeyItem = true;
-                _initialKeyItem = false;
-                return true;
             }
             do
             {
