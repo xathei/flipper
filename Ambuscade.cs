@@ -258,12 +258,15 @@ namespace Flipper
                 // Go kill monsters.
                 DoRoute(_route3, true);
                 // Allow time for player to disengage.
-                Thread.Sleep(2500);
+                fface.Navigator.Reset();
+                Thread.Sleep(3000);
+                fface.Navigator.Reset();
                 // Go back to Mhaura.
                 if (_netMode)
                 {
                     client.Send("RETURN_HOME");
                 }
+                Thread.Sleep(1000);
 
                 ReturnHome();
 
@@ -360,11 +363,12 @@ namespace Flipper
 
         private void ReturnHome()
         {
-            while (fface.Player.Zone != Zone.Mhaura)
+            do
             {
                 job.Warp();
-                Thread.Sleep(1);
-            }
+                Thread.Sleep(10);
+            } while (fface.Player.Zone != Zone.Mhaura);
+
             _hasKeyItem = false;
             Thread.Sleep(10000);
             if (_netMode && !_leader)
@@ -392,6 +396,8 @@ namespace Flipper
         {
             while ((fface.Target.ID != target || string.IsNullOrEmpty(fface.Target.Name)) || fface.Target.Name != "Home Point #1" && _ambuscade)
             {
+                fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+                Thread.Sleep(100);
                 fface.Target.SetNPCTarget(target);
                 Thread.Sleep(100);
                 fface.Windower.SendString("/target <t>");
@@ -461,6 +467,12 @@ namespace Flipper
         public bool DoRoute(string route, bool targets = false)
         {
             fface.Windower.SendString("/echo running route: " + route);
+            if ((_netMode && _initialKeyItem && _keyItemCount == _partyCount) || (!_netMode && _hasKeyItem))
+            {
+                _hasKeyItem = true;
+                _initialKeyItem = false;
+                return true;
+            }
             do
             {
                 List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();

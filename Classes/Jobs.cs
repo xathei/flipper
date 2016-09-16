@@ -83,8 +83,6 @@ namespace Flipper.Classes
             Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
             Thread.Sleep(7000);
-            SendCommand("/ma \"Ulmia\" <me>");
-            Thread.Sleep(7000);
         }
 
         public void Warp()
