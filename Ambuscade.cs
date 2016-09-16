@@ -196,7 +196,7 @@ namespace Flipper
                 {
                     DoRoute(_route2);
                     NavigateToZone(_zone, 41);
-                    if (!_initialKeyItem)
+                    if (_initialKeyItem)
                     {
                         client.Send("KEY_ITEM");
                         _initialKeyItem = false;
