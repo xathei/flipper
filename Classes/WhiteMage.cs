@@ -15,6 +15,7 @@ namespace Flipper.Classes
         {
             _content = content;
             _fface = instance;
+            _hasteStates = new Dictionary<int, bool>();
         }
 
         public override void UseHeals()
