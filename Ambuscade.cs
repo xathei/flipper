@@ -288,9 +288,7 @@ namespace Flipper
                 // WAIT FOR PLAYERS TO ZONE INTO LEGION
                 if (_netMode && _awaitingLegionZoneInCount)
                 {
-                    Thread.Sleep(8000);
-                    fface.Windower.SendString("/p We'll get going in a second...");
-                    Thread.Sleep(4000);
+                    Thread.Sleep(12000);
                 }
                 else
                 {
