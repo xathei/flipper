@@ -81,8 +81,6 @@ namespace Flipper.Classes
         {
             SendCommand("/ma \"Zeid II\" <me>");
             Thread.Sleep(7000);
-            SendCommand("/ma \"Tenzen\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
@@ -94,7 +92,7 @@ namespace Flipper.Classes
         public void Warp()
         {
             SendCommand("/equip l.ring \"Warp ring\"", 9);
-            Thread.Sleep(12000);
+            Thread.Sleep(10000);
             SendCommand("/item \"Warp Ring\" <me>", 10);
             Thread.Sleep(5000);
         }
@@ -259,6 +257,11 @@ namespace Flipper.Classes
         public void UseSpell(SpellList spell, int castTime, bool Offensive = false)
         {
             SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
+        }
+
+        public void UseSpell(SpellList spell, int castTime, string targetName)
+        {
+            SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + targetName, castTime);
         }
 
         /// <summary>

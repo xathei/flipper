@@ -113,7 +113,6 @@
             this.label24 = new System.Windows.Forms.Label();
             this.ambDifficulty = new System.Windows.Forms.ComboBox();
             this.ambHomePoint = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.ambHitbox = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
@@ -121,8 +120,8 @@
             this.ambTarget = new System.Windows.Forms.TextBox();
             this.ambStartButton = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.ambPartyCount = new System.Windows.Forms.TextBox();
+            this.ambNetworkMode = new System.Windows.Forms.CheckBox();
             this.ambRoleLabel = new System.Windows.Forms.Label();
             this.ambTrustCheckbox = new System.Windows.Forms.CheckBox();
             this.ambLeaderCheckbox = new System.Windows.Forms.CheckBox();
@@ -1065,7 +1064,6 @@
             this.tabAmbuscade.Controls.Add(this.label24);
             this.tabAmbuscade.Controls.Add(this.ambDifficulty);
             this.tabAmbuscade.Controls.Add(this.ambHomePoint);
-            this.tabAmbuscade.Controls.Add(this.label23);
             this.tabAmbuscade.Controls.Add(this.groupBox12);
             this.tabAmbuscade.Controls.Add(this.ambStartButton);
             this.tabAmbuscade.Controls.Add(this.groupBox11);
@@ -1081,7 +1079,7 @@
             // uxAmbKeyItem
             // 
             this.uxAmbKeyItem.AutoSize = true;
-            this.uxAmbKeyItem.Location = new System.Drawing.Point(360, 184);
+            this.uxAmbKeyItem.Location = new System.Drawing.Point(311, 210);
             this.uxAmbKeyItem.Name = "uxAmbKeyItem";
             this.uxAmbKeyItem.Size = new System.Drawing.Size(209, 21);
             this.uxAmbKeyItem.TabIndex = 9;
@@ -1091,7 +1089,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(280, 156);
+            this.label25.Location = new System.Drawing.Point(231, 182);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(74, 17);
             this.label25.TabIndex = 8;
@@ -1100,7 +1098,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(93, 126);
+            this.label24.Location = new System.Drawing.Point(44, 152);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(261, 17);
             this.label24.TabIndex = 7;
@@ -1116,29 +1114,18 @@
             "Normal. (Level: 119)",
             "Difficult. (Level: 124)",
             "Very difficult. (Level: ???)"});
-            this.ambDifficulty.Location = new System.Drawing.Point(360, 153);
+            this.ambDifficulty.Location = new System.Drawing.Point(311, 179);
             this.ambDifficulty.Name = "ambDifficulty";
             this.ambDifficulty.Size = new System.Drawing.Size(253, 25);
             this.ambDifficulty.TabIndex = 3;
             // 
             // ambHomePoint
             // 
-            this.ambHomePoint.Location = new System.Drawing.Point(360, 123);
+            this.ambHomePoint.Location = new System.Drawing.Point(311, 149);
             this.ambHomePoint.Name = "ambHomePoint";
             this.ambHomePoint.Size = new System.Drawing.Size(253, 24);
             this.ambHomePoint.TabIndex = 6;
             this.ambHomePoint.Text = "Cape Teriggan #1.";
-            // 
-            // label23
-            // 
-            this.label23.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.ForeColor = System.Drawing.Color.Red;
-            this.label23.Location = new System.Drawing.Point(10, 206);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(621, 191);
-            this.label23.TabIndex = 5;
-            this.label23.Text = resources.GetString("label23.Text");
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupBox12
             // 
@@ -1200,45 +1187,47 @@
             // 
             // groupBox11
             // 
-            this.groupBox11.Controls.Add(this.label22);
-            this.groupBox11.Controls.Add(this.label18);
+            this.groupBox11.Controls.Add(this.ambPartyCount);
+            this.groupBox11.Controls.Add(this.ambNetworkMode);
             this.groupBox11.Controls.Add(this.ambRoleLabel);
             this.groupBox11.Controls.Add(this.ambTrustCheckbox);
             this.groupBox11.Controls.Add(this.ambLeaderCheckbox);
             this.groupBox11.Controls.Add(this.ambRoleDamage);
             this.groupBox11.Controls.Add(this.ambRoleSupport);
             this.groupBox11.Controls.Add(this.ambRoleTank);
-            this.groupBox11.Enabled = false;
-            this.groupBox11.Location = new System.Drawing.Point(6, 367);
+            this.groupBox11.Location = new System.Drawing.Point(6, 298);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(625, 31);
+            this.groupBox11.Size = new System.Drawing.Size(458, 161);
             this.groupBox11.TabIndex = 2;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Network Settings";
-            this.groupBox11.Visible = false;
             // 
-            // label22
+            // ambPartyCount
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(85, 58);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(57, 17);
-            this.label22.TabIndex = 7;
-            this.label22.Text = "label22";
+            this.ambPartyCount.Location = new System.Drawing.Point(199, 113);
+            this.ambPartyCount.Name = "ambPartyCount";
+            this.ambPartyCount.Size = new System.Drawing.Size(85, 24);
+            this.ambPartyCount.TabIndex = 7;
+            this.ambPartyCount.Text = "1";
             // 
-            // label18
+            // ambNetworkMode
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(314, 43);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(101, 17);
-            this.label18.TabIndex = 6;
-            this.label18.Text = "Misc Settings";
+            this.ambNetworkMode.AutoSize = true;
+            this.ambNetworkMode.Checked = true;
+            this.ambNetworkMode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ambNetworkMode.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ambNetworkMode.ForeColor = System.Drawing.Color.Red;
+            this.ambNetworkMode.Location = new System.Drawing.Point(197, 33);
+            this.ambNetworkMode.Name = "ambNetworkMode";
+            this.ambNetworkMode.Size = new System.Drawing.Size(176, 21);
+            this.ambNetworkMode.TabIndex = 6;
+            this.ambNetworkMode.Text = "Use Network Mode";
+            this.ambNetworkMode.UseVisualStyleBackColor = true;
             // 
             // ambRoleLabel
             // 
             this.ambRoleLabel.AutoSize = true;
-            this.ambRoleLabel.Location = new System.Drawing.Point(147, 43);
+            this.ambRoleLabel.Location = new System.Drawing.Point(23, 33);
             this.ambRoleLabel.Name = "ambRoleLabel";
             this.ambRoleLabel.Size = new System.Drawing.Size(86, 17);
             this.ambRoleLabel.TabIndex = 5;
@@ -1247,7 +1236,7 @@
             // ambTrustCheckbox
             // 
             this.ambTrustCheckbox.AutoSize = true;
-            this.ambTrustCheckbox.Location = new System.Drawing.Point(317, 96);
+            this.ambTrustCheckbox.Location = new System.Drawing.Point(197, 86);
             this.ambTrustCheckbox.Name = "ambTrustCheckbox";
             this.ambTrustCheckbox.Size = new System.Drawing.Size(185, 21);
             this.ambTrustCheckbox.TabIndex = 4;
@@ -1257,17 +1246,17 @@
             // ambLeaderCheckbox
             // 
             this.ambLeaderCheckbox.AutoSize = true;
-            this.ambLeaderCheckbox.Location = new System.Drawing.Point(317, 69);
+            this.ambLeaderCheckbox.Location = new System.Drawing.Point(197, 59);
             this.ambLeaderCheckbox.Name = "ambLeaderCheckbox";
-            this.ambLeaderCheckbox.Size = new System.Drawing.Size(174, 21);
+            this.ambLeaderCheckbox.Size = new System.Drawing.Size(145, 21);
             this.ambLeaderCheckbox.TabIndex = 3;
-            this.ambLeaderCheckbox.Text = "I\'m the group leader";
+            this.ambLeaderCheckbox.Text = "I\'m Party Leader";
             this.ambLeaderCheckbox.UseVisualStyleBackColor = true;
             // 
             // ambRoleDamage
             // 
             this.ambRoleDamage.AutoSize = true;
-            this.ambRoleDamage.Location = new System.Drawing.Point(150, 123);
+            this.ambRoleDamage.Location = new System.Drawing.Point(26, 113);
             this.ambRoleDamage.Name = "ambRoleDamage";
             this.ambRoleDamage.Size = new System.Drawing.Size(86, 21);
             this.ambRoleDamage.TabIndex = 2;
@@ -1278,7 +1267,7 @@
             // ambRoleSupport
             // 
             this.ambRoleSupport.AutoSize = true;
-            this.ambRoleSupport.Location = new System.Drawing.Point(150, 96);
+            this.ambRoleSupport.Location = new System.Drawing.Point(26, 86);
             this.ambRoleSupport.Name = "ambRoleSupport";
             this.ambRoleSupport.Size = new System.Drawing.Size(87, 21);
             this.ambRoleSupport.TabIndex = 1;
@@ -1289,7 +1278,7 @@
             // ambRoleTank
             // 
             this.ambRoleTank.AutoSize = true;
-            this.ambRoleTank.Location = new System.Drawing.Point(150, 69);
+            this.ambRoleTank.Location = new System.Drawing.Point(26, 59);
             this.ambRoleTank.Name = "ambRoleTank";
             this.ambRoleTank.Size = new System.Drawing.Size(63, 21);
             this.ambRoleTank.TabIndex = 0;
@@ -1931,7 +1920,6 @@
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label ambRoETargetLabel;
-        private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label ambRoleLabel;
         private System.Windows.Forms.CheckBox ambTrustCheckbox;
         private System.Windows.Forms.CheckBox ambLeaderCheckbox;
@@ -1951,9 +1939,9 @@
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox ambHomePoint;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label22;
         private System.Windows.Forms.CheckBox uxAmbKeyItem;
+        public System.Windows.Forms.CheckBox ambNetworkMode;
+        private System.Windows.Forms.TextBox ambPartyCount;
     }
 }
 
