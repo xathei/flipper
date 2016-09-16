@@ -120,6 +120,8 @@
             this.ambTarget = new System.Windows.Forms.TextBox();
             this.ambStartButton = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.ambPartyCount = new System.Windows.Forms.TextBox();
+            this.ambNetworkMode = new System.Windows.Forms.CheckBox();
             this.ambRoleLabel = new System.Windows.Forms.Label();
             this.ambTrustCheckbox = new System.Windows.Forms.CheckBox();
             this.ambLeaderCheckbox = new System.Windows.Forms.CheckBox();
@@ -169,7 +171,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.ambNetworkMode = new System.Windows.Forms.CheckBox();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1186,6 +1187,7 @@
             // 
             // groupBox11
             // 
+            this.groupBox11.Controls.Add(this.ambPartyCount);
             this.groupBox11.Controls.Add(this.ambNetworkMode);
             this.groupBox11.Controls.Add(this.ambRoleLabel);
             this.groupBox11.Controls.Add(this.ambTrustCheckbox);
@@ -1199,6 +1201,28 @@
             this.groupBox11.TabIndex = 2;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Network Settings";
+            // 
+            // ambPartyCount
+            // 
+            this.ambPartyCount.Location = new System.Drawing.Point(199, 113);
+            this.ambPartyCount.Name = "ambPartyCount";
+            this.ambPartyCount.Size = new System.Drawing.Size(85, 24);
+            this.ambPartyCount.TabIndex = 7;
+            this.ambPartyCount.Text = "1";
+            // 
+            // ambNetworkMode
+            // 
+            this.ambNetworkMode.AutoSize = true;
+            this.ambNetworkMode.Checked = true;
+            this.ambNetworkMode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ambNetworkMode.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ambNetworkMode.ForeColor = System.Drawing.Color.Red;
+            this.ambNetworkMode.Location = new System.Drawing.Point(197, 33);
+            this.ambNetworkMode.Name = "ambNetworkMode";
+            this.ambNetworkMode.Size = new System.Drawing.Size(176, 21);
+            this.ambNetworkMode.TabIndex = 6;
+            this.ambNetworkMode.Text = "Use Network Mode";
+            this.ambNetworkMode.UseVisualStyleBackColor = true;
             // 
             // ambRoleLabel
             // 
@@ -1704,18 +1728,6 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
             // 
-            // ambNetworkMode
-            // 
-            this.ambNetworkMode.AutoSize = true;
-            this.ambNetworkMode.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ambNetworkMode.ForeColor = System.Drawing.Color.Red;
-            this.ambNetworkMode.Location = new System.Drawing.Point(197, 33);
-            this.ambNetworkMode.Name = "ambNetworkMode";
-            this.ambNetworkMode.Size = new System.Drawing.Size(176, 21);
-            this.ambNetworkMode.TabIndex = 6;
-            this.ambNetworkMode.Text = "Use Network Mode";
-            this.ambNetworkMode.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1929,6 +1941,7 @@
         private System.Windows.Forms.TextBox ambHomePoint;
         private System.Windows.Forms.CheckBox uxAmbKeyItem;
         public System.Windows.Forms.CheckBox ambNetworkMode;
+        private System.Windows.Forms.TextBox ambPartyCount;
     }
 }
 
