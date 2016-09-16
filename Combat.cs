@@ -134,6 +134,8 @@ namespace Flipper
                         {
                             // We don't want to wonder too far from our strict path. Use Strict Pathing.
                             if (DistanceTo(target) >= monster.HitBox * 1.5)
+                                fface.Navigator.Reset();
+                                Thread.Sleep(500);
                                 job.UseRangedClaim();
                             break;
                         }
@@ -164,7 +166,7 @@ namespace Flipper
                         case Mode.StrictPathing:
                         {
                              // if we're strict pathing, let the mob get close to us before we move to it.
-                            if (DistanceTo(target) < monster.HitBox*2)
+                            if (DistanceTo(target) < monster.HitBox*1.25)
                             {
                                 fface.Windower.SendString("/echo Close enough, moving in...");
                                 fface.Navigator.Reset();
@@ -185,14 +187,14 @@ namespace Flipper
                 }
 
                 // MOVE BACK
-                if (DistanceTo(target) < (monster.HitBox * 0.50) && CanStillAttack(target) && _fighting)
+                if (DistanceTo(target) < (monster.HitBox * 0.65) && CanStillAttack(target) && _fighting)
                 {
                     switch (mode)
                     {
                         default:
                         {
                             fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                            Thread.Sleep(75);
+                            Thread.Sleep(50);
                             fface.Windower.SendKey(KeyCode.NP_Number2, false);
                             break;
                         }
