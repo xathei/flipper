@@ -20,14 +20,6 @@ namespace Flipper.Classes
 
         public override void UseHeals()
         {
-            // Check to see if the player is currently not under the effect of 'Afflatus Solace' and that the ability is not on cooldown.
-            if (!IsAfflicted(StatusEffect.Afflatus_Solace) && Ready(AbilityList.Afflatus_Solace))
-                UseAbility(AbilityList.Afflatus_Solace, 2);
-
-            // Check if the player's SubJob is set to Scholar, is currently not under the effect of Light Arts and that the ability is not on cooldown.
-            if (_fface.Player.SubJob == Job.SCH && !IsAfflicted(StatusEffect.Light_Arts) && Ready(AbilityList.Light_Arts))
-                UseAbility(AbilityList.Light_Arts, 2);
-
             // Check if the player's SubJob is set to Scholar, is currently not under the effect of Aurorastorm and that the spell is not on cooldown.
             if (_fface.Player.SubJob == Job.SCH && !IsAfflicted(StatusEffect.Aurorastorm) && Ready(SpellList.Aurorastorm))
                 UseSpell(SpellList.Aurorastorm, 8);
@@ -64,7 +56,13 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
+            // Check to see if the player is currently not under the effect of 'Afflatus Solace' and that the ability is not on cooldown.
+            if (!IsAfflicted(StatusEffect.Afflatus_Solace) && Ready(AbilityList.Afflatus_Solace))
+                UseAbility(AbilityList.Afflatus_Solace, 2);
 
+            // Check if the player's SubJob is set to Scholar, is currently not under the effect of Light Arts and that the ability is not on cooldown.
+            if (_fface.Player.SubJob == Job.SCH && !IsAfflicted(StatusEffect.Light_Arts) && Ready(AbilityList.Light_Arts))
+                UseAbility(AbilityList.Light_Arts, 2);
         }
 
         public override void UseSpells()
@@ -72,6 +70,14 @@ namespace Flipper.Classes
             // Check if we have Reraise status and cast if not.
             if (!IsAfflicted(StatusEffect.Reraise))
                 UseSpell(SpellList.Reraise_III, 8);
+
+            // Check if we have Protect status and cast Protectra if not.
+            if (!IsAfflicted(StatusEffect.Protect))
+                UseSpell((_fface.Player.KnowsSpell(SpellList.Protectra_V) ? SpellList.Protectra_V : SpellList.Protectra_IV), 10);
+
+            // Check if we have Shell stastus and cast Shellra if not.
+            if (!IsAfflicted(StatusEffect.Shell))
+                UseSpell((_fface.Player.KnowsSpell(SpellList.Shellra_V) ? SpellList.Shellra_V : SpellList.Shellra_IV), 10);
 
             // Loop through each active party member in the party list.
             foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active == true))
