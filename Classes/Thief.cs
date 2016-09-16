@@ -10,6 +10,8 @@ namespace Flipper.Classes
 {
     public class Thief : Jobs
     {
+        private int _bullyTimer;
+        
         public Thief(FFACE instance, Content content)
         {
             _content = content;
@@ -46,8 +48,8 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
-            if (Ready(AbilityList.Bully))
-                UseAbility(AbilityList.Bully, 2, true);
+            //if (Ready(AbilityList.Bully))
+            //    UseAbility(AbilityList.Bully, 2, true);
 
             if (Ready(AbilityList.Conspirator))
                 UseAbility(AbilityList.Conspirator, 2, false);
@@ -118,6 +120,31 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
+            // Check if Bullt is not on cooldown.
+            if (Ready(AbilityList.Bully))
+            {
+                // Use bully on the target enemy.
+                UseAbility(AbilityList.Bully, 2, true);
+                // Set the internal timer to 30 seconds.
+                _bullyTimer = 180;
+                // Sleep the thread for 1500 ms.
+                Thread.Sleep(1500);
+            }
+            else
+            {
+                // If bully is not ready, update the timer value by getting the recast.
+                _bullyTimer = _fface.Timer.GetAbilityRecast(AbilityList.Bully);
+            }
+
+            // If the recast time for Bully is greater than 155 seconds and Sneak Attack is ready.
+            if (_bullyTimer >= 155 && Ready(AbilityList.Sneak_Attack))
+            {
+                // Use Sneak Attack.
+                UseAbility(AbilityList.Sneak_Attack, 2);
+                // Sleep the thread for 1500 ms.
+                Thread.Sleep(1500);
+            }
+
             SendCommand("/ws \"Rudra's Storm\" <t>", 3);
         }
 
