@@ -153,8 +153,8 @@ namespace Flipper
 
             if (token[0] == "PING!")
             {
-                WriteLog("PONG...");
-                client.Send("PONG...");
+                WriteLog("PONG");
+                client.Send("PONG");
             }
 
             if (_leader)
@@ -246,11 +246,12 @@ namespace Flipper
                 // Go kill monsters.
                 DoRoute(_route3, true);
                 // Allow time for player to disengage.
-                Thread.Sleep(300);
+                Thread.Sleep(2500);
                 // Go back to Mhaura.
-
                 if (_netMode)
+                {
                     client.Send("RETURN_HOME");
+                }
 
                 ReturnHome();
 
@@ -319,7 +320,6 @@ namespace Flipper
                 Thread.Sleep(500);
             }
 
-
             while (!fface.Menu.IsOpen)
             {
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -356,8 +356,8 @@ namespace Flipper
                 Thread.Sleep(1);
             }
             _hasKeyItem = false;
-            Thread.Sleep(7000);
-            if (_netMode)
+            Thread.Sleep(10000);
+            if (_netMode && !_leader)
             {
                 client.Send("LANDED_MHAURA");
             }
@@ -429,9 +429,9 @@ namespace Flipper
             }
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
-            Thread.Sleep(15000);
+            Thread.Sleep(22000);
 
-            if (_netMode)
+            if (_netMode && !_leader)
             {
                 Thread.Sleep(2000);
                 fface.Windower.SendString("/target Dazusu");

@@ -92,7 +92,7 @@ namespace Flipper.Classes
         public void Warp()
         {
             SendCommand("/equip l.ring \"Warp ring\"", 9);
-            Thread.Sleep(12000);
+            Thread.Sleep(10000);
             SendCommand("/item \"Warp Ring\" <me>", 10);
             Thread.Sleep(5000);
         }
