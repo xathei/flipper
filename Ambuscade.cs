@@ -114,13 +114,14 @@ namespace Flipper
             if (settings.Leader && settings.Network || !settings.Network)
             {
                 taskThread = new Thread(DoTask);
-                chatThread = new Thread(DoChat);
                 taskThread.Start();
-                chatThread.Start();
                 _leader = true;
                 _partyCount = settings.PartyCount;
                 client.Send("RESET");
             }
+
+            chatThread = new Thread(DoChat);
+            chatThread.Start();
 
             if (settings.Network && !settings.Leader)
                 client.Send("LANDED_MHAURA");
@@ -153,8 +154,8 @@ namespace Flipper
 
             if (token[0] == "PING!")
             {
-                WriteLog("PONG...");
-                client.Send("PONG...");
+                WriteLog("PONG");
+                client.Send("PONG");
             }
 
             if (_leader)
@@ -183,6 +184,11 @@ namespace Flipper
                         _awaitingLegionZoneInCount = false;
                     }
                 }
+                else if (TokenMatch(text, "KEY_ITEM_COUNT"))
+                {
+                    int count = Convert.ToInt32(token[1]);
+                    _keyItemCount = count;
+                }
             }
             else
             {
@@ -190,6 +196,11 @@ namespace Flipper
                 {
                     DoRoute(_route2);
                     NavigateToZone(_zone, 41);
+                    if (!_initialKeyItem)
+                    {
+                        client.Send("KEY_ITEM");
+                        _initialKeyItem = false;
+                    }
                 }
                 else if (TokenMatch(text, "RETURN_HOME"))
                 {
@@ -210,6 +221,7 @@ namespace Flipper
 
         }
 
+        private volatile int _keyItemCount = 0;
         private volatile bool _awaitingMhauraZoneInCount = true;
         private volatile bool _awaitingRoEZoneInCount = true;
         private volatile bool _awaitingLegionZoneInCount = true;
@@ -246,11 +258,12 @@ namespace Flipper
                 // Go kill monsters.
                 DoRoute(_route3, true);
                 // Allow time for player to disengage.
-                Thread.Sleep(300);
+                Thread.Sleep(2500);
                 // Go back to Mhaura.
-
                 if (_netMode)
+                {
                     client.Send("RETURN_HOME");
+                }
 
                 ReturnHome();
 
@@ -319,7 +332,6 @@ namespace Flipper
                 Thread.Sleep(500);
             }
 
-
             while (!fface.Menu.IsOpen)
             {
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -356,8 +368,8 @@ namespace Flipper
                 Thread.Sleep(1);
             }
             _hasKeyItem = false;
-            Thread.Sleep(7000);
-            if (_netMode)
+            Thread.Sleep(10000);
+            if (_netMode && !_leader)
             {
                 client.Send("LANDED_MHAURA");
             }
@@ -380,7 +392,7 @@ namespace Flipper
 
         public bool NavigateToZone(string zone, int target)
         {
-            while ((fface.Target.ID != target || string.IsNullOrEmpty(fface.Target.Name)) && _ambuscade)
+            while ((fface.Target.ID != target || string.IsNullOrEmpty(fface.Target.Name)) || fface.Target.Name != "Home Point #1" && _ambuscade)
             {
                 fface.Target.SetNPCTarget(target);
                 Thread.Sleep(100);
@@ -429,9 +441,9 @@ namespace Flipper
             }
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
-            Thread.Sleep(15000);
+            Thread.Sleep(22000);
 
-            if (_netMode)
+            if (_netMode && !_leader)
             {
                 Thread.Sleep(2000);
                 fface.Windower.SendString("/target Dazusu");
@@ -467,7 +479,7 @@ namespace Flipper
                 float X = 0;
                 float Y = 0;
 
-                while (path.Any() && !_hasKeyItem && !_interruptRoute)
+                while (path.Any() && (!_hasKeyItem || (_netMode && _keyItemCount < _partyCount)) && !_interruptRoute)
                 {
 
                     if (targets)
@@ -490,7 +502,7 @@ namespace Flipper
                 }
 
                 Thread.Sleep(1);
-            } while (!_hasKeyItem && targets);
+            } while ((!_hasKeyItem || (_netMode && _keyItemCount < _partyCount)) && targets);
 
             fface.Navigator.Reset();
 
@@ -537,6 +549,10 @@ namespace Flipper
 
                     if (newChat.Contains("obtained an Ambuscade Primer Volume Two"))
                     {
+                        if (_netMode && !_leader)
+                        {
+                            client.Send("KEY_ITEM");
+                        }
                         _hasKeyItem = true;
                     }
 

@@ -79,8 +79,6 @@ namespace Flipper.Classes
 
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Zeid II\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
@@ -92,7 +90,7 @@ namespace Flipper.Classes
         public void Warp()
         {
             SendCommand("/equip l.ring \"Warp ring\"", 9);
-            Thread.Sleep(12000);
+            Thread.Sleep(10000);
             SendCommand("/item \"Warp Ring\" <me>", 10);
             Thread.Sleep(5000);
         }
