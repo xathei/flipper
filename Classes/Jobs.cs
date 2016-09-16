@@ -79,8 +79,6 @@ namespace Flipper.Classes
 
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Zeid II\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");

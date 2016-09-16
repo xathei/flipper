@@ -75,17 +75,17 @@ namespace Flipper.Classes
         }
         public override void UseSpells()
         {
-            if (!IsAfflicted(StatusEffect.Haste))
+            if (!IsAfflicted(StatusEffect.Haste) && Ready(SpellList.Erratic_Flutter))
             {
                 UseSpell(SpellList.Erratic_Flutter, 4, false);
             }
 
-            if (!IsAfflicted(StatusEffect.Attack_Boost))
+            if (!IsAfflicted(StatusEffect.Attack_Boost) && Ready(SpellList.Nat_Meditation))
             {
-                UseSpell(SpellList.Nat_Meditation, 3, false);
+                SendCommand("/ma \"Nat. Meditation\" <me>", 5, false);
             }
 
-            if (!IsAfflicted(StatusEffect.Defense_Boost))
+            if (!IsAfflicted(StatusEffect.Defense_Boost) && Ready(SpellList.Cocoon))
             {
                 UseSpell(SpellList.Cocoon, 3, false);
             }
