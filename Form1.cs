@@ -74,6 +74,7 @@ namespace FlipperD
         private void Form1_Load(object sender, EventArgs e)
         {
             cmbMode.SelectedIndex = 0;
+            ambDifficulty.SelectedIndex = 0;
             fface = null;
         }
 

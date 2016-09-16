@@ -69,6 +69,8 @@ namespace Flipper
 
         public void Start(FFACE instance, Monster roeTarget, Monster ambuscadeTarget, string homePoint, bool keyitem, AmbuscadeSettings settings, string difficulty = "Easy. (Level: 114)")
         {
+            fface = instance;
+
             // Load JobClass.
             switch (fface.Player.MainJob)
             {
@@ -85,7 +87,6 @@ namespace Flipper
 
             _ambuscade = true;
             _interruptRoute = false;
-            fface = instance;
             _zone = homePoint;
             RoETarget = roeTarget;
             AmbuscadeTarget = ambuscadeTarget;
@@ -102,6 +103,7 @@ namespace Flipper
                 // Connect to Network
                 Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
                 client = new ClientInfo(sock, false);
+                client.Delimiter = "\r\n";
                 client.OnRead += new ConnectionRead(ReadData);
                 client.BeginReceive();
             }
@@ -114,26 +116,47 @@ namespace Flipper
                 chatThread.Start();
                 _leader = true;
                 _partyCount = settings.PartyCount;
+                client.Send("RESET");
             }
 
             if (settings.Network && !settings.Leader)
                 client.Send("LANDED_MHAURA");
         }
 
+
+        public bool TokenMatch(string data, string match)
+        {
+            int count = match.Split(' ').Count();
+
+            string[] dataTokens = data.Split(' ');
+            string[] matchTokens = match.Split(' ');
+
+            for (int i = 0; i < count; i++)
+            {
+                if (dataTokens[i] != matchTokens[i])
+                    return false;
+            }
+            return true;
+
+        }
+
         private void ReadData(ClientInfo ci, string text)
         {
+            text = text.Replace("\r\n", "");
+
             string[] token = text.Split(' ');
 
-            WriteLog("[NET]: " +text);
+            WriteLog("[NET]: " + text);
 
-            if (text == "PING!")
+            if (token[0] == "PING!")
             {
-                client.Send("PONG..");
+                WriteLog("PONG...");
+                client.Send("PONG...");
             }
 
             if (_leader)
             {
-                if (token[0] == "ROE_ZONE_COUNT")
+                if (TokenMatch(text, "ROE_ZONE_COUNT"))
                 {
                     int count = Convert.ToInt32(token[1]);
                     if (count == _partyCount)
@@ -141,7 +164,7 @@ namespace Flipper
                         _awaitingRoEZoneInCount = false;
                     }
                 }
-                else if (token[0] == "MHAURA_COUNT")
+                if (TokenMatch(text, "MHAURA_COUNT"))
                 {
                     int count = Convert.ToInt32(token[1]);
                     if (count == _partyCount)
@@ -149,7 +172,7 @@ namespace Flipper
                         _awaitingMhauraZoneInCount = false;
                     }
                 }
-                else if (token[0] == "LEGION_COUNT")
+                else if (TokenMatch(text, "LEGION_COUNT"))
                 {
                     int count = Convert.ToInt32(token[1]);
                     if (count == _partyCount)
@@ -160,15 +183,16 @@ namespace Flipper
             }
             else
             {
-                if (text == "TO_MONSTER_ZONE")
+                if (TokenMatch(text, "TO_MONSTER_ZONE"))
                 {
+                    DoRoute(_route2);
                     NavigateToZone(_zone, 41);
                 }
-                else if (text == "RETURN_HOME")
+                else if (TokenMatch(text, "RETURN_HOME"))
                 {
                     ReturnHome();
                 }
-                else if (token[0] == "ENGAGE_AMBUSCADE")
+                else if (TokenMatch(text, "ENGAGE_AMBUSCADE"))
                 {
                     int target = Convert.ToInt32(token[1]);
                     Combat.Fight(target, AmbuscadeTarget, Combat.Mode.None, 50);
@@ -233,7 +257,6 @@ namespace Flipper
                 {
                     Thread.Sleep(500);
                 }
-                _awaitingMhauraZoneInCount = true;
 
                 Thread.Sleep(1000);
                 // Run to ambuscade book.
@@ -247,15 +270,19 @@ namespace Flipper
                 }
 
                 // WAIT FOR PLAYERS TO ZONE INTO LEGION
-                while (_netMode && _awaitingLegionZoneInCount)
+                if (_netMode && _awaitingLegionZoneInCount)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(8000);
+                    fface.Windower.SendString("/p We'll get going in a second...");
+                    Thread.Sleep(4000);
+                }
+                else
+                {
+                    Thread.Sleep(10000);
                 }
                 _awaitingLegionZoneInCount = true;
 
-                Thread.Sleep(10000);
-
-                //SpawnTrusts();
+                SpawnTrusts();
 
                 List<TargetInfo> targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
                 while (!targs.Any())
@@ -264,6 +291,7 @@ namespace Flipper
                 if (_netMode)
                     client.Send("ENGAGE_AMBUSCADE " + targs[0].Id);
 
+                
                 Combat.Fight(targs[0].Id, AmbuscadeTarget, Combat.Mode.None, 50);
 
                 Thread.Sleep(10000);

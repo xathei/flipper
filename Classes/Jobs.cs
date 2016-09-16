@@ -81,8 +81,6 @@ namespace Flipper.Classes
         {
             SendCommand("/ma \"Zeid II\" <me>");
             Thread.Sleep(7000);
-            SendCommand("/ma \"Tenzen\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
