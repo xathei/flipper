@@ -1193,14 +1193,12 @@
             this.groupBox11.Controls.Add(this.ambRoleDamage);
             this.groupBox11.Controls.Add(this.ambRoleSupport);
             this.groupBox11.Controls.Add(this.ambRoleTank);
-            this.groupBox11.Enabled = false;
             this.groupBox11.Location = new System.Drawing.Point(6, 298);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(458, 161);
             this.groupBox11.TabIndex = 2;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Network Settings";
-            this.groupBox11.Visible = false;
             // 
             // ambRoleLabel
             // 
