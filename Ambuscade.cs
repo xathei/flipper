@@ -131,7 +131,7 @@ namespace Flipper
 
                 Combat.Fight(targs[0].Id, AmbuscadeTarget, Combat.Mode.None, 50);
 
-                Thread.Sleep(15000);
+                Thread.Sleep(10000);
                 //wat
                 Thread.Sleep(1);
             }
@@ -192,12 +192,21 @@ namespace Flipper
                 Thread.Sleep(1);
             }
             _hasKeyItem = false;
-            Thread.Sleep(10000);
+            Thread.Sleep(7000);
         }
 
         public bool MenuSelectedText(string text)
         {
-            fface.Windower.SendString($"/echo {text} == {fface.Menu.DialogText.Options[fface.Menu.DialogOptionIndex]}");
+            try
+            {
+                fface.Windower.SendString(
+                    $"/echo {text} == {fface.Menu.DialogText.Options[fface.Menu.DialogOptionIndex]}");
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
             return (text == fface.Menu.DialogText.Options[fface.Menu.DialogOptionIndex]);
         }
 
