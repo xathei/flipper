@@ -261,6 +261,11 @@ namespace Flipper.Classes
             SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
         }
 
+        public void UseSpell(SpellList spell, int castTime, string targetName)
+        {
+            SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + targetName, castTime);
+        }
+
         /// <summary>
         /// Gets an item by it's passed item name and uses it.
         /// </summary>

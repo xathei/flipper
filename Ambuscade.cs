@@ -65,6 +65,9 @@ namespace Flipper
                 case Job.BLU:
                     job = new BlueMage(instance, Content.Ambuscade);
                     break;
+                case Job.WHM:
+                    job = new WhiteMage(instance, Content.Ambuscade);
+                    break; 
             }
 
             Combat.SetInstance = fface;
