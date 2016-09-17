@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FFACETools;
 using Flipper.Classes;
-using FlipperD;
 using RedCorona.Net;
 using System.Net.Sockets;
+using FlipperD;
 
 namespace Flipper
 {
@@ -173,7 +173,6 @@ namespace Flipper
             client.Send(_Leader ? "RECOVERY_L" : "RECOVERY");
         }
 
-
         /// <summary>
         /// Data read from the network socket.
         /// </summary>
@@ -229,7 +228,9 @@ namespace Flipper
             GotoMonsterZone = 1,
             ReturnHome = 2,
             Fight = 3,
-            CancelEngage = 4
+            CancelEngage = 4,
+            ObtainKI = 5,
+            CappedKI
         }
 
         public volatile bool _KeyCapped = false;
@@ -241,7 +242,7 @@ namespace Flipper
                 case AmbuscadeTaskType.GotoMonsterZone:
                 {
                     WriteLog("[TASK] Moving to RoE Zone");
-                    DoRoute(_route2, false);
+                    DoRoute(_route2);
                     NavigateToZone(_hpMenuItemString, 41);
                     client.Send("DOCK_ROE");
                     WriteLog($"[REPLY] >> TASK ({task}) OK");
@@ -262,7 +263,7 @@ namespace Flipper
                     int distance = fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion ? 50 : 35;
                     bool noMovement = fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion;
 
-                    Fight(parameter, distance, noMovement);
+                    Fight(parameter, Combat.Mode.None);
                     WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
                     break;
                 }
@@ -273,6 +274,22 @@ namespace Flipper
                     WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
                     break;
                 }
+                case AmbuscadeTaskType.ObtainKI:
+                {
+                    WriteLog($"[TASK] Obtaining KI until everyone has KI");
+                    ObtainKI();
+                    client.Send("DOCK_KI");
+                    WriteLog($"[REPLY] >> TASK ({task} OK");
+
+                    break;
+                }
+                case AmbuscadeTaskType.CappedKI:
+                {
+                    WriteLog($"[TASK] Capped KI");
+                    _KeyCapped = true;
+                    WriteLog($"[REPLY] >> TASK ({task} OK");
+                    break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(task), task, null);
             }
@@ -280,21 +297,85 @@ namespace Flipper
             _inTask = false;
         }
 
-
-        public bool Fight(int id, int distance = 50, bool noMovement = false)
+        public bool HasKeyItem()
         {
-            bool result = false;
+            if (!_Network && _hasKeyItem)
+                return true;
 
+            if (_Network)
+            {
+                if (_Leader && _hasKeyItem && _KeyCapped)
+                    return true;
+
+                if (!_Leader && _hasKeyItem && _KeyCapped)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool ObtainKI()
+        {
+            Combat.LoadCoords(Zone.Cape_Teriggan);
+            Combat.LoadHotspots(Zone.Cape_Teriggan);
+            List<Hotspot> hotspots = Combat.GetHotspots();
+            List<Node> path = new List<Node>();
+            int hotspotIndex = 0;
+
+            while (!HasKeyItem() && _ambuscade)
+            {
+
+              NoPath:
+                hotspotIndex = (hotspotIndex + 1)%hotspots.Count;
+
+                float destx = hotspots[hotspotIndex].Waypoint.X;
+                float destz = hotspots[hotspotIndex].Waypoint.Z;
+
+                path = Combat.GetPath(destx, destz);
+
+                if (path == null)
+                    goto NoPath;
+
+                float targetx;
+                float targetz;
+
+                while (path.Any() && !HasKeyItem() && _ambuscade)
+                {
+                    _targetId = Combat.FindTarget(50, roeTargetMonster.MonsterName);
+                    if (_targetId > 0)
+                    {
+                        fface.Navigator.Reset();
+                        WriteLog("Waiting for movement to end...");
+                        Thread.Sleep(200);
+                        WriteLog("Engaging mob...");
+                        Fight(_targetId, Combat.Mode.Meshing);
+                        WriteLog("Fight routine complete... comtinuing to roam?");
+                        fface.Navigator.Reset();
+                        _targetId = 0;
+                        goto NoPath;
+                    }
+                    fface.Navigator.HeadingTolerance = 1;
+                    fface.Navigator.DistanceTolerance = 0.7;
+                    targetx = path[0].X;
+                    targetz = path[0].Z;
+                    path.RemoveAt(0);
+                    fface.Navigator.Goto(() => targetx, () => targetz, path.Any());
+                }
+                fface.Navigator.Reset();
+                Thread.Sleep(1);
+            }
+
+            fface.Navigator.Reset();
+            return true;
+        }
+
+
+        public bool Fight(int id, Combat.Mode mode)
+        {
             if (_Network && _Leader)
                 client.Send("RELAY TASK 3 " + id);
-
-            result = Combat.Fight(id, ambuscadeTargetMonster, (distance == 50) ? Combat.Mode.None : Combat.Mode.StrictPathing, distance, noMovement);
-
-            if (!result && _Network && _Leader)
-            {
-                client.Send("RELAY TASK 4 " + id);
-            }
-            return result;
+            Combat.FailType fail = Combat.FailType.NoFail;
+            return  Combat.Fight(id, ambuscadeTargetMonster, mode, out fail);
         }
 
         public void DoTask()
@@ -314,7 +395,7 @@ namespace Flipper
                 if (_Network && _KeyCapped && _initialKeyItem)
                 {
                     _proceed = true;
-                    goto SkipRoEFarming;  
+                    goto SkipRoEFarming;
                 }
 
                 // Travel to Home Point then RoE Zone.
@@ -333,9 +414,19 @@ namespace Flipper
 
 
                 // Farm Key Item, then ReturnHome()
-                DoRoute(_route3, true);
+                //DoRoute(_route3, true);
+                client.Send("RELAY TASK 5 0"); // -- obtain KI
+                ObtainKI();
                 fface.Navigator.Reset();
                 Thread.Sleep(4000);
+                client.Send("RELAY TASK 6 0"); // -- tell players to stop farming KI
+
+                if (_Network)
+                {
+                    while (!_proceed)
+                        Thread.Sleep(100);
+                    _proceed = false;
+                }
 
                 // Tell clients to return home!
                 client.Send("RELAY TASK 2 0");
@@ -376,7 +467,7 @@ namespace Flipper
                 }
 
                 // Fight le target.
-                Fight(targs[0].Id, 50);
+                Fight(targs[0].Id, Combat.Mode.None);
 
                 _KeyCapped = false;
                 _initialKeyItem = false;
@@ -544,65 +635,35 @@ namespace Flipper
                 Thread.Sleep(1000);
 
             Thread.Sleep(13000);
-            if (_Network && !_Leader)
-            {
-                WriteLog("Processing landed in ROE event");
-                fface.Windower.SendKey(KeyCode.NP_Number2,true);
-                Thread.Sleep(200);
-                fface.Windower.SendKey(KeyCode.NP_Number2, false);
-                fface.Windower.SendString("/follow Dazusu");
-                Thread.Sleep(200);
-            }
             return true;
         }
 
-        public bool DoRoute(string route, bool targets = false)
+        public bool DoRoute(string route)
         {
             fface.Windower.SendString("/echo running route: " + route);
-            if (_initialKeyItem)
+            List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();
+            List<Node> path = new List<Node>();
+
+            foreach (string node in nodes)
             {
-                _hasKeyItem = true;
+                string[] token = node.Split(',');
+                var x = float.Parse((token[0]), CultureInfo.InvariantCulture);
+                var z = float.Parse((token[1]), CultureInfo.InvariantCulture);
+                path.Add(new Node() {X = x, Z = z});
             }
-            do
+
+            float X = 0;
+            float Y = 0;
+
+            while (path.Any())
             {
-                List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();
-                List<Node> path = new List<Node>();
-
-                foreach (string node in nodes)
-                {
-                    string[] token = node.Split(',');
-                    var x = float.Parse((token[0]), CultureInfo.InvariantCulture);
-                    var z = float.Parse((token[1]), CultureInfo.InvariantCulture);
-                    path.Add(new Node() { X = x, Z = z });
-                }
-
-                float X = 0;
-                float Y = 0;
-
-                while (path.Any() && ((targets && !_hasKeyItem) || (_Network && targets && !_KeyCapped) || !targets))
-                {
-                    if (targets)
-                    {
-                        _targetId = Combat.FindTarget(15, roeTargetMonster.MonsterName);
-                        WriteLog("Target found was: " + _targetId);
-                    }
-
-                    if (_targetId > 0 && targets)
-                    {
-                        Fight(_targetId, 20);
-                    }
-
-                    Node n = path[0];
-                    path.RemoveAt(0);
-                    fface.Navigator.DistanceTolerance = 0.2;
-                    fface.Navigator.HeadingTolerance = 1;
-                    fface.Navigator.Goto(() => n.X, () => n.Z, path.Any());
-                    Thread.Sleep(1);
-                }
-
+                Node n = path[0];
+                path.RemoveAt(0);
+                fface.Navigator.DistanceTolerance = 0.2;
+                fface.Navigator.HeadingTolerance = 1;
+                fface.Navigator.Goto(() => n.X, () => n.Z, path.Any());
                 Thread.Sleep(1);
-
-            } while (!_hasKeyItem && targets || (_Network && targets && !_KeyCapped));
+            }
 
             fface.Navigator.Reset();
 
@@ -683,6 +744,7 @@ namespace Flipper
     public class Node
     {
         public float X;
+        public float Y;
         public float Z;
     }
 

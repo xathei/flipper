@@ -838,10 +838,6 @@ namespace FlipperD
             Process.GetCurrentProcess().Kill();
         }
 
-
-
-
-
         private void ambStartRecording_Click(object sender, EventArgs e)
         {
             if (ambStartRecording.Text == "Start")
@@ -906,13 +902,13 @@ namespace FlipperD
         {
             Ambuscade ambuscade = new Ambuscade();
 
-            Monster roe = new Monster()
+           Flipper.Monster roe = new Flipper.Monster()
             {
                 MonsterName = ambRoETarget.Text,
                 HitBox = Double.Parse(ambRoEHitbox.Text)
             };
 
-            Monster amb = new Monster()
+            Flipper.Monster amb = new Flipper.Monster()
             {
                 MonsterName = ambTarget.Text,
                 HitBox = Double.Parse(ambHitbox.Text)

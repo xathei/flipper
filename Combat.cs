@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DeenGames.Utils.AStarPathFinder;
 using FFACETools;
 using Flipper.Classes;
 using FlipperD;
@@ -29,20 +32,24 @@ namespace Flipper
             set { job = value; }
         }
 
+
         public static FailType GetFailType { get; } = FailType.NoFail;
+
 
         public enum FailType
         {
             NoFail,
             OutOfRange,
             OutClaimed,
-            CantSee
+            CantSee,
+            NoPath
         }
 
         public enum Mode
         {
             None,
-            StrictPathing
+            StrictPathing,
+            Meshing
         }
 
 
@@ -54,7 +61,7 @@ namespace Flipper
         public static int FindTarget(double maxDistance = 50.0, params string[] monsterName)
         {
             int bestTarget = 0;
-            double bestDistance = 20.0;
+            double bestDistance = maxDistance;
 
             for (short i = 0; i < 768; i++)
             {
@@ -65,7 +72,7 @@ namespace Flipper
                     continue;
 
                 if (fface.NPC.Distance(i) < 7 && fface.NPC.Status(i) == Status.Fighting &&
-                    (!fface.NPC.IsClaimed(i) || (fface.NPC.Status(i)  == Status.Fighting && !fface.NPC.IsClaimed(i)) || PartyHasHate(i)) && IsFacingMe(i))
+                    (!fface.NPC.IsClaimed(i) || (fface.NPC.Status(i) == Status.Fighting && !fface.NPC.IsClaimed(i)) || PartyHasHate(i)) && IsFacingMe(i))
                 {
                     return i;
                 }
@@ -112,46 +119,84 @@ namespace Flipper
         /// <param name="target">The ID of the target to engage.</param>
         /// <param name="monster">The monster object for the monster you're engaging</param>
         /// <param name="mode">Special mode considerations for engaging this target.</param>
-        /// <param name="maxDistance">Maximum distance our target can be from us.</param>
-        /// <param name="noMovement">Don't process movement related things</param>
+        /// <param name="fail"></param>
         /// <returns></returns>
-        public static bool Fight(int target, Monster monster, Mode mode = Mode.None, double maxDistance = 20.0, bool noMovement = false)
+        public static bool Fight(int target, Monster monster, Mode mode, out FailType fail)
         {
+            fail = FailType.NoFail;
             _fighting = true;
-            if (!noMovement)
-                fface.Navigator.Reset();
+            float targetX = 0;
+            float targetZ = 0;
 
-            while (CanStillAttack(target) && DistanceTo(target) < maxDistance &&  _fighting)
+            fface.Navigator.Reset();
+
+            if (mode == Mode.Meshing)
+            {
+                List<Node> path = new List<Node>();
+                float destinationX = fface.NPC.PosX(target);
+                float destinationZ = fface.NPC.PosZ(target);
+
+                path = GetPath(destinationX, destinationZ);
+
+                if (!path.Any())
+                {
+                    fail = FailType.NoPath;
+                    return false;
+                }
+
+
+                while (path.Any() && CanStillAttack(target) && DistanceTo(target) > (monster.HitBox*1.5) && _fighting)
+                {
+                    if (!fface.NPC.IsClaimed(target))
+                    {
+                        Target(target);
+                        job.UseClaim();
+                    }
+                    if (_fighting)
+                    {
+                        targetX = path[0].X;
+                        targetZ = path[0].Z;
+                        fface.Navigator.HeadingTolerance = 2;
+                        fface.Navigator.DistanceTolerance = 0.7;
+                        path.RemoveAt(0);
+                        fface.Navigator.Goto(() => targetX, () => targetZ, false);
+                    }
+                    Thread.Sleep(1);
+                }
+                fface.Navigator.Reset();
+            }
+
+            // battle routine
+            while (CanStillAttack(target) && DistanceTo(target) < 20 && _fighting)
             {
                 // TARGET
                 Target(target);
 
                 // FACE TARGET
-                if (!noMovement)
-                    fface.Navigator.FaceHeading(target);
+                fface.Navigator.FaceHeading(target);
 
                 // CLAIM
-                if (!noMovement)
-                    if (!fface.NPC.IsClaimed(target) && _fighting)
+                if (!fface.NPC.IsClaimed(target) && _fighting)
+                {
+                    switch (mode)
                     {
-                        switch (mode)
+                        case Mode.StrictPathing:
                         {
-                            case Mode.StrictPathing:
-                            {
-                                // We don't want to wonder too far from our strict path. Use Strict Pathing.
-                                if (DistanceTo(target) >= monster.HitBox*1.5)
-                                    fface.Navigator.Reset();
-                                Thread.Sleep(500);
-                                job.UseRangedClaim();
-                                break;
-                            }
-                            case Mode.None:
-                            {
-                                job.UseClaim();
-                                break;
-                            }
+                            // We don't want to wonder too far from our strict path. Use Strict Pathing.
+                            if (DistanceTo(target) >= monster.HitBox*1.5)
+                                fface.Navigator.Reset();
+                            Thread.Sleep(500);
+                            job.UseRangedClaim();
+                            break;
+                        }
+                        case Mode.Meshing:
+                        case Mode.None:
+                        {
+                            job.UseClaim();
+                            break;
                         }
                     }
+                }
 
                 // ENGAGE
 
@@ -168,49 +213,49 @@ namespace Flipper
                 }
 
                 // MOVE CLOSER
-                if (!noMovement)
-                    if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
+
+                if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
+                {
+                    switch (mode)
                     {
-                        switch (mode)
-                        {
-                            case Mode.StrictPathing:
+                        case Mode.StrictPathing:
                             {
                                 // if we're strict pathing, let the mob get close to us before we move to it.
-                                if (DistanceTo(target) < monster.HitBox*1.25)
+                                if (DistanceTo(target) < monster.HitBox * 1.25)
                                 {
                                     fface.Windower.SendString("/echo Close enough, moving in...");
                                     fface.Navigator.Reset();
                                     fface.Navigator.HeadingTolerance = 7;
-                                    fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
+                                    fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
                                     fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
                                 }
                                 break;
                             }
-                            case Mode.None:
+                        case Mode.Meshing:
+                        case Mode.None:
                             {
                                 fface.Navigator.Reset();
-                                fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
+                                fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
                                 fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
                                 break;
                             }
-                        }
                     }
+                }
 
                 // MOVE BACK
-                if (!noMovement)
-                    if (DistanceTo(target) < (monster.HitBox*0.65) && CanStillAttack(target) && _fighting)
+                if (DistanceTo(target) < (monster.HitBox * 0.65) && CanStillAttack(target) && _fighting)
+                {
+                    switch (mode)
                     {
-                        switch (mode)
-                        {
-                            default:
+                        default:
                             {
                                 fface.Windower.SendKey(KeyCode.NP_Number2, true);
                                 Thread.Sleep(50);
                                 fface.Windower.SendKey(KeyCode.NP_Number2, false);
                                 break;
                             }
-                        }
                     }
+                }
 
                 // PLAYER STUFF
                 if (fface.Player.Status == Status.Fighting && _fighting)
@@ -247,7 +292,7 @@ namespace Flipper
 
         static Combat()
         {
-            
+
         }
 
         public static void Interrupt()
@@ -303,7 +348,7 @@ namespace Flipper
                 return false;
             }
 
-            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id)) 
+            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id))
             {
                 WriteLog("[CANT ATTACK] Monster is claimed, and Party doesn't have hate.");
                 return false;
@@ -319,6 +364,7 @@ namespace Flipper
             // Skip if the NPC's HP is 0
             if (fface.NPC.HPPCurrent(id) == 0 || !IsRendered(id))
             {
+                WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
                 WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
                 return false;
             }
@@ -384,7 +430,7 @@ namespace Flipper
             return angle * (180.0 / Math.PI);
         }
 
-        
+
         /// <summary>
         /// Get Angle of Line between two points.
         /// </summary>
@@ -413,6 +459,275 @@ namespace Flipper
                     Program.mainform.uxLog.TopIndex = Math.Max(Program.mainform.uxLog.Items.Count - visibleItems + 1, 0);
                 });
             }
+        }
+
+
+        #region Navigation
+        public static List<Node> Waypoints = new List<Node>();
+        public static List<Blacklist> Blacklists = new List<Blacklist>();
+        public static byte[,] Grid { get; set; }
+        public static int offset = 2000;
+        private static PathFinderFast mesh;
+        public static List<Hotspot> Hotspots = new List<Hotspot>();
+
+        public static List<Hotspot> GetHotspots()
+        {
+            return Hotspots;
+        }
+
+        /// <summary>
+        /// Loads coordinates from a file.
+        /// </summary>
+        /// <returns></returns>
+        public static bool LoadCoords(Zone zone)
+        {
+            List<string> files = new List<string>();
+
+            Grid =
+                    new byte[PathFinderHelper.RoundToNearestPowerOfTwo(4000),
+                        PathFinderHelper.RoundToNearestPowerOfTwo(4000)];
+            for (int i = 0; i < 4096; i++)
+            {
+                for (int j = 0; j < 4096; j++)
+                {
+                    Grid[i, j] = PathFinderHelper.BLOCKED_TILE;
+                }
+            }
+
+            Waypoints.Clear();
+            string loadFile = AppDomain.CurrentDomain.BaseDirectory + @"\assets\global.mesh";
+            string loadFileM = AppDomain.CurrentDomain.BaseDirectory + @"\assets\" + (int)zone + ".mesh";
+            files.Add(loadFile);
+            files.Add(loadFileM);
+            int caught = 0;
+
+            foreach (string f in files)
+            {
+                if (File.Exists(f))
+                {
+                    string line;
+                    // Read the file and display it line by line.
+                    System.IO.StreamReader file = new System.IO.StreamReader(f);
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        string[] token = line.Split(',');
+                        if (Convert.ToInt32(token[1]) == (int)zone)
+                        {
+                            bool inblackspot = false;
+                            foreach (Blacklist b in Blacklists)
+                            {
+                                if (InCircle((int)b.Waypoint.X, (int)b.Waypoint.Z, Convert.ToInt32(token[2]),
+                                    Convert.ToInt32(token[4]), Convert.ToInt32(b.Radius)))
+                                {
+                                    inblackspot = true;
+                                    caught++;
+                                    //WriteLog("In Blackpost (Ignoring!!): " + token[2] + " / " + token[4]);
+                                }
+                            }
+                            if (!inblackspot)
+                            {
+                                Waypoints.Add(new Node
+                                {
+                                    X = float.Parse((token[2]), CultureInfo.InvariantCulture),
+                                    Y = float.Parse((token[3]), CultureInfo.InvariantCulture),
+                                    Z = float.Parse((token[4]), CultureInfo.InvariantCulture)
+                                });
+                                Grid[int.Parse((token[2]), CultureInfo.InvariantCulture) + offset,
+                                     int.Parse((token[4]), CultureInfo.InvariantCulture) + offset] = PathFinderHelper.EMPTY_TILE;
+                            }
+                        }
+                    }
+                    WriteLog($"Excluded {caught} nodes, due to being in blackspots.");
+                    WriteLog($"Loaded {Waypoints.Count} ({f.Split(Convert.ToChar(@"\"))[f.Split(Convert.ToChar(@"\")).Count() - 1].Replace(".mesh", "")}) nodes.");
+                    file.Close();
+                }
+            }
+            return false;
+        }
+
+
+        public static bool LoadHotspots(Zone zone)
+        {
+            Hotspots.Clear();
+            string loadFile = AppDomain.CurrentDomain.BaseDirectory + @"\Assets\hotspot.list";
+            if (File.Exists(loadFile))
+            {
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(loadFile);
+                while ((line = file.ReadLine()) != null)
+                {
+                    string[] token = line.Split(',');
+                    if (Convert.ToInt32(token[0]) == Convert.ToInt32(zone))
+                    {
+
+                        Hotspot hotspot = new Hotspot();
+                        hotspot.Name = token[1];
+                        hotspot.Waypoint = new Node { X = (float)Convert.ToDouble(token[2], CultureInfo.InvariantCulture), Y = (float)Convert.ToDouble(token[3], CultureInfo.InvariantCulture), Z = (float)Convert.ToDouble(token[4], CultureInfo.InvariantCulture) };
+                        hotspot.TimeSpecific = Convert.ToBoolean(token[5]);
+                        if (hotspot.TimeSpecific)
+                        {
+                            hotspot.TimeBegin = new FFACE.TimerTools.VanaTime { Hour = Convert.ToByte(token[6].Split(':')[0]), Minute = Convert.ToByte(token[6].Split(':')[1]) };
+                            hotspot.TimeEnd = new FFACE.TimerTools.VanaTime { Hour = Convert.ToByte(token[7].Split(':')[0]), Minute = Convert.ToByte(token[7].Split(':')[1]) };
+                        }
+                        Hotspots.Add(hotspot);
+                    }
+                }
+                WriteLog($"Loaded {Hotspots.Count} hotspots.");
+                file.Close();
+            }
+            return true;
+        }
+
+
+
+        public static List<Node> GetPath(float X, float Z)
+        {
+            if (mesh == null)
+            {
+                mesh = new PathFinderFast(Grid)
+                {
+                    Formula = HeuristicFormula.Manhattan,
+                    Diagonals = true,
+                    PunishChangeDirection = false,
+                    TieBreaker = false,
+                    SearchLimit = 1000000
+                };
+            }
+
+            List<Node> ReturnPath = new List<Node>();
+            int StartingX = Convert.ToInt32(fface.Player.PosX) + offset;
+            int StartingZ = Convert.ToInt32(fface.Player.PosZ) + offset;
+            int DestinationX = Convert.ToInt32(X) + offset;
+            int DestinationZ = Convert.ToInt32(Z) + offset;
+
+            WriteLog($"Generating a path to {X} , {Z}");
+            List<PathFinderNode> path = new List<PathFinderNode>();
+            try
+            {
+                path = mesh.FindPath(new DeenGames.Utils.Point(StartingX, StartingZ),
+                    new DeenGames.Utils.Point(DestinationX, DestinationZ));
+            }
+            catch
+            {
+
+                path = null;
+            }
+            if (path != null)
+            {
+                WriteLog($"Generation succeeded! {path.Count()} nodes were assembled");
+                foreach (PathFinderNode point in path)
+                {
+                    ReturnPath.Add(new Node { X = point.X - offset, Z = point.Y - offset });
+                }
+            }
+            else
+            {
+                WriteLog($"Pathing failed (No route): {Convert.ToInt32(fface.Player.PosX)},{Convert.ToInt32(fface.Player.PosZ)} to {X},{Z}!");
+            }
+            ReturnPath = SmoothNodes(ReturnPath);
+
+            ReturnPath.Reverse();
+
+            return ReturnPath;
+        }
+
+        /// <summary>
+        /// Smoothes nodes in a list.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        public static List<Node> SmoothNodes(List<Node> nodes)
+        {
+            WriteLog($"Smoothing nodes for a path with {nodes.Count()} nodes.");
+            List<Node> SmoothLikeButter = new List<Node>();
+            int Index = 0;
+            try
+            {
+                foreach (Node node in nodes)
+                {
+                    if (Index > 0 && Index != nodes.Count - 1)
+                    {
+                        float nX = (nodes[Index - 1].X + nodes[Index].X + nodes[Index + 1].X) / 3;
+                        float nZ = (nodes[Index - 1].Z + nodes[Index].Z + nodes[Index + 1].Z) / 3;
+                        SmoothLikeButter.Add(new Node { X = nX, Z = nZ });
+                    }
+                    if (Index == 0)
+                    {
+                        float nX = (nodes[Index].X + nodes[Index + 1].X) / 2;
+                        float nZ = (nodes[Index].Z + nodes[Index + 1].Z) / 2;
+                        SmoothLikeButter.Add(new Node { X = nX, Z = nZ });
+                    }
+                    if (Index == nodes.Count - 1)
+                    {
+                        float nX = (nodes[Index - 1].X + nodes[Index].X) / 2;
+                        float nZ = (nodes[Index - 1].Z + nodes[Index].Z) / 2;
+                        SmoothLikeButter.Add(new Node { X = nX, Z = nZ });
+                    }
+                    Index++;
+                }
+                return SmoothLikeButter;
+            }
+            catch
+            {
+                return nodes;
+            }
+
+        }
+
+
+        /// <summary>
+        /// Checks of a coordinate exists in a circle.
+        /// </summary>
+        /// <returns></returns>
+        public static bool InCircle(int centerx, int centery, int x, int y, int radius = 4)
+        {
+            var dist = Math.Sqrt(Math.Pow((centerx - x), 2) + Math.Pow((centery - y), 2));
+            return dist < radius;
+        }
+
+
+
+        public class Blacklist
+        {
+            public Node Waypoint { get; set; }
+            public double Radius { get; set; }
+        }
+
+
+        #endregion
+    }
+
+    public class Hotspot
+    {
+        public string Name { get; set; }
+        public Node Waypoint { get; set; }
+        public bool TimeSpecific { get; set; }
+        public FFACE.TimerTools.VanaTime TimeBegin { get; set; }
+        public FFACE.TimerTools.VanaTime TimeEnd { get; set; }
+    }
+
+    public class TargetInfo
+    {
+        public int Id;
+        public string Name;
+        public FFACETools.Status Status;
+        public double Distance;
+        public bool IsRendered;
+    }
+
+    public class Monster
+    {
+        public string MonsterName { get; set; }
+        public double HitBox { get; set; }
+        public bool TimeSpecific { get; set; }
+        public FFACE.TimerTools.VanaTime TimeBegin { get; set; }
+        public FFACE.TimerTools.VanaTime TimeEnd { get; set; }
+
+        public Monster()
+        {
+            MonsterName = "Default";
+            HitBox = 2.4;
+            TimeSpecific = false;
         }
     }
 }

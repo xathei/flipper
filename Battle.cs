@@ -2314,7 +2314,6 @@ namespace FlipperD
         }
     }
 
-
     public class Hotspot
     {
         public string Name { get; set; }
@@ -2323,6 +2322,7 @@ namespace FlipperD
         public FFACE.TimerTools.VanaTime TimeBegin { get; set; }
         public FFACE.TimerTools.VanaTime TimeEnd { get; set; }
     }
+
 
     public class Blacklist
     {
