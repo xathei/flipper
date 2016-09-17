@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FFACETools;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Flipper.Classes
 {
@@ -187,7 +188,7 @@ namespace Flipper.Classes
         public DateTime NextCommandAllowed = DateTime.MinValue;
 
 
-        public void SendCommand(string command, int Delay = 2, bool PreventGlobal = false)
+        public bool SendCommand(string command, int Delay = 2, bool PreventGlobal = false)
         {
             if ((!CommandsLog.ContainsKey(command) || (CommandsLog.ContainsKey(command) && CommandsLog[command] < DateTime.Now)) &&
                 (NextCommandAllowed <= DateTime.Now || PreventGlobal))
@@ -204,8 +205,14 @@ namespace Flipper.Classes
                 else
                     NextCommandAllowed = DateTime.MinValue;
 
+                Debug.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Sent Command: " + command);
+
                 _fface.Windower.SendString(command);
+
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -218,9 +225,9 @@ namespace Flipper.Classes
         /// <param name="ability">The ability to use</param>
         /// <param name="Delay">How long does it take to use this ability? (Consider lockout after use)</param>
         /// <param name="Offensive">Is this ability used on me, or my target?</param>
-        public void UseAbility(AbilityList ability, int Delay = 2, bool Offensive = false)
+        public bool UseAbility(AbilityList ability, int Delay = 2, bool Offensive = false)
         {
-            SendCommand("/ja \"" + ability.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), Delay);
+            return SendCommand("/ja \"" + ability.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), Delay);
         }
 
 
@@ -234,9 +241,9 @@ namespace Flipper.Classes
         /// <param name="abilityGroup">The ability group to use from AbilityList</param>
         /// <param name="Delay">How long does it take to use this ability? (Consider lockout after use)</param>
         /// <param name="Offensive">Is this ability used on me, or my target?</param>
-        public void UseAbility(string ability, AbilityList abilityGroup, int Delay = 2, bool Offensive = false)
+        public bool UseAbility(string ability, AbilityList abilityGroup, int Delay = 2, bool Offensive = false)
         {
-            SendCommand("/ja \"" + ability.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), Delay);
+            return SendCommand("/ja \"" + ability.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), Delay);
         }
 
 
@@ -250,14 +257,21 @@ namespace Flipper.Classes
         /// <param name="ability">The ability to use</param>
         /// <param name="Delay">How long does it take to use this ability? (Consider lockout after use)</param>
         /// <param name="Offensive">Is this ability used on me, or my target?</param>
-        public void UseSpell(SpellList spell, int castTime, bool Offensive = false)
+        public bool UseSpell(SpellList spell, int castTime, bool Offensive = false)
         {
-            SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
+            return SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
         }
 
-        public void UseSpell(SpellList spell, int castTime, string targetName)
+        /// <summary>
+        /// Uses a spell from the SpellList enum by target name.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <param name="castTime"></param>
+        /// <param name="targetName"></param>
+        /// <returns></returns>
+        public bool UseSpell(SpellList spell, int castTime, string targetName)
         {
-            SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + targetName, castTime);
+            return SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + targetName, castTime);
         }
 
         /// <summary>
@@ -266,12 +280,12 @@ namespace Flipper.Classes
         /// <param name="itemName">The name of the item.</param>
         /// <param name="castTime">How long does it take to use this item?</param>
         /// <param name="offensive">Is this item used on me, or my target?</param>
-        public void UseItem(string itemName, int castTime, bool offensive = false)
+        public bool UseItem(string itemName, int castTime, bool offensive = false)
         {
             // Get the item by name from the Item list.
             Item item = Items.GetItem(itemName);
             // Send the command to use the item.
-            SendCommand("/item \"" + item.Name + "\" " + (offensive ? "<t>" : "<me>"), castTime);
+            return SendCommand("/item \"" + item.Name + "\" " + (offensive ? "<t>" : "<me>"), castTime);
         }
 
         /// <summary>
@@ -280,12 +294,12 @@ namespace Flipper.Classes
         /// <param name="itemId">The id of the item.</param>
         /// <param name="castTime">How long does it take to use this item?</param>
         /// <param name="offensive">Is this item used on me, or my target?</param>
-        public void UseItem(ushort itemId, int castTime, bool offensive = false)
+        public bool UseItem(ushort itemId, int castTime, bool offensive = false)
         {
             // Get the item by id from the Item list.
             Item item = Items.GetItem(itemId);
             // Send the command to use the item.
-            SendCommand("/item \"" + item.Name + "\" " + (offensive ? "<t>" : "<me>"), castTime);
+            return SendCommand("/item \"" + item.Name + "\" " + (offensive ? "<t>" : "<me>"), castTime);
         }
 
         /// <summary>
