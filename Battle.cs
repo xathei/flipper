@@ -1980,8 +1980,6 @@ namespace FlipperD
                     bool notFacingEnemy = (fface.Navigator.GetPlayerPosHInDegrees() > headingToEnemy + 7 ||
                                            fface.Navigator.GetPlayerPosHInDegrees() < headingToEnemy - 7);
 
-
-
                     // face mobs we should be facing:
                     if (notFacingEnemy && CanStillAttack(target) &&
                         (

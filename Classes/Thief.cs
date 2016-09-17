@@ -120,32 +120,47 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-            // Check if Bullt is not on cooldown.
-            if (Ready(AbilityList.Bully))
+            //// Check if Bullt is not on cooldown.
+            //if (Ready(AbilityList.Bully))
+            //{
+            //    // Use bully on the target enemy.
+            //    UseAbility(AbilityList.Bully, 2, true);
+            //    // Set the internal timer to 30 seconds.
+            //    _bullyTimer = 180;
+            //    // Sleep the thread for 1500 ms.
+            //    Thread.Sleep(1500);
+            //}
+            //else
+            //{
+            //    // If bully is not ready, update the timer value by getting the recast.
+            //    _bullyTimer = _fface.Timer.GetAbilityRecast(AbilityList.Bully);
+            //}
+
+            //// If the recast time for Bully is greater than 155 seconds and Sneak Attack is ready.
+            //if (_bullyTimer >= 155 && Ready(AbilityList.Sneak_Attack))
+            //{
+            //    // Use Sneak Attack.
+            //    UseAbility(AbilityList.Sneak_Attack, 1);
+            //    // Sleep the thread for 1500 ms.
+            //    Thread.Sleep(1500);
+            //}
+
+            var mobHead = _fface.Target.PosH;
+            var myHead = _fface.Player.PosH;
+
+            if (Math.Abs(Math.Abs(mobHead) - Math.Abs(myHead)) < 10 && Ready(AbilityList.Sneak_Attack))
             {
-                // Use bully on the target enemy.
-                UseAbility(AbilityList.Bully, 2, true);
-                // Set the internal timer to 30 seconds.
-                _bullyTimer = 180;
-                // Sleep the thread for 1500 ms.
-                Thread.Sleep(1500);
+                UseAbility(AbilityList.Sneak_Attack, 1);
+                Thread.Sleep(1700);
+            }
+            if (_fface.Target.Name == "Lycaon")
+            {
+                SendCommand("/ws \"Shark Bite\" <t>", 3);
             }
             else
             {
-                // If bully is not ready, update the timer value by getting the recast.
-                _bullyTimer = _fface.Timer.GetAbilityRecast(AbilityList.Bully);
+                SendCommand("/ws \"Rudra's Storm\" <t>", 3);
             }
-
-            // If the recast time for Bully is greater than 155 seconds and Sneak Attack is ready.
-            if (_bullyTimer >= 155 && Ready(AbilityList.Sneak_Attack))
-            {
-                // Use Sneak Attack.
-                UseAbility(AbilityList.Sneak_Attack, 2);
-                // Sleep the thread for 1500 ms.
-                Thread.Sleep(1500);
-            }
-
-            SendCommand("/ws \"Rudra's Storm\" <t>", 3);
         }
 
         #region Add other methods here that aren't overrides, such as calculating finishing moves, etc

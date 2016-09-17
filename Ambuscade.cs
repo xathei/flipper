@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,20 +18,6 @@ using System.Net.Sockets;
 
 namespace Flipper
 {
-    public enum JobRole
-    {
-        Tank,
-        Healer,
-        Damage
-    }
-    public class AmbuscadeSettings
-    {
-        public bool Network;
-        public bool Leader;
-        public bool FillTrusts;
-        public JobRole Role;
-        public int PartyCount;
-    }
     public class Ambuscade
     {
         private FFACE fface;
@@ -38,280 +25,369 @@ namespace Flipper
 
         private Thread chatThread;
         private Thread taskThread;
-        private Monster RoETarget;
-        private Monster AmbuscadeTarget;
-
-        private string DifficultyMenu;
-        private volatile bool _ambuscade;
-        private string _target;
-        private volatile bool _interruptRoute;
+        private Monster roeTargetMonster;
+        private Monster ambuscadeTargetMonster;
         public volatile int _targetId = 0;
-        public volatile int _partyCount = 3;
+
+        private string _difficultyMenuString;
+        private string _hpMenuItemString = "Cape Teriggan #1.";
+
+        private volatile bool _ambuscade;
+        private volatile bool _interruptRoute;
 
         private volatile bool _hasKeyItem = false;
         private volatile bool _initialKeyItem = false;
 
-
-        private volatile ClientInfo client;
-        private volatile bool _netMode = false;
-        private volatile bool _leader;
+        #region Network and Static Variables
+        private Thread _task;
+        private volatile bool _inTask = false;
         private JobRole _role = JobRole.Damage;
-
-        #region Bulk
         private string _route1 = "1-amb-homepoint-book.list";
         private string _route2 = "2-amb-exit-homepoint.list";
         private string _route3 = "3-amb-monstercircular.list";
-        private string _zone = "Cape Teriggan #1.";
+        private volatile bool _Network = false;
+        private volatile bool _Leader = false;
+        private volatile int _HumanPlayers = 0;
+        private volatile int _KeyItemCount = 0;
+        private volatile ClientInfo client;
+        public volatile bool _proceed;
+        public volatile bool _FillTrusts = false;
         #endregion
 
-
-
-
-        public void Start(FFACE instance, Monster roeTarget, Monster ambuscadeTarget, string homePoint, bool keyitem, AmbuscadeSettings settings, string difficulty = "Easy. (Level: 114)")
+        private void LoadJobClass()
         {
-            fface = instance;
-
-            // Load JobClass.
             switch (fface.Player.MainJob)
             {
                 case Job.THF:
-                    job = new Thief(instance, Content.Ambuscade);
+                    job = new Thief(fface, Content.Ambuscade);
                     break;
                 case Job.PLD:
-                    job = new Paladin(instance, Content.Ambuscade);
+                    job = new Paladin(fface, Content.Ambuscade);
                     break;
                 case Job.BLU:
-                    job = new BlueMage(instance, Content.Ambuscade);
+                    job = new BlueMage(fface, Content.Ambuscade);
                     break;
                 case Job.WHM:
-                    job = new WhiteMage(instance, Content.Ambuscade);
-                    break; 
+                    job = new WhiteMage(fface, Content.Ambuscade);
+                    break;
             }
+        }
 
+        /// <summary>
+        /// Starts the Ambuscade Process.
+        /// </summary>
+        /// <param name="instance">FFACE Instance.</param>
+        /// <param name="roeTarget">RoE Target Monster</param>
+        /// <param name="ambuscadeTarget">Ambuscade Target NM</param>
+        /// <param name="homePoint">Home Point Menu Item to Click (i.e.: "Cape Teriggan #1.")</param>
+        /// <param name="keyitem">Does the player already possess the KI upon starting?</param>
+        /// <param name="settings">Settings object added as an afterthought to prevent more parameters being added.</param>
+        /// <param name="difficulty">The difficulty string to select when entering ambuscade.</param>
+        public void Start(FFACE instance, Monster roeTarget, Monster ambuscadeTarget, string homePoint, bool keyitem, AmbuscadeSettings settings, string difficulty = "Easy. (Level: 114)")
+        {
+            // Assign fface instance.
+            fface = instance;
+
+            // Load Job Class to handle battle.
+            LoadJobClass();
+
+            // Enables looping in the class.
             _ambuscade = true;
-            _interruptRoute = false;
-            _zone = homePoint;
-            RoETarget = roeTarget;
-            AmbuscadeTarget = ambuscadeTarget;
+
+            // The HP Menu Item String to select when moving to the RoE Zone.
+            _hpMenuItemString = homePoint;
+
+            // The RoE And Ambuscade Target Monsters.
+            roeTargetMonster = roeTarget;
+            ambuscadeTargetMonster = ambuscadeTarget;
+
+            // Use new FFACE Movement.
             fface.Navigator.UseNewMovement = true;
+            fface.Navigator.SetViewMode(ViewMode.ThirdPerson);
+
+            // Does the player have a key item already upon starting?
             _initialKeyItem = keyitem;
-            DifficultyMenu = difficulty;
+            if (_initialKeyItem) _hasKeyItem = true;
+
+            // The Difficulty to select when entering ambuscade.
+            _difficultyMenuString = difficulty;
+
+            // Assign the job and fface instance to the combat static class.
             Combat.SetInstance = fface;
             Combat.SetJob = job;
 
-            _netMode = settings.Network;
+            // Network and Other Settings:
+            _Network = settings.Network;
+            _Leader = settings.Leader;
+            _HumanPlayers = settings.PartyCount;
+            _FillTrusts = settings.FillTrusts;
 
-            if (settings.Network)
+            if (_Network)
             {
                 // Connect to Network
                 Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
                 client = new ClientInfo(sock, false);
                 client.Delimiter = "\r\n";
                 client.OnRead += new ConnectionRead(ReadData);
+                client.OnClose += Client_OnClose;
+                client.OnReady += Client_OnReady;
                 client.BeginReceive();
+                Thread.Sleep(100);
+                client.Send(_Leader ? $"RESET {_HumanPlayers}" : "DOCK_MHAURA");
+                if (_initialKeyItem && !_Leader)
+                {
+                    WriteLog("[REPLY] >> KEY");
+                    client.Send("KEY");
+                }
+            }
+            else
+            {
+                _proceed = true;
             }
 
-            if (settings.Leader && settings.Network || !settings.Network)
+            if ((_Network && _Leader) || !_Network)
             {
                 taskThread = new Thread(DoTask);
                 taskThread.Start();
-                _leader = true;
-                _partyCount = settings.PartyCount;
-                client.Send("RESET");
             }
 
             chatThread = new Thread(DoChat);
             chatThread.Start();
-
-            if (settings.Network && !settings.Leader)
-                client.Send("LANDED_MHAURA");
         }
 
-
-        public bool TokenMatch(string data, string match)
+        private void Client_OnReady(ClientInfo ci)
         {
-            int count = match.Split(' ').Count();
-
-            string[] dataTokens = data.Split(' ');
-            string[] matchTokens = match.Split(' ');
-
-            for (int i = 0; i < count; i++)
-            {
-                if (dataTokens[i] != matchTokens[i])
-                    return false;
-            }
-            return true;
-
+            WriteLog("[CLIENT] Connected!");
         }
 
+        private void Client_OnClose(ClientInfo ci)
+        {
+            WriteLog("[ERROR] Disconnected from server!");
+            WriteLog("[ERROR] Attempting to reconnect...");
+            Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
+            client = new ClientInfo(sock, false);
+            client.Delimiter = "\r\n";
+            client.OnRead += new ConnectionRead(ReadData);
+            client.OnClose += Client_OnClose;
+            client.BeginReceive();
+            client.Send(_Leader ? "RECOVERY_L" : "RECOVERY");
+        }
+
+
+        /// <summary>
+        /// Data read from the network socket.
+        /// </summary>
+        /// <param name="ci">The ClientInfo the read belongs to.</param>
+        /// <param name="text">The string of data that was read, appended with \r\n.</param>
         private void ReadData(ClientInfo ci, string text)
         {
             text = text.Replace("\r\n", "");
 
             string[] token = text.Split(' ');
 
-            WriteLog("[NET]: " + text);
+            if (text != "PING!")
+            {
+                WriteLog("[SERVER] " + text);
+            }
 
+            // Always reply to ping.
             if (token[0] == "PING!")
             {
-                WriteLog("PONG");
+                //WriteLog("[REPLY] >> PONG");
                 client.Send("PONG");
             }
 
-            if (_leader)
+            if (token[0] == "PROCEED" && _Leader)
             {
-                if (TokenMatch(text, "ROE_ZONE_COUNT"))
-                {
-                    int count = Convert.ToInt32(token[1]);
-                    if (count == _partyCount)
-                    {
-                        _awaitingRoEZoneInCount = false;
-                    }
-                }
-                if (TokenMatch(text, "MHAURA_COUNT"))
-                {
-                    int count = Convert.ToInt32(token[1]);
-                    if (count == _partyCount)
-                    {
-                        _awaitingMhauraZoneInCount = false;
-                    }
-                }
-                else if (TokenMatch(text, "LEGION_COUNT"))
-                {
-                    int count = Convert.ToInt32(token[1]);
-                    if (count == _partyCount)
-                    {
-                        _awaitingLegionZoneInCount = false;
-                    }
-                }
-                else if (TokenMatch(text, "KEY_ITEM_COUNT"))
-                {
-                    int count = Convert.ToInt32(token[1]);
-                    _keyItemCount = count;
-                }
-            }
-            else
-            {
-                if (TokenMatch(text, "TO_MONSTER_ZONE"))
-                {
-                    DoRoute(_route2);
-                    NavigateToZone(_zone, 41);
-                    if (_initialKeyItem)
-                    {
-                        client.Send("KEY_ITEM");
-                        _initialKeyItem = false;
-                    }
-                }
-                else if (TokenMatch(text, "RETURN_HOME"))
-                {
-                    ReturnHome();
-                }
-                else if (TokenMatch(text, "ENGAGE_AMBUSCADE"))
-                {
-                    int target = Convert.ToInt32(token[1]);
-                    Combat.Fight(target, AmbuscadeTarget, Combat.Mode.None, 50);
-                }
-                else if (token[0] == "ENGAGE_ROE")
-                {
-                    int target = Convert.ToInt32(token[1]);
-                    Combat.Fight(target, RoETarget, Combat.Mode.StrictPathing);
-                }
+                _proceed = true;
             }
 
+            if (token[0] == "KEY_CAP" && _Leader)
+            {
+                _KeyCapped = true;
+            }
 
+            if (token[0] == "TASK" && !_Leader)
+            {
+                // When the server requests a new task, let's run it on another thread.
+                if (!_inTask)
+                {
+                    // task is always an int.
+                    AmbuscadeTaskType task = (AmbuscadeTaskType) Convert.ToInt32(token[1]);
+                    // parameter is usually a monster ID.
+                    int parameter = token.Count() == 3 ? Convert.ToInt32(token[2]) : 0;
+
+                    _task = new Thread(() => NetworkTask(task, parameter));
+
+                    _task.Start();
+                }
+            }
         }
 
-        private volatile int _keyItemCount = 0;
-        private volatile bool _awaitingMhauraZoneInCount = true;
-        private volatile bool _awaitingRoEZoneInCount = true;
-        private volatile bool _awaitingLegionZoneInCount = true;
+        public enum AmbuscadeTaskType
+        {
+            GotoMonsterZone = 1,
+            ReturnHome = 2,
+            Fight = 3,
+            CancelEngage = 4
+        }
+
+        public volatile bool _KeyCapped = false;
+
+        public void NetworkTask(AmbuscadeTaskType task, int parameter = 0)
+        {
+            switch (task)
+            {
+                case AmbuscadeTaskType.GotoMonsterZone:
+                {
+                    WriteLog("[TASK] Moving to RoE Zone");
+                    DoRoute(_route2, false);
+                    NavigateToZone(_hpMenuItemString, 41);
+                    client.Send("DOCK_ROE");
+                    WriteLog($"[REPLY] >> TASK ({task}) OK");
+                    break;
+                }
+                case AmbuscadeTaskType.ReturnHome:
+                {
+                    WriteLog("[TASK] Returning Home");
+                    ReturnHome();
+                    client.Send("DOCK_MHAURA");
+                    WriteLog($"[REPLY] >> TASK ({task}) OK");
+                    break;
+
+                }
+                case AmbuscadeTaskType.Fight:
+                {
+                    WriteLog($"[TASK] Fighting -- Mob ID: {parameter}");
+                    int distance = fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion ? 50 : 35;
+                    bool noMovement = fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion;
+
+                    Fight(parameter, distance, noMovement);
+                    WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
+                    break;
+                }
+                case AmbuscadeTaskType.CancelEngage:
+                {
+                    WriteLog($"[TASK] Cancel Engage -- Mob ID: {parameter}");
+                    Combat.Interrupt();
+                    WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(task), task, null);
+            }
+            WriteLog("[TASK] Task Complete! Accepting new task");
+            _inTask = false;
+        }
+
+
+        public bool Fight(int id, int distance = 50, bool noMovement = false)
+        {
+            bool result = false;
+
+            if (_Network && _Leader)
+                client.Send("RELAY TASK 3 " + id);
+
+            result = Combat.Fight(id, ambuscadeTargetMonster, (distance == 50) ? Combat.Mode.None : Combat.Mode.StrictPathing, distance, noMovement);
+
+            if (!result && _Network && _Leader)
+            {
+                client.Send("RELAY TASK 4 " + id);
+            }
+            return result;
+        }
 
         public void DoTask()
         {
             while (_ambuscade)
             {
 
-                // WAIT FOR PLAYERS TO GET TO MHAURA.
-                while (_netMode && _awaitingMhauraZoneInCount)
+                // Wait for all palyers to start.
+                if (_Network)
                 {
-                    Thread.Sleep(500); 
-                }
-                _awaitingMhauraZoneInCount = true;
-
-                if (_netMode)
-                    client.Send("TO_MONSTER_ZONE");
-
-                // Goto home point crystal.
-                DoRoute(_route2);
-                // Use home point to get to RoE Zone
-                NavigateToZone(_zone, 41);
-
-
-                // WAIT FOR PLAYERS TO GET TO ROE ZONE.
-                while (_netMode && _awaitingRoEZoneInCount)
-                {
-                    Thread.Sleep(500); 
-                }
-                _awaitingRoEZoneInCount = true;
-
-
-                // Go kill monsters.
-                DoRoute(_route3, true);
-                // Allow time for player to disengage.
-                fface.Navigator.Reset();
-                Thread.Sleep(3000);
-                fface.Navigator.Reset();
-                // Go back to Mhaura.
-                if (_netMode)
-                {
-                    client.Send("RETURN_HOME");
+                    while (!_proceed)
+                        Thread.Sleep(100);
+                    _proceed = false;
                 }
                 Thread.Sleep(1000);
 
+                if (_Network && _KeyCapped && _initialKeyItem)
+                {
+                    _proceed = true;
+                    goto SkipRoEFarming;  
+                }
+
+                // Travel to Home Point then RoE Zone.
+                client.Send("RELAY TASK 1 0");
+                DoRoute(_route2);
+                NavigateToZone(_hpMenuItemString, 41);
+
+
+                // Wait for all players to arrive at the RoE Zone.
+                if (_Network)
+                {
+                    while (!_proceed)
+                        Thread.Sleep(100);
+                    _proceed = false;
+                }
+
+
+                // Farm Key Item, then ReturnHome()
+                DoRoute(_route3, true);
+                fface.Navigator.Reset();
+                Thread.Sleep(4000);
+
+                // Tell clients to return home!
+                client.Send("RELAY TASK 2 0");
                 ReturnHome();
 
-
-                // WAIT FOR PLAYERS TO GET TO MHAURA.
-                while (_netMode && _awaitingMhauraZoneInCount)
+                // Wait for everyone to return home.
+                if (_Network)
                 {
-                    Thread.Sleep(500);
+                    while (!_proceed)
+                        Thread.Sleep(100);
                 }
 
-                Thread.Sleep(1000);
-                // Run to ambuscade book.
+             SkipRoEFarming:
+
+                // Run to the book, and enter legion.
                 DoRoute(_route1);
-                // Process entry.
                 DoEntry();
 
+                // Wait until I'm in legion to proceed.
                 while (fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion)
                 {
                     Thread.Sleep(100);
                 }
-
-                // WAIT FOR PLAYERS TO ZONE INTO LEGION
-                if (_netMode && _awaitingLegionZoneInCount)
-                {
-                    Thread.Sleep(12000);
-                }
-                else
-                {
-                    Thread.Sleep(10000);
-                }
-                _awaitingLegionZoneInCount = true;
-
-                SpawnTrusts();
-
-                List<TargetInfo> targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
-                while (!targs.Any())
-                    targs = Combat.FindTarget(AmbuscadeTarget.MonsterName);
-
-                if (_netMode)
-                    client.Send("ENGAGE_AMBUSCADE " + targs[0].Id);
-
                 
-                Combat.Fight(targs[0].Id, AmbuscadeTarget, Combat.Mode.None, 50);
+                // Once in Legion, wait for everything to load.
+                Thread.Sleep(22000);
 
-                Thread.Sleep(10000);
+                // Add trusts to the party.
+                if (_FillTrusts)
+                    SpawnTrusts();
+
+                // Look for a target
+                List<TargetInfo> targs = Combat.FindTarget(ambuscadeTargetMonster.MonsterName);
+                while (!targs.Any())
+                {
+                    targs = Combat.FindTarget(ambuscadeTargetMonster.MonsterName);
+                    Thread.Sleep(1);
+                }
+
+                // Fight le target.
+                Fight(targs[0].Id, 50);
+
+                _KeyCapped = false;
+                _initialKeyItem = false;
+
+                while (fface.Player.Zone != Zone.Mhaura)
+                {
+                    Thread.Sleep(100);
+                }
+
+                // After fighting the target, loop back to the start.
+                Thread.Sleep(15000);
             }
         }
 
@@ -323,24 +399,35 @@ namespace Flipper
         public void DoEntry()
         {
 
+            Thread.Sleep(3000);
             int bookId = 146;
 
-            while ((fface.Target.ID != bookId || string.IsNullOrEmpty(fface.Target.Name)) && _ambuscade)
+            MenuClosed:
+            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+            Thread.Sleep(100);
+            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+
+            while ((fface.Target.ID != bookId || fface.Target.Name != "Ambuscade Tome") && _ambuscade)
             {
+
                 fface.Target.SetNPCTarget(bookId);
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
+                fface.Target.SetNPCTarget(bookId);
                 fface.Windower.SendString("/target <t>");
-                Thread.Sleep(500);
+                Thread.Sleep(100);
             }
+
+            Thread.Sleep(1000);
 
             while (!fface.Menu.IsOpen)
             {
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                Thread.Sleep(1000);
+                Thread.Sleep(3000);
             }
 
             while (!MenuSelectedText("Regular Ambuscade."))
             {
+                if (!fface.Menu.IsOpen) goto MenuClosed;
                 fface.Windower.SendKeyPress(KeyCode.DownArrow);
                 Thread.Sleep(400);
             }
@@ -348,8 +435,9 @@ namespace Flipper
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             Thread.Sleep(1000);
 
-            while (!MenuSelectedText(DifficultyMenu))
+            while (!MenuSelectedText(_difficultyMenuString))
             {
+                if (!fface.Menu.IsOpen) goto MenuClosed;
                 fface.Windower.SendKeyPress(KeyCode.DownArrow);
                 Thread.Sleep(400);
             }
@@ -367,14 +455,10 @@ namespace Flipper
             {
                 job.Warp();
                 Thread.Sleep(10);
+
             } while (fface.Player.Zone != Zone.Mhaura);
 
-            _hasKeyItem = false;
-            Thread.Sleep(10000);
-            if (_netMode && !_leader)
-            {
-                client.Send("LANDED_MHAURA");
-            }
+            Thread.Sleep(15000);
         }
 
         public bool MenuSelectedText(string text)
@@ -394,14 +478,21 @@ namespace Flipper
 
         public bool NavigateToZone(string zone, int target)
         {
-            while ((fface.Target.ID != target || string.IsNullOrEmpty(fface.Target.Name)) || fface.Target.Name != "Home Point #1" && _ambuscade)
+            Thread.Sleep(3000);
+
+            MenuClosed:
+            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+            Thread.Sleep(100);
+            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+
+            while ((fface.Target.ID != target || fface.Target.Name != "Home Point #1") && _ambuscade)
             {
-                fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                Thread.Sleep(100);
+
                 fface.Target.SetNPCTarget(target);
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
+                fface.Target.SetNPCTarget(target);
                 fface.Windower.SendString("/target <t>");
-                Thread.Sleep(500);
+                Thread.Sleep(100);
             }
 
             while (!fface.Menu.IsOpen)
@@ -410,10 +501,9 @@ namespace Flipper
                 Thread.Sleep(3000);
             }
 
-            Thread.Sleep(1000);
-
             if (MenuSelectedText("Travel to another home point."))
             {
+                if (!fface.Menu.IsOpen) goto MenuClosed;
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
                 Thread.Sleep(1000);
             }
@@ -424,6 +514,7 @@ namespace Flipper
 
             while (!MenuSelectedText("Select from favorites."))
             {
+                if (!fface.Menu.IsOpen) goto MenuClosed;
                 fface.Windower.SendKeyPress(KeyCode.DownArrow);
                 Thread.Sleep(400);
             }
@@ -433,6 +524,7 @@ namespace Flipper
 
             while (!MenuSelectedText(zone))
             {
+                if (!fface.Menu.IsOpen) goto MenuClosed;
                 fface.Windower.SendKeyPress(KeyCode.DownArrow);
                 Thread.Sleep(400);
             }
@@ -442,26 +534,24 @@ namespace Flipper
 
             while (!MenuSelectedText("Yes, please."))
             {
+                if (!fface.Menu.IsOpen) goto MenuClosed;
                 fface.Windower.SendKeyPress(KeyCode.UpArrow);
                 Thread.Sleep(400);
             }
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
-            Thread.Sleep(22000);
+            while (fface.Player.Zone == Zone.Mhaura || fface.Player.GetLoginStatus == LoginStatus.Loading)
+                Thread.Sleep(1000);
 
-            if (_netMode && !_leader)
+            Thread.Sleep(13000);
+            if (_Network && !_Leader)
             {
-                Thread.Sleep(2000);
-                fface.Windower.SendString("/target Dazusu");
-                Thread.Sleep(500);
-                fface.Windower.SendString("/lockon");
-                Thread.Sleep(500);
-                fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                Thread.Sleep(500);
+                WriteLog("Processing landed in ROE event");
+                fface.Windower.SendKey(KeyCode.NP_Number2,true);
+                Thread.Sleep(200);
                 fface.Windower.SendKey(KeyCode.NP_Number2, false);
-                Thread.Sleep(500);
                 fface.Windower.SendString("/follow Dazusu");
-                client.Send("LANDED_ROE_ZONE");
+                Thread.Sleep(200);
             }
             return true;
         }
@@ -489,18 +579,17 @@ namespace Flipper
                 float X = 0;
                 float Y = 0;
 
-                while (path.Any() && (!_hasKeyItem || (_netMode && _keyItemCount < _partyCount)) && !_interruptRoute)
+                while (path.Any() && ((targets && !_hasKeyItem) || (_Network && targets && !_KeyCapped) || !targets))
                 {
-
                     if (targets)
                     {
-                        _targetId = Combat.FindTarget(20, RoETarget.MonsterName);
+                        _targetId = Combat.FindTarget(15, roeTargetMonster.MonsterName);
                         WriteLog("Target found was: " + _targetId);
                     }
 
-                    if (_targetId > 0)
+                    if (_targetId > 0 && targets)
                     {
-                        Combat.Fight(_targetId, RoETarget, Combat.Mode.StrictPathing);
+                        Fight(_targetId, 20);
                     }
 
                     Node n = path[0];
@@ -512,7 +601,8 @@ namespace Flipper
                 }
 
                 Thread.Sleep(1);
-            } while ((!_hasKeyItem || (_netMode && _keyItemCount < _partyCount)) && targets);
+
+            } while (!_hasKeyItem && targets || (_Network && targets && !_KeyCapped));
 
             fface.Navigator.Reset();
 
@@ -550,7 +640,7 @@ namespace Flipper
                 {
 
                 }
-                if (!String.IsNullOrEmpty(newChat) && newChat != oldChat)
+                if (!string.IsNullOrEmpty(newChat) && newChat != oldChat)
                 {
                     oldChat = newChat;
                     string[] token = newChat.Split(' ');
@@ -559,9 +649,10 @@ namespace Flipper
 
                     if (newChat.Contains("obtained an Ambuscade Primer Volume Two"))
                     {
-                        if (_netMode && !_leader)
+                        WriteLog("[CLIENT] >> REPORTING KEY ITEM");
+                        if (_Network && !_Leader)
                         {
-                            client.Send("KEY_ITEM");
+                            client.Send("KEY");
                         }
                         _hasKeyItem = true;
                     }
@@ -571,11 +662,42 @@ namespace Flipper
             }
         }
 
+        private bool TokenMatch(string data, string match)
+        {
+            int count = match.Split(' ').Count();
+
+            string[] dataTokens = data.Split(' ');
+            string[] matchTokens = match.Split(' ');
+
+            for (int i = 0; i < count; i++)
+            {
+                if (dataTokens[i] != matchTokens[i])
+                    return false;
+            }
+            return true;
+
+        }
+
     }
 
     public class Node
     {
         public float X;
         public float Z;
+    }
+
+    public enum JobRole
+    {
+        Tank,
+        Healer,
+        Damage
+    }
+    public class AmbuscadeSettings
+    {
+        public bool Network;
+        public bool Leader;
+        public bool FillTrusts;
+        public JobRole Role;
+        public int PartyCount;
     }
 }

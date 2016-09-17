@@ -6,6 +6,7 @@ using System.Net.Configuration;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FFACETools;
 using Flipper.Classes;
 using FlipperD;
@@ -64,7 +65,7 @@ namespace Flipper
                     continue;
 
                 if (fface.NPC.Distance(i) < 7 && fface.NPC.Status(i) == Status.Fighting &&
-                    (!fface.NPC.IsClaimed(i) || PartyHasHate(i)) && IsFacingMe(i))
+                    (!fface.NPC.IsClaimed(i) || (fface.NPC.Status(i)  == Status.Fighting && !fface.NPC.IsClaimed(i)) || PartyHasHate(i)) && IsFacingMe(i))
                 {
                     return i;
                 }
@@ -111,11 +112,14 @@ namespace Flipper
         /// <param name="target">The ID of the target to engage.</param>
         /// <param name="monster">The monster object for the monster you're engaging</param>
         /// <param name="mode">Special mode considerations for engaging this target.</param>
+        /// <param name="maxDistance">Maximum distance our target can be from us.</param>
+        /// <param name="noMovement">Don't process movement related things</param>
         /// <returns></returns>
-        public static bool Fight(int target, Monster monster, Mode mode = Mode.None, double maxDistance = 20.0)
+        public static bool Fight(int target, Monster monster, Mode mode = Mode.None, double maxDistance = 20.0, bool noMovement = false)
         {
             _fighting = true;
-            fface.Navigator.Reset();
+            if (!noMovement)
+                fface.Navigator.Reset();
 
             while (CanStillAttack(target) && DistanceTo(target) < maxDistance &&  _fighting)
             {
@@ -123,31 +127,36 @@ namespace Flipper
                 Target(target);
 
                 // FACE TARGET
-                fface.Navigator.FaceHeading(target);
+                if (!noMovement)
+                    fface.Navigator.FaceHeading(target);
 
                 // CLAIM
-                if (!fface.NPC.IsClaimed(target) && _fighting)
-                {
-                    switch (mode)
+                if (!noMovement)
+                    if (!fface.NPC.IsClaimed(target) && _fighting)
                     {
-                        case Mode.StrictPathing:
+                        switch (mode)
                         {
-                            // We don't want to wonder too far from our strict path. Use Strict Pathing.
-                            if (DistanceTo(target) >= monster.HitBox * 1.5)
-                                fface.Navigator.Reset();
+                            case Mode.StrictPathing:
+                            {
+                                // We don't want to wonder too far from our strict path. Use Strict Pathing.
+                                if (DistanceTo(target) >= monster.HitBox*1.5)
+                                    fface.Navigator.Reset();
                                 Thread.Sleep(500);
                                 job.UseRangedClaim();
-                            break;
-                        }
-                        case Mode.None:
-                        {
-                            job.UseClaim();
-                            break;
+                                break;
+                            }
+                            case Mode.None:
+                            {
+                                job.UseClaim();
+                                break;
+                            }
                         }
                     }
-                }
 
                 // ENGAGE
+
+
+
                 if (((fface.NPC.IsClaimed(target) && PartyHasHate(target)) ||
                     (DistanceTo(target) < monster.HitBox * 1.5 && !fface.NPC.IsClaimed(target)))
                     && fface.Player.Status != Status.Fighting && fface.Target.ID == target && _fighting)
@@ -159,47 +168,49 @@ namespace Flipper
                 }
 
                 // MOVE CLOSER
-                if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
-                {
-                    switch (mode)
+                if (!noMovement)
+                    if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
                     {
-                        case Mode.StrictPathing:
+                        switch (mode)
                         {
-                             // if we're strict pathing, let the mob get close to us before we move to it.
-                            if (DistanceTo(target) < monster.HitBox*1.25)
+                            case Mode.StrictPathing:
                             {
-                                fface.Windower.SendString("/echo Close enough, moving in...");
+                                // if we're strict pathing, let the mob get close to us before we move to it.
+                                if (DistanceTo(target) < monster.HitBox*1.25)
+                                {
+                                    fface.Windower.SendString("/echo Close enough, moving in...");
+                                    fface.Navigator.Reset();
+                                    fface.Navigator.HeadingTolerance = 7;
+                                    fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
+                                    fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
+                                }
+                                break;
+                            }
+                            case Mode.None:
+                            {
                                 fface.Navigator.Reset();
-                                fface.Navigator.HeadingTolerance = 7;
                                 fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
                                 fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
+                                break;
                             }
-                            break;
-                        }
-                        case Mode.None:
-                        {
-                            fface.Navigator.Reset();
-                            fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                            fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
-                            break;
                         }
                     }
-                }
 
                 // MOVE BACK
-                if (DistanceTo(target) < (monster.HitBox * 0.65) && CanStillAttack(target) && _fighting)
-                {
-                    switch (mode)
+                if (!noMovement)
+                    if (DistanceTo(target) < (monster.HitBox*0.65) && CanStillAttack(target) && _fighting)
                     {
-                        default:
+                        switch (mode)
                         {
-                            fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                            Thread.Sleep(50);
-                            fface.Windower.SendKey(KeyCode.NP_Number2, false);
-                            break;
+                            default:
+                            {
+                                fface.Windower.SendKey(KeyCode.NP_Number2, true);
+                                Thread.Sleep(50);
+                                fface.Windower.SendKey(KeyCode.NP_Number2, false);
+                                break;
+                            }
                         }
                     }
-                }
 
                 // PLAYER STUFF
                 if (fface.Player.Status == Status.Fighting && _fighting)
@@ -216,8 +227,19 @@ namespace Flipper
 
                 Thread.Sleep(1);
             }
+            Thread.Sleep(500);
+            if (!_fighting && fface.Player.Status == Status.Fighting)
+            {
+                fface.Windower.SendString("/attackoff");
+                Thread.Sleep(3000);
+                if (fface.Target.IsLocked)
+                {
+                    fface.Windower.SendString("/lockon");
+                    Thread.Sleep(500);
+                }
+            }
 
-            if (!_fighting) return false;
+            if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
 
             _fighting = false;
             return true;
@@ -277,23 +299,27 @@ namespace Flipper
 
             if (!IsRendered(id))
             {
+                WriteLog("[CANT ATTACK] Monster is not rendered.");
                 return false;
             }
 
-            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id) && !IsFacingMe(id)) 
+            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id)) 
             {
+                WriteLog("[CANT ATTACK] Monster is claimed, and Party doesn't have hate.");
                 return false;
             }
 
             // Skip if the mob more than 5 yalms above or below us
-            if (Math.Abs(Math.Abs(fface.NPC.PosY(id)) - Math.Abs(fface.Player.PosY)) > 5)
+            if (Math.Abs(Math.Abs(fface.NPC.PosY(id)) - Math.Abs(fface.Player.PosY)) > 15)
             {
+                WriteLog("[CANT ATTACK] Mob is too far below/above me!");
                 return false;
             }
 
             // Skip if the NPC's HP is 0
             if (fface.NPC.HPPCurrent(id) == 0 || !IsRendered(id))
             {
+                WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
                 return false;
             }
 
@@ -373,6 +399,20 @@ namespace Flipper
         }
         #endregion
 
+        public static string lastLog = "";
 
+        public static void WriteLog(string log, bool verbose = false)
+        {
+            if (lastLog != log)
+            {
+                lastLog = log;
+                Program.mainform.uxLog.Invoke((MethodInvoker)delegate
+                {
+                    Program.mainform.uxLog.Items.Add("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + log);
+                    int visibleItems = Program.mainform.uxLog.ClientSize.Height / Program.mainform.uxLog.ItemHeight;
+                    Program.mainform.uxLog.TopIndex = Math.Max(Program.mainform.uxLog.Items.Count - visibleItems + 1, 0);
+                });
+            }
+        }
     }
 }
