@@ -17,18 +17,12 @@ namespace Flipper.Classes
         public bool Melee = true;
         public FFACE _fface;
         public Content _content;
-        public bool melee = true;
-
-        public bool Engages()
-        {
-            return melee;
-        }
 
         public bool Engages()
         {
             return Melee;
         }
-            
+           
         /// <summary>
         /// The furthest distance you can be from the enemy before abandoning battle.
         /// </summary>

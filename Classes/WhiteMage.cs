@@ -26,7 +26,7 @@ namespace Flipper.Classes
             _hasteStates = new Dictionary<string, bool>();
             _partyMembers = new List<PartyMember>();
 
-            melee = false;
+            Melee = false;
 
             //// Loop through each active party member in the party list.
             //foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
