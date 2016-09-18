@@ -103,6 +103,12 @@
       <DependentUpon>ThiefForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\WhiteMage.cs" />
+    <Compile Include="Classes\WhiteMageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\WhiteMageForm.Designer.cs">
+      <DependentUpon>WhiteMageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common.cs" />
     <Compile Include="Combat.cs" />
     <Compile Include="Form1.cs">
@@ -119,6 +125,9 @@
     <Compile Include="Sockets.cs" />
     <EmbeddedResource Include="Classes\ThiefForm.resx">
       <DependentUpon>ThiefForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\WhiteMageForm.resx">
+      <DependentUpon>WhiteMageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

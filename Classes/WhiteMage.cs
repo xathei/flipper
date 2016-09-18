@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Flipper.Classes
 {
@@ -9,6 +10,14 @@ namespace Flipper.Classes
     {
         private Dictionary<string, bool> _hasteStates;
         private List<PartyMember> _partyMembers;
+        public Form _settingsForm = new WhiteMageForm();
+        
+        public override void SettingsForm()
+        {
+            _settingsForm.
+
+            
+        }
 
         public WhiteMage(FFACE instance, Content content)
         {
@@ -153,8 +162,9 @@ namespace Flipper.Classes
         /// <returns></returns>
         private int CalculateMaxHp(int currentHp, int currentHpPercentage)
         {
-            // Divide the percentage by 100, then divide the current HP by the calculated value to return the approximate Max HP.
-            return (currentHp / (currentHpPercentage / 100));
+            decimal divisor = ((decimal)currentHpPercentage) / 100;
+
+            return Convert.ToInt32(Math.Round(currentHp / divisor));
         }
         #endregion
     }

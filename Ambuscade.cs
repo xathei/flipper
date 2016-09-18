@@ -67,21 +67,22 @@ namespace Flipper
 
         private void LoadJobClass()
         {
-            switch (fface.Player.MainJob)
-            {
-                case Job.THF:
-                    job = new Thief(fface, Content.Ambuscade);
-                    break;
-                case Job.PLD:
-                    job = new Paladin(fface, Content.Ambuscade);
-                    break;
-                case Job.BLU:
-                    job = new BlueMage(fface, Content.Ambuscade);
-                    break;
-                case Job.WHM:
-                    job = new WhiteMage(fface, Content.Ambuscade);
-                    break;
-            }
+            job = new WhiteMage(fface, Content.Ambuscade);
+            //switch (fface.Player.MainJob)
+            //{
+            //    case Job.THF:
+            //        job = new Thief(fface, Content.Ambuscade);
+            //        break;
+            //    case Job.PLD:
+            //        job = new Paladin(fface, Content.Ambuscade);
+            //        break;
+            //    case Job.BLU:
+            //        job = new BlueMage(fface, Content.Ambuscade);
+            //        break;
+            //    case Job.WHM:
+            //        job = new WhiteMage(fface, Content.Ambuscade);
+            //        break;
+            //}
         }
 
         /// <summary>

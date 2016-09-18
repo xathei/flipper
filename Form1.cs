@@ -166,7 +166,7 @@ namespace FlipperD
                 s = client.DownloadString("http://www.dazusu.com/soap.php?d="+CalculateMD5Hash(uxCharacter.SelectedItem.ToString()).ToLower());
             }
 
-            if (s == "0 " || uxCharacter.SelectedItem.ToString() == "Dazusu" || uxCharacter.SelectedItem.ToString() == "Dazuto" || uxCharacter.SelectedItem.ToString() == "Otsureku")
+            if (s == "0 " || uxCharacter.SelectedItem.ToString() == "Dazusu" || uxCharacter.SelectedItem.ToString() == "Dazuto" || uxCharacter.SelectedItem.ToString() == "Otsureku" || uxCharacter.SelectedItem.ToString() == "Damarijanette")
             {
 
                 fface = Hook.HookCharacter(uxCharacter.SelectedItem.ToString());
