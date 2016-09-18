@@ -22,5 +22,6 @@ namespace Flipper.Classes
         bool CanStillAttack(int id);
         void Position(int id, Monster monster);
         void SettingsForm();
+        bool Engages();
     }
 }

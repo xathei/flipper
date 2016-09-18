@@ -303,6 +303,10 @@ namespace Flipper
                 {
                     WriteLog($"[TASK] Capped KI");
                     _KeyCapped = true;
+                    if (!job.Engages())
+                    {
+                        Combat.Interrupt();
+                    }
                     WriteLog($"[REPLY] >> TASK ({task}) OK");
                     break;
                 }

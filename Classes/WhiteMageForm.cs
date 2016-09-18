@@ -16,11 +16,5 @@ namespace Flipper.Classes
         {
             InitializeComponent();
         }
-
-        public void StupidMethod()
-        {
-
-        }
-
     }
 }

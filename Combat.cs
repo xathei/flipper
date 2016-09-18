@@ -277,9 +277,21 @@ namespace Flipper
                 }
                 else
                 {
-                    fface.Navigator.Reset();
-                    Thread.Sleep(500);
-                    job.UseSpells();
+                    if (fface.Player.MainJob == Job.WHM)
+                    {
+                        job.UseHeals();
+
+                        job.UseAbilities();
+
+                        job.UseSpells();
+                    }
+                    else
+                    {
+                        fface.Navigator.Reset();
+                        Thread.Sleep(500);
+                        job.UseSpells();
+                    }
+
                 }
 
                 Thread.Sleep(1);
