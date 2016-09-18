@@ -213,7 +213,7 @@ namespace Flipper
                 job.Position(target, monster);
 
                 // PLAYER STUFF
-                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO)
+                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM)
                 {
                     job.UseHeals();
 

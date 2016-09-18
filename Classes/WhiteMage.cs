@@ -72,8 +72,6 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
-            if (!_fface.Target.IsLocked)
-                _fface.Windower.SendString("/lockon");
             return;
         }
 
