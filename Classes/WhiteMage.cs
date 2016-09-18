@@ -1,4 +1,5 @@
 ﻿using FFACETools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,12 +8,25 @@ namespace Flipper.Classes
     public class WhiteMage : Jobs
     {
         private Dictionary<string, bool> _hasteStates;
+        private List<PartyMember> _partyMembers;
 
         public WhiteMage(FFACE instance, Content content)
         {
             _content = content;
             _fface = instance;
             _hasteStates = new Dictionary<string, bool>();
+            _partyMembers = new List<PartyMember>();
+
+            // Loop through each active party member in the party list.
+            foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active == true))
+            {
+                // Add a new PartyMember object to the list of party members.
+                _partyMembers.Add(new PartyMember {
+                    Name = partyMember.Value.Name,
+                    HpCurrent = partyMember.Value.HPCurrent,
+                    HpCurrentMax = CalculateMaxHp(partyMember.Value.HPCurrent, partyMember.Value.HPPCurrent)
+                });
+            }
         }
 
         public override void UseHeals()
@@ -24,6 +38,14 @@ namespace Flipper.Classes
             // Loop through each active party member in the party list.
             foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active == true))
             {
+                // Get the PartyMember object from the current list.
+                PartyMember member = _partyMembers.SingleOrDefault(x => x.Name == partyMember.Value.Name);
+
+                // Update the HP values for the object.
+                member.HpCurrent = partyMember.Value.HPCurrent;
+                member.HpCurrentMax = CalculateMaxHp(partyMember.Value.HPCurrent, partyMember.Value.HPPCurrent);
+                member.HpMissing = member.HpCurrentMax - member.HpCurrent;
+
                 // If the party member's HP is equal or less than 20%, cast Cure VI.
                 if (partyMember.Value.HPPCurrent <= 20 && Ready(SpellList.Cure_VI))
                     UseSpell(SpellList.Cure_VI, 5, partyMember.Value.Name);
@@ -40,6 +62,21 @@ namespace Flipper.Classes
                 if (partyMember.Value.HPPCurrent <= 75 && Ready(SpellList.Cure_III))
                     UseSpell(SpellList.Cure_III, 5, partyMember.Value.Name);
             }
+
+            // Calculate the average HP missing among party members.
+            int averageHpMissing = (_partyMembers.Where(x => x.HpMissing > 100).Sum(x => x.HpMissing) / _partyMembers.Where(x => x.HpMissing > 100).Count());
+
+            // Determine what curaga to cast based on the average missing HP.
+            if (averageHpMissing >= 960 && Ready(SpellList.Curaga_V))
+                UseSpell(SpellList.Curaga_V, 7);
+            else if (averageHpMissing >= 690 && Ready(SpellList.Curaga_IV))
+                UseSpell(SpellList.Curaga_IV, 7);
+            else if (averageHpMissing >= 390 && Ready(SpellList.Curaga_III))
+                UseSpell(SpellList.Curaga_III, 7);
+            else if (averageHpMissing >= 190 && Ready(SpellList.Curaga_II))
+                UseSpell(SpellList.Curaga_II, 7);
+            else if (averageHpMissing >= 90 && Ready(SpellList.Curaga))
+                UseSpell(SpellList.Curaga, 7);
         }
 
         public override void UseAbilities()
@@ -106,5 +143,19 @@ namespace Flipper.Classes
         {
             SendCommand("/ws \"Hexa Strike\" <t>", 3);
         }
+
+        #region Helper Methods
+        /// <summary>
+        /// Calculates the Max Hit Points based on the current value and it's percentage value against 100%.
+        /// </summary>
+        /// <param name="currentHp"></param>
+        /// <param name="currentHpPercentage"></param>
+        /// <returns></returns>
+        private int CalculateMaxHp(int currentHp, int currentHpPercentage)
+        {
+            // Divide the percentage by 100, then divide the current HP by the calculated value to return the approximate Max HP.
+            return (currentHp / (currentHpPercentage / 100));
+        }
+        #endregion
     }
 }
