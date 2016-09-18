@@ -404,39 +404,39 @@ namespace Flipper
             while (_ambuscade)
             {
 
-                // Wait for all palyers to start.
-                if (_Network)
-                {
-                    while (!_proceed)
-                        Thread.Sleep(100);
-                    _proceed = false;
-                }
-                Thread.Sleep(1000);
+                //// Wait for all palyers to start.
+                //if (_Network)
+                //{
+                //    while (!_proceed)
+                //        Thread.Sleep(100);
+                //    _proceed = false;
+                //}
+                //Thread.Sleep(1000);
 
-                if (_Network && _KeyCapped && _initialKeyItem)
-                {
-                    _proceed = true;
-                    goto SkipRoEFarming;
-                }
+                //if (_Network && _KeyCapped && _initialKeyItem)
+                //{
+                //    _proceed = true;
+                //    goto SkipRoEFarming;
+                //}
 
-                // Travel to Home Point then RoE Zone.
-                client.Send("RELAY TASK 1 0");
-                DoRoute(_route2);
-                NavigateToZone(_hpMenuItemString, 41);
-
-
-                // Wait for all players to arrive at the RoE Zone.
-                if (_Network)
-                {
-                    while (!_proceed)
-                        Thread.Sleep(100);
-                    _proceed = false;
-                }
+                //// Travel to Home Point then RoE Zone.
+                //client.Send("RELAY TASK 1 0");
+                //DoRoute(_route2);
+                //NavigateToZone(_hpMenuItemString, 41);
 
 
-                // Farm Key Item, then ReturnHome()
-                //DoRoute(_route3, true);
-                client.Send("RELAY TASK 5 0"); // -- obtain KI
+                //// Wait for all players to arrive at the RoE Zone.
+                //if (_Network)
+                //{
+                //    while (!_proceed)
+                //        Thread.Sleep(100);
+                //    _proceed = false;
+                //}
+
+
+                //// Farm Key Item, then ReturnHome()
+                ////DoRoute(_route3, true);
+                //client.Send("RELAY TASK 5 0"); // -- obtain KI
                 ObtainKI();
                 fface.Navigator.Reset();
                 Thread.Sleep(4000);

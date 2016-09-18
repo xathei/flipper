@@ -171,7 +171,7 @@ namespace Flipper
             }
 
             // battle routine
-            while (job.CanStillAttack(target) &&  _fighting)
+            while (job.CanStillAttack(target) && _fighting)
             {
                 // TARGET
                 Target(target);

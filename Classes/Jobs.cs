@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using FFACETools;
 using System.Threading;
 using System.Diagnostics;
+using System.Windows.Forms;
+using FlipperD;
 
 namespace Flipper.Classes
 {
@@ -40,28 +42,34 @@ namespace Flipper.Classes
 
             if (!IsRendered(id))
             {
+                //WriteLog("[STOP!] The target isn't rendered.");
                 return false;
             }
 
             if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
             {
+                //WriteLog("[STOP!] The target is claimed to someone else.");
                 return false;
             }
 
             // Skip if the mob more than 5 yalms above or below us
             if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
             {
+                //WriteLog("[STOP!] The target is too far above or below.");
                 return false;
             }
 
             // Skip if the NPC's HP is 0
-            if (_fface.NPC.HPPCurrent(id) == 0 || !IsRendered(id))
+            if (_fface.NPC.HPPCurrent(id) == 0)
             {
+                //WriteLog("[STOP!] Target HP is 0 :(");
                 return false;
             }
 
-            if (DistanceTo(id) > MaxDistance())
+            if (DistanceTo(id) > MaxDistance() && _fface.Player.Status == Status.Fighting)
             {
+                //WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
+
                 return false;
             }
 
@@ -518,6 +526,22 @@ namespace Flipper.Classes
         public bool HasItem(ushort itemId)
         {
             return _fface.Item.GetInventoryItemCount(itemId) >= 1;
+        }
+
+
+        public static string lastLog = "";
+        public static void WriteLog(string log, bool verbose = false)
+        {
+            if (lastLog != log)
+            {
+                lastLog = log;
+                Program.mainform.uxLog.Invoke((MethodInvoker)delegate
+                {
+                    Program.mainform.uxLog.Items.Add("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + log);
+                    int visibleItems = Program.mainform.uxLog.ClientSize.Height / Program.mainform.uxLog.ItemHeight;
+                    Program.mainform.uxLog.TopIndex = Math.Max(Program.mainform.uxLog.Items.Count - visibleItems + 1, 0);
+                });
+            }
         }
         #endregion
     }
