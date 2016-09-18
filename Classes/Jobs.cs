@@ -15,6 +15,85 @@ namespace Flipper.Classes
         public Content _content;
 
         /// <summary>
+        /// The furthest distance you can be from the enemy before abandoning battle.
+        /// </summary>
+        /// <returns></returns>
+        public virtual int MaxDistance()
+        {
+            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            {
+                return 50;
+            }
+            else
+            {
+                return 20;
+            }
+        }
+
+        /// <summary>
+        /// Determines if the character is still engaged and can still attack their target.
+        /// Called periodically during combat.
+        /// </summary>
+        /// <param name="id">The ID of your target</param>
+        public virtual bool CanStillAttack(int id)
+        {
+
+            if (!IsRendered(id))
+            {
+                return false;
+            }
+
+            if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
+            {
+                return false;
+            }
+
+            // Skip if the mob more than 5 yalms above or below us
+            if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
+            {
+                return false;
+            }
+
+            // Skip if the NPC's HP is 0
+            if (_fface.NPC.HPPCurrent(id) == 0 || !IsRendered(id))
+            {
+                return false;
+            }
+
+            if (DistanceTo(id) > MaxDistance())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Called continually during battle to ensure characters are in the correct position.
+        /// </summary>
+        public virtual void Position(int id, Monster monster)
+        {
+            // move closer to the mob
+            if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
+            {
+                _fface.Navigator.Reset();
+                _fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
+                _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
+
+            }
+
+            // move back from the target
+            if (DistanceTo(id) < (monster.HitBox*0.65) && CanStillAttack(id))
+            {
+
+                _fface.Windower.SendKey(KeyCode.NP_Number2, true);
+                Thread.Sleep(50);
+                _fface.Windower.SendKey(KeyCode.NP_Number2, false);
+
+            }
+        }
+
+        /// <summary>
         /// Called when the user is following a strict path, but needs to claim a monster.
         /// </summary>
         public virtual void UseRangedClaim()
@@ -73,22 +152,29 @@ namespace Flipper.Classes
             
         }
 
-        public void Engage()
+        /// <summary>
+        /// Engages the current target.
+        /// </summary>
+        public virtual void Engage()
         {
             SendCommand("/attack <t>", 3);
         }
 
+        /// <summary>
+        /// Spawns trusts.
+        /// </summary>
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Koru-Moru\" <me>");
-            Thread.Sleep(7000);
-            SendCommand("/ma \"Ulmia\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
+            Thread.Sleep(7000);
+            SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
         }
 
-        public void Warp()
+        /// <summary>
+        /// Causes the player to warp from their current location via any means possible.
+        /// </summary>
+        public virtual void Warp()
         {
             _fface.Windower.SendString("//gs disable lring");
             Thread.Sleep(100);
@@ -188,11 +274,63 @@ namespace Flipper.Classes
             }
         }
 
+
+
         #region Helper Methods
-        public Dictionary<string, DateTime> CommandsLog = new Dictionary<string, DateTime>();
-        public DateTime NextCommandAllowed = DateTime.MinValue;
+
+        /// <summary>
+        /// A lazy way to return distance from target.
+        /// </summary>
+        /// <param name="id">ID of target.</param>
+        /// <returns>Double indicating distance from target.</returns>
+        private double DistanceTo(int id)
+        {
+            return _fface.Navigator.DistanceTo(id);
+        }
+
+        /// <summary>
+        /// Checks if a party member has hate
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private bool PartyHasHate(int id)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                var members = _fface.PartyMember[Convert.ToByte(i)];
+
+                if (_fface.NPC.ClaimedID(id) == members.ServerID && _fface.NPC.HPPCurrent(id) > 0 && _fface.NPC.Status(id) != Status.Dead1 && _fface.NPC.Status(id) != Status.Dead2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Is a mosnter rendered?
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsRendered(int id)
+        {
+            byte[] b = _fface.NPC.GetRawNPCData(id, 0x120, 4);
+            if (b != null)
+                return (BitConverter.ToInt32(b, 0) & 0x200) != 0;
+            return false;
+        }
 
 
+        private Dictionary<string, DateTime> CommandsLog = new Dictionary<string, DateTime>();
+        private DateTime NextCommandAllowed = DateTime.MinValue;
+
+        /// <summary>
+        /// Sends commands to the server, and ensures commands are not spammed.
+        /// </summary>
+        /// <param name="command">The fully qualified command.</param>
+        /// <param name="Delay">How long to lockout other avilities.</param>
+        /// <param name="PreventGlobal"></param>
+        /// <returns></returns>
         public bool SendCommand(string command, int Delay = 2, bool PreventGlobal = false)
         {
             if ((!CommandsLog.ContainsKey(command) || (CommandsLog.ContainsKey(command) && CommandsLog[command] < DateTime.Now)) &&
@@ -235,7 +373,6 @@ namespace Flipper.Classes
             return SendCommand("/ja \"" + ability.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), Delay);
         }
 
-
         /// <summary>
         /// Uses an ability list that belongs to a group of abilities; such as a Pet ability, DNC Step, or DNC Waltz.
         /// </summary>
@@ -250,7 +387,6 @@ namespace Flipper.Classes
         {
             return SendCommand("/ja \"" + ability.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), Delay);
         }
-
 
         /// <summary>
         /// Uses a spell from the SpellList enum.

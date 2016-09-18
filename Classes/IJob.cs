@@ -19,5 +19,7 @@ namespace Flipper.Classes
         void Engage();
         void Warp();
         void SpawnTrusts();
+        bool CanStillAttack(int id);
+        void Position(int id, Monster monster);
     }
 }

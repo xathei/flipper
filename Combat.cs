@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Configuration;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -148,7 +149,7 @@ namespace Flipper
                 }
 
 
-                while (path.Any() && CanStillAttack(target) && DistanceTo(target) > (monster.HitBox*1.5) && _fighting)
+                while (path.Any() && job.CanStillAttack(target) && DistanceTo(target) > (monster.HitBox*1.5) && _fighting)
                 {
                     if (!fface.NPC.IsClaimed(target))
                     {
@@ -170,7 +171,7 @@ namespace Flipper
             }
 
             // battle routine
-            while (CanStillAttack(target) && (DistanceTo(target) < 20 || fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) && _fighting)
+            while (job.CanStillAttack(target) &&  _fighting)
             {
                 // TARGET
                 Target(target);
@@ -213,50 +214,54 @@ namespace Flipper
                     job.Engage();
                 }
 
-                // MOVE CLOSER
+                // make sure we're in the correct position
+                job.Position(target, monster);
+                #region Deprecated
+                //// MOVE CLOSER
 
-                if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
-                {
-                    switch (mode)
-                    {
-                        case Mode.StrictPathing:
-                            {
-                                // if we're strict pathing, let the mob get close to us before we move to it.
-                                if (DistanceTo(target) < monster.HitBox * 1.25)
-                                {
-                                    fface.Windower.SendString("/echo Close enough, moving in...");
-                                    fface.Navigator.Reset();
-                                    fface.Navigator.HeadingTolerance = 7;
-                                    fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                                    fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
-                                }
-                                break;
-                            }
-                        case Mode.Meshing:
-                        case Mode.None:
-                            {
-                                fface.Navigator.Reset();
-                                fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                                fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
-                                break;
-                            }
-                    }
-                }
+                //if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
+                //{
+                //    switch (mode)
+                //    {
+                //        case Mode.StrictPathing:
+                //            {
+                //                // if we're strict pathing, let the mob get close to us before we move to it.
+                //                if (DistanceTo(target) < monster.HitBox * 1.25)
+                //                {
+                //                    fface.Windower.SendString("/echo Close enough, moving in...");
+                //                    fface.Navigator.Reset();
+                //                    fface.Navigator.HeadingTolerance = 7;
+                //                    fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
+                //                    fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
+                //                }
+                //                break;
+                //            }
+                //        case Mode.Meshing:
+                //        case Mode.None:
+                //            {
+                //                fface.Navigator.Reset();
+                //                fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
+                //                fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
+                //                break;
+                //            }
+                //    }
+                //}
 
-                // MOVE BACK
-                if (DistanceTo(target) < (monster.HitBox * 0.65) && CanStillAttack(target) && _fighting)
-                {
-                    switch (mode)
-                    {
-                        default:
-                            {
-                                fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                                Thread.Sleep(50);
-                                fface.Windower.SendKey(KeyCode.NP_Number2, false);
-                                break;
-                            }
-                    }
-                }
+                //// MOVE BACK
+                //if (DistanceTo(target) < (monster.HitBox * 0.65) && CanStillAttack(target) && _fighting)
+                //{
+                //    switch (mode)
+                //    {
+                //        default:
+                //            {
+                //                fface.Windower.SendKey(KeyCode.NP_Number2, true);
+                //                Thread.Sleep(50);
+                //                fface.Windower.SendKey(KeyCode.NP_Number2, false);
+                //                break;
+                //            }
+                //    }
+                //}
+                #endregion
 
                 // PLAYER STUFF
                 if (fface.Player.Status == Status.Fighting && _fighting)
@@ -641,7 +646,7 @@ namespace Flipper
             int DestinationX = Convert.ToInt32(X) + offset;
             int DestinationZ = Convert.ToInt32(Z) + offset;
 
-            WriteLog($"Generating a path to {X} , {Z}");
+           // WriteLog($"Generating a path to {X} , {Z}");
             List<PathFinderNode> path = new List<PathFinderNode>();
             try
             {
@@ -655,7 +660,7 @@ namespace Flipper
             }
             if (path != null)
             {
-                WriteLog($"Generation succeeded! {path.Count()} nodes were assembled");
+                //WriteLog($"Generation succeeded! {path.Count()} nodes were assembled");
                 foreach (PathFinderNode point in path)
                 {
                     ReturnPath.Add(new Node { X = point.X - offset, Z = point.Y - offset });
@@ -663,7 +668,7 @@ namespace Flipper
             }
             else
             {
-                WriteLog($"Pathing failed (No route): {Convert.ToInt32(fface.Player.PosX)},{Convert.ToInt32(fface.Player.PosZ)} to {X},{Z}!");
+               // WriteLog($"Pathing failed (No route): {Convert.ToInt32(fface.Player.PosX)},{Convert.ToInt32(fface.Player.PosZ)} to {X},{Z}!");
             }
             ReturnPath = SmoothNodes(ReturnPath);
 
@@ -679,7 +684,7 @@ namespace Flipper
         /// <returns></returns>
         public static List<Node> SmoothNodes(List<Node> nodes)
         {
-            WriteLog($"Smoothing nodes for a path with {nodes.Count()} nodes.");
+            //WriteLog($"Smoothing nodes for a path with {nodes.Count()} nodes.");
             List<Node> SmoothLikeButter = new List<Node>();
             int Index = 0;
             try
