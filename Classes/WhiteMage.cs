@@ -59,7 +59,15 @@ namespace Flipper.Classes
 
         public override void UseRangedClaim()
         {
-            return;
+            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            {
+                return;
+            }
+            else
+            {
+                if (Ready(SpellList.Flash))
+                    UseSpell(SpellList.Flash, 6, true);
+            }
         }
 
         public override void Engage()
