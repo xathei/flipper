@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Flipper;
+using Flipper.Classes;
 
 namespace FlipperD
 {
@@ -247,8 +248,17 @@ namespace FlipperD
         private void button3_Click(object sender, EventArgs e)
         {
 
-            double x = GetSADifference(fface.Target.ID);
-            fface.Windower.SendString($"/echo diff: {x}");
+            var difference = GetSADifference(fface.Target.ID);
+            while (difference < 66 || difference > 89)
+            {
+                fface.Windower.SendKey(KeyCode.NP_Number6, true);
+                Thread.Sleep(100);
+                fface.Windower.SendKey(KeyCode.NP_Number6, false);
+                difference = GetSADifference(fface.Target.ID);
+            }
+
+            //double x = GetSADifference(fface.Target.ID);
+            //fface.Windower.SendString($"/echo diff: {x}");
             //Thread t = new Thread(Claim);
             //t.Start();
 
@@ -969,6 +979,22 @@ namespace FlipperD
                 _ambuscade = new Ambuscade(fface);
 
             _ambuscade?.JobClass.SettingsForm();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            IJob job = new Geomancer(fface, Content.Ambuscade);
+            Flipper.Monster mob = new Flipper.Monster()
+            {
+                HitBox = 2.5,
+                MonsterName = "Sylvestre",
+                TimeSpecific = false
+            };
+
+            Combat.SetInstance = fface;
+            Combat.SetJob = job;
+            Combat.FailType fail = Combat.FailType.NoFail;
+            Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
         }
     }
 

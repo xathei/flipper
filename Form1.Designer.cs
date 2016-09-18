@@ -172,6 +172,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.button7 = new System.Windows.Forms.Button();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1585,6 +1586,7 @@
             // 
             // tabMisc2
             // 
+            this.tabMisc2.Controls.Add(this.button7);
             this.tabMisc2.Controls.Add(this.groupBox9);
             this.tabMisc2.Location = new System.Drawing.Point(4, 26);
             this.tabMisc2.Name = "tabMisc2";
@@ -1740,6 +1742,16 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(22, 19);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(246, 76);
+            this.button7.TabIndex = 6;
+            this.button7.Text = "Booga\'s Geo Test";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // Form1
             // 
@@ -1956,6 +1968,7 @@
         public System.Windows.Forms.CheckBox ambNetworkMode;
         private System.Windows.Forms.TextBox ambPartyCount;
         private System.Windows.Forms.Button AmbJobConfigButton;
+        private System.Windows.Forms.Button button7;
     }
 }
 
