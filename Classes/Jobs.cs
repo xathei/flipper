@@ -22,7 +22,7 @@ namespace Flipper.Classes
         {
             return Melee;
         }
-            
+           
         /// <summary>
         /// The furthest distance you can be from the enemy before abandoning battle.
         /// </summary>
