@@ -181,8 +181,6 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Apururu (UC)\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
         }
@@ -297,7 +295,7 @@ namespace Flipper.Classes
         /// </summary>
         /// <param name="id">ID of target.</param>
         /// <returns>Double indicating distance from target.</returns>
-        private double DistanceTo(int id)
+        public double DistanceTo(int id)
         {
             return _fface.Navigator.DistanceTo(id);
         }
@@ -415,6 +413,11 @@ namespace Flipper.Classes
         public bool UseSpell(SpellList spell, int castTime, bool Offensive = false)
         {
             return SendCommand("/ma \"" + spell.ToString().Replace('_', ' ') + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
+        }
+
+        public bool UseSpell(string spell, SpellList spellGroup, int castTime, bool Offensive = false)
+        {
+            return SendCommand("/ma \"" + spell + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
         }
 
         /// <summary>

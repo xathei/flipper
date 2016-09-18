@@ -16,5 +16,11 @@ namespace Flipper.Classes
         {
             InitializeComponent();
         }
+
+        public void PopulateUI(string data)
+        {
+            MessageBox.Show("Got data!");
+        }
+
     }
 }

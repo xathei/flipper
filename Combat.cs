@@ -264,7 +264,7 @@ namespace Flipper
                 #endregion
 
                 // PLAYER STUFF
-                if (fface.Player.Status == Status.Fighting && _fighting)
+                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO)
                 {
                     job.UseHeals();
 
@@ -273,6 +273,12 @@ namespace Flipper
                     if (fface.Player.TPCurrent >= 1000)
                         job.UseWeaponskills();
 
+                    job.UseSpells();
+                }
+                else
+                {
+                    fface.Navigator.Reset();
+                    Thread.Sleep(500);
                     job.UseSpells();
                 }
 

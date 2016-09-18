@@ -14,17 +14,19 @@ namespace Flipper.Classes
     public class Thief : Jobs
     {
         private int _bullyTimer;
-        private Form settingsForm = new ThiefForm();
+        private ThiefForm settingsForm = new ThiefForm();
 
-        public override void SettingsForm()
-        {
-            settingsForm.Show();
-        }
 
         public Thief(FFACE instance, Content content)
         {
             _content = content;
             _fface = instance;
+        }
+
+        public override void SettingsForm()
+        {
+            settingsForm.Show();
+            settingsForm.PopulateUI("derp");
         }
 
         public override void UseRangedClaim()
