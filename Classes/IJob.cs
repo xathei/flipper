@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,5 +23,6 @@ namespace Flipper.Classes
         bool CanStillAttack(int id);
         void Position(int id, Monster monster);
         void SettingsForm();
+        bool Engages();
     }
 }

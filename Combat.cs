@@ -204,64 +204,13 @@ namespace Flipper
 
                 // ENGAGE
 
-                if (((fface.NPC.IsClaimed(target) && PartyHasHate(target)) ||
-                    (DistanceTo(target) < monster.HitBox * 1.5 && !fface.NPC.IsClaimed(target)))
-                    && fface.Player.Status != Status.Fighting && fface.Target.ID == target && _fighting)
+                if (fface.Player.Status != Status.Fighting && fface.Target.ID == target && job.CanStillAttack(target) && _fighting)
                 {
-                    // IF ('TARGET IS CLAIMED && PARTY HAS HATE'
-                    // OR 'DISTANCE TO TARGET < 5 && TARGET IS NOT CLAIMED') AND
-                    //    PLAYER IS NOT ENGAGED && TARGET ID == TARGET && _FIGHTING
                     job.Engage();
                 }
 
                 // make sure we're in the correct position
                 job.Position(target, monster);
-                #region Deprecated
-                //// MOVE CLOSER
-
-                //if (DistanceTo(target) > monster.HitBox && CanStillAttack(target) && _fighting)
-                //{
-                //    switch (mode)
-                //    {
-                //        case Mode.StrictPathing:
-                //            {
-                //                // if we're strict pathing, let the mob get close to us before we move to it.
-                //                if (DistanceTo(target) < monster.HitBox * 1.25)
-                //                {
-                //                    fface.Windower.SendString("/echo Close enough, moving in...");
-                //                    fface.Navigator.Reset();
-                //                    fface.Navigator.HeadingTolerance = 7;
-                //                    fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                //                    fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
-                //                }
-                //                break;
-                //            }
-                //        case Mode.Meshing:
-                //        case Mode.None:
-                //            {
-                //                fface.Navigator.Reset();
-                //                fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                //                fface.Navigator.Goto(fface.NPC.PosX(target), fface.NPC.PosZ(target), false);
-                //                break;
-                //            }
-                //    }
-                //}
-
-                //// MOVE BACK
-                //if (DistanceTo(target) < (monster.HitBox * 0.65) && CanStillAttack(target) && _fighting)
-                //{
-                //    switch (mode)
-                //    {
-                //        default:
-                //            {
-                //                fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                //                Thread.Sleep(50);
-                //                fface.Windower.SendKey(KeyCode.NP_Number2, false);
-                //                break;
-                //            }
-                //    }
-                //}
-                #endregion
 
                 // PLAYER STUFF
                 if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO)
@@ -277,8 +226,8 @@ namespace Flipper
                 }
                 else
                 {
+
                     fface.Navigator.Reset();
-                    Thread.Sleep(500);
                     job.UseSpells();
                 }
 
@@ -324,7 +273,6 @@ namespace Flipper
         {
             _fighting = false;
         }
-
 
         #region Helper Methods
 

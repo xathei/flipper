@@ -17,6 +17,7 @@ namespace Flipper.Classes
         {
             _content = content;
             _fface = instance;
+            Melee = false;
         }
 
         public override int MaxDistance()
@@ -95,63 +96,67 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
-            double targetDistanceFromLuopan = 0;
-            List<TargetInfo> luopan = FindTargetAll("luopan", 30);
-
-            if (luopan.Any())
+            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
-                int luopanId = luopan[0].Id;
-                int monsterId = _fface.Target.ID;
-                targetDistanceFromLuopan = DistanceTo(new Node()
+                double targetDistanceFromLuopan = 0;
+                List<TargetInfo> luopan = FindTargetAll("luopan", 30);
+
+                if (luopan.Any())
                 {
-                    X = _fface.NPC.PosX(luopanId),
-                    Z = _fface.NPC.PosZ(luopanId),
-                }, new Node()
-                {
-                    X = _fface.NPC.PosX(monsterId),
-                    Z = _fface.NPC.PosZ(monsterId),
-                });
-            }
-
-            if (!IsAfflicted(StatusEffect.Geo_Fury) && Ready(SpellList.Indi_Fury))
-            {
-                UseSpell("Indi-Fury", SpellList.Indi_Fury, 10, false);
-            }
-            else if (Ready(SpellList.Geo_Frailty) && !FindTargetAll("luopan", 10).Any())
-            {
-                if (targetDistanceFromLuopan != 0 && targetDistanceFromLuopan > 7)
-                {
-                    UseAbility(AbilityList.Full_Circle, 2, false);
-                    Thread.Sleep(2500);
-
-
-                    if (Ready(AbilityList.Blaze_Glory))
-                        UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
-
-                    Thread.Sleep(2500);
-
-                    UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
-
-                    _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
+                    int luopanId = luopan[0].Id;
+                    int monsterId = _fface.Target.ID;
+                    targetDistanceFromLuopan = DistanceTo(new Node()
+                    {
+                        X = _fface.NPC.PosX(luopanId),
+                        Z = _fface.NPC.PosZ(luopanId),
+                    }, new Node()
+                    {
+                        X = _fface.NPC.PosX(monsterId),
+                        Z = _fface.NPC.PosZ(monsterId),
+                    });
                 }
-                else if (targetDistanceFromLuopan == 0)
+
+                if (!IsAfflicted(StatusEffect.Geo_Haste) && Ready(SpellList.Indi_Haste))
                 {
-
-
-                    if (Ready(AbilityList.Blaze_Glory))
-                        UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
-
-                    Thread.Sleep(2500);
-
-                    UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
-                    _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
+                    UseSpell("Indi-Haste", SpellList.Indi_Haste, 10, false);
                 }
-            }
-            else if (FindTargetAll("luopan", 10).Any() && Ready(AbilityList.Dematerialize) && Ready(AbilityList.Life_Cycle) && DateTime.Now > _useDematerializeAt)
-            {
-                UseAbility(AbilityList.Dematerialize, 2, false);
-                Thread.Sleep(2500);
-                UseAbility(AbilityList.Life_Cycle, 2, false);
+                else if (Ready(SpellList.Geo_Frailty) && (!FindTargetAll("luopan", 10).Any() || targetDistanceFromLuopan > 4))
+                {
+                    if (targetDistanceFromLuopan != 0 && targetDistanceFromLuopan > 4)
+                    {
+                        UseAbility(AbilityList.Full_Circle, 2, false);
+                        Thread.Sleep(2500);
+
+
+                        if (Ready(AbilityList.Blaze_Glory))
+                            UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
+
+                        Thread.Sleep(2500);
+
+                        UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
+
+                        _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
+                    }
+                    else if (targetDistanceFromLuopan == 0)
+                    {
+
+
+                        if (Ready(AbilityList.Blaze_Glory))
+                            UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
+
+                        Thread.Sleep(2500);
+
+                        UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
+                        _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
+                    }
+                }
+                else if (FindTargetAll("luopan", 10).Any() && Ready(AbilityList.Dematerialize) &&
+                         Ready(AbilityList.Life_Cycle) && DateTime.Now > _useDematerializeAt)
+                {
+                    UseAbility(AbilityList.Dematerialize, 2, false);
+                    Thread.Sleep(2500);
+                    UseAbility(AbilityList.Life_Cycle, 2, false);
+                }
             }
         }
 

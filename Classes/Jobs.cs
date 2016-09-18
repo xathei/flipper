@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FFACETools;
 using System.Threading;
 using System.Diagnostics;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Forms;
 using FlipperD;
 
@@ -13,9 +14,15 @@ namespace Flipper.Classes
 {
     public class Jobs : IJob
     {
+        public bool Melee = true;
         public FFACE _fface;
         public Content _content;
 
+        public bool Engages()
+        {
+            return Melee;
+        }
+            
         /// <summary>
         /// The furthest distance you can be from the enemy before abandoning battle.
         /// </summary>
@@ -42,13 +49,13 @@ namespace Flipper.Classes
 
             if (!IsRendered(id))
             {
-                //WriteLog("[STOP!] The target isn't rendered.");
+               //WriteLog("[STOP!] The target isn't rendered.");
                 return false;
             }
 
             if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
             {
-                //WriteLog("[STOP!] The target is claimed to someone else.");
+               //WriteLog("[STOP!] The target is claimed to someone else.");
                 return false;
             }
 
@@ -69,7 +76,6 @@ namespace Flipper.Classes
             if (DistanceTo(id) > MaxDistance() && _fface.Player.Status == Status.Fighting)
             {
                 //WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
-
                 return false;
             }
 
@@ -181,8 +187,8 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Koru-Moru\" <me>");
-            Thread.Sleep(7000);
+           // SendCommand("/ma \"Koru-Moru\" <me>");
+           // Thread.Sleep(7000);
         }
 
         /// <summary>

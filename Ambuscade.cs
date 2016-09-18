@@ -303,6 +303,10 @@ namespace Flipper
                 {
                     WriteLog($"[TASK] Capped KI");
                     _KeyCapped = true;
+                    if (!job.Engages())
+                    {
+                        Combat.Interrupt();
+                    }
                     WriteLog($"[REPLY] >> TASK ({task}) OK");
                     break;
                 }
@@ -363,11 +367,8 @@ namespace Flipper
                     if (_targetId > 0)
                     {
                         fface.Navigator.Reset();
-                        WriteLog("Waiting for movement to end...");
                         Thread.Sleep(200);
-                        WriteLog("Engaging mob...");
                         Fight(_targetId, Combat.Mode.Meshing);
-                        WriteLog("Fight routine complete... comtinuing to roam?");
                         fface.Navigator.Reset();
                         _targetId = 0;
                         goto NoPath;
