@@ -21,5 +21,6 @@ namespace Flipper.Classes
         void SpawnTrusts();
         bool CanStillAttack(int id);
         void Position(int id, Monster monster);
+        void SettingsForm();
     }
 }

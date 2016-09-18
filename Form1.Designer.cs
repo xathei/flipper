@@ -108,6 +108,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
             this.tabAmbuscade = new System.Windows.Forms.TabPage();
+            this.AmbJobConfigButton = new System.Windows.Forms.Button();
             this.uxAmbKeyItem = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
@@ -1059,6 +1060,7 @@
             // 
             // tabAmbuscade
             // 
+            this.tabAmbuscade.Controls.Add(this.AmbJobConfigButton);
             this.tabAmbuscade.Controls.Add(this.uxAmbKeyItem);
             this.tabAmbuscade.Controls.Add(this.label25);
             this.tabAmbuscade.Controls.Add(this.label24);
@@ -1075,6 +1077,17 @@
             this.tabAmbuscade.TabIndex = 8;
             this.tabAmbuscade.Text = "Ambuscade";
             this.tabAmbuscade.UseVisualStyleBackColor = true;
+            // 
+            // AmbJobConfigButton
+            // 
+            this.AmbJobConfigButton.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmbJobConfigButton.Location = new System.Drawing.Point(470, 343);
+            this.AmbJobConfigButton.Name = "AmbJobConfigButton";
+            this.AmbJobConfigButton.Size = new System.Drawing.Size(163, 55);
+            this.AmbJobConfigButton.TabIndex = 10;
+            this.AmbJobConfigButton.Text = "Job Config";
+            this.AmbJobConfigButton.UseVisualStyleBackColor = true;
+            this.AmbJobConfigButton.Click += new System.EventHandler(this.AmbJobConfigButton_Click);
             // 
             // uxAmbKeyItem
             // 
@@ -1942,6 +1955,7 @@
         private System.Windows.Forms.CheckBox uxAmbKeyItem;
         public System.Windows.Forms.CheckBox ambNetworkMode;
         private System.Windows.Forms.TextBox ambPartyCount;
+        private System.Windows.Forms.Button AmbJobConfigButton;
     }
 }
 

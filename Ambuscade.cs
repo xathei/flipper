@@ -21,7 +21,7 @@ namespace Flipper
     public class Ambuscade
     {
         private FFACE fface;
-        public IJob job;
+        private IJob job;
 
         private Thread chatThread;
         private Thread taskThread;
@@ -52,7 +52,18 @@ namespace Flipper
         private volatile ClientInfo client;
         public volatile bool _proceed;
         public volatile bool _FillTrusts = false;
+
+        public IJob JobClass => job;
         #endregion
+
+        public Ambuscade(FFACE instance)
+        {
+            // Assign fface instance.
+            fface = instance;
+
+            // Load Job Class to handle battle.
+            LoadJobClass();
+        }
 
         private void LoadJobClass()
         {
@@ -85,12 +96,6 @@ namespace Flipper
         /// <param name="difficulty">The difficulty string to select when entering ambuscade.</param>
         public void Start(FFACE instance, Monster roeTarget, Monster ambuscadeTarget, string homePoint, bool keyitem, AmbuscadeSettings settings, string difficulty = "Easy. (Level: 114)")
         {
-            // Assign fface instance.
-            fface = instance;
-
-            // Load Job Class to handle battle.
-            LoadJobClass();
-
             // Enables looping in the class.
             _ambuscade = true;
 
@@ -404,39 +409,39 @@ namespace Flipper
             while (_ambuscade)
             {
 
-                //// Wait for all palyers to start.
-                //if (_Network)
-                //{
-                //    while (!_proceed)
-                //        Thread.Sleep(100);
-                //    _proceed = false;
-                //}
-                //Thread.Sleep(1000);
+                // Wait for all palyers to start.
+                if (_Network)
+                {
+                    while (!_proceed)
+                        Thread.Sleep(100);
+                    _proceed = false;
+                }
+                Thread.Sleep(1000);
 
-                //if (_Network && _KeyCapped && _initialKeyItem)
-                //{
-                //    _proceed = true;
-                //    goto SkipRoEFarming;
-                //}
+                if (_Network && _KeyCapped && _initialKeyItem)
+                {
+                    _proceed = true;
+                    goto SkipRoEFarming;
+                }
 
-                //// Travel to Home Point then RoE Zone.
-                //client.Send("RELAY TASK 1 0");
-                //DoRoute(_route2);
-                //NavigateToZone(_hpMenuItemString, 41);
-
-
-                //// Wait for all players to arrive at the RoE Zone.
-                //if (_Network)
-                //{
-                //    while (!_proceed)
-                //        Thread.Sleep(100);
-                //    _proceed = false;
-                //}
+                // Travel to Home Point then RoE Zone.
+                client.Send("RELAY TASK 1 0");
+                DoRoute(_route2);
+                NavigateToZone(_hpMenuItemString, 41);
 
 
-                //// Farm Key Item, then ReturnHome()
-                ////DoRoute(_route3, true);
-                //client.Send("RELAY TASK 5 0"); // -- obtain KI
+                // Wait for all players to arrive at the RoE Zone.
+                if (_Network)
+                {
+                    while (!_proceed)
+                        Thread.Sleep(100);
+                    _proceed = false;
+                }
+
+
+                // Farm Key Item, then ReturnHome()
+                //DoRoute(_route3, true);
+                client.Send("RELAY TASK 5 0"); // -- obtain KI
                 ObtainKI();
                 fface.Navigator.Reset();
                 Thread.Sleep(4000);

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FFACETools;
 
 namespace Flipper.Classes
@@ -13,6 +14,12 @@ namespace Flipper.Classes
     public class Thief : Jobs
     {
         private int _bullyTimer;
+        private Form settingsForm = new ThiefForm();
+
+        public override void SettingsForm()
+        {
+            settingsForm.Show();
+        }
 
         public Thief(FFACE instance, Content content)
         {

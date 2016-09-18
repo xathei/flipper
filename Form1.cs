@@ -920,9 +920,11 @@ namespace FlipperD
             MessageBox.Show($"File {ambFilename.Text} has been saved.", "Save OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private Ambuscade _ambuscade;
+
         private void ambStartButton_Click(object sender, EventArgs e)
         {
-            Ambuscade ambuscade = new Ambuscade();
+            _ambuscade = new Ambuscade(fface);
 
            Flipper.Monster roe = new Flipper.Monster()
             {
@@ -945,7 +947,7 @@ namespace FlipperD
                 PartyCount = Convert.ToInt32(ambPartyCount.Text)
             };
 
-            ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, settings, ambDifficulty.SelectedItem.ToString());
+            _ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, settings, ambDifficulty.SelectedItem.ToString());
         }
 
         public JobRole DetermineJobRole()
@@ -958,6 +960,12 @@ namespace FlipperD
                 return JobRole.Tank;
 
             return JobRole.Damage;
+        }
+
+        private void AmbJobConfigButton_Click(object sender, EventArgs e)
+        {
+            _ambuscade = new Ambuscade(fface);
+            _ambuscade?.JobClass.SettingsForm();
         }
     }
 

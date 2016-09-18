@@ -135,6 +135,14 @@ namespace Flipper.Classes
             
         }
 
+        /// <summary>
+        /// Shows the settings form
+        /// </summary>
+        public virtual void SettingsForm()
+        {
+            MessageBox.Show($"Settings have not yet been implemented for {_fface.Player.MainJob}.", "Not Implemented", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
 
         /// <summary>
         /// Called continually during battle.
@@ -185,9 +193,9 @@ namespace Flipper.Classes
         public virtual void Warp()
         {
             _fface.Windower.SendString("//gs disable lring");
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             SendCommand("/equip l.ring \"Warp ring\"", 9);
-            Thread.Sleep(10000);
+            Thread.Sleep(11000);
             SendCommand("/item \"Warp Ring\" <me>", 10);
             Thread.Sleep(5000);
             _fface.Windower.SendString("//gs enable lring");
@@ -281,8 +289,6 @@ namespace Flipper.Classes
                 }
             }
         }
-
-
 
         #region Helper Methods
 
