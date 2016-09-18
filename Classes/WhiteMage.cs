@@ -26,7 +26,7 @@ namespace Flipper.Classes
             _hasteStates = new Dictionary<string, bool>();
             _partyMembers = new List<PartyMember>();
 
-            melee = false;
+            Melee = false;
 
             //// Loop through each active party member in the party list.
             //foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
@@ -107,15 +107,25 @@ namespace Flipper.Classes
 
             }
 
+            bool wasLocked = true;
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
                 var difference = GetSADifference(id);
                 while (difference < 66 || difference > 89)
                 {
+                    if (!_fface.Target.IsLocked)
+                    {
+                        wasLocked = false;
+                        _fface.Windower.SendString("/lockon");
+                    }
                     _fface.Windower.SendKey(KeyCode.NP_Number6, true);
                     Thread.Sleep(100);
                     _fface.Windower.SendKey(KeyCode.NP_Number6, false);
                     difference = GetSADifference(id);
+                }
+                if (!wasLocked && _fface.Target.IsLocked)
+                {
+                    _fface.Windower.SendString("/lockon");
                 }
             }
         }

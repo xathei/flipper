@@ -17,12 +17,6 @@ namespace Flipper.Classes
         public bool Melee = true;
         public FFACE _fface;
         public Content _content;
-        public bool melee = true;
-
-        public bool Engages()
-        {
-            return melee;
-        }
 
         public bool Engages()
         {
