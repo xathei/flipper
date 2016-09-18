@@ -92,6 +92,7 @@
     <Compile Include="Ambuscade.cs" />
     <Compile Include="Battle.cs" />
     <Compile Include="Classes\BlueMage.cs" />
+    <Compile Include="Classes\Geomancer.cs" />
     <Compile Include="Classes\IJob.cs" />
     <Compile Include="Classes\Items.cs" />
     <Compile Include="Classes\Paladin.cs" />

@@ -16,15 +16,16 @@ namespace Flipper.Classes
         private int _bullyTimer;
         private Form settingsForm = new ThiefForm();
 
-        public override void SettingsForm()
-        {
-            settingsForm.Show();
-        }
 
         public Thief(FFACE instance, Content content)
         {
             _content = content;
             _fface = instance;
+        }
+
+        public override void SettingsForm()
+        {
+            settingsForm.Show();
         }
 
         public override void UseRangedClaim()

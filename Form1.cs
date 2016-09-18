@@ -924,7 +924,8 @@ namespace FlipperD
 
         private void ambStartButton_Click(object sender, EventArgs e)
         {
-            _ambuscade = new Ambuscade(fface);
+            if (_ambuscade == null)
+                _ambuscade = new Ambuscade(fface);
 
            Flipper.Monster roe = new Flipper.Monster()
             {
@@ -964,7 +965,9 @@ namespace FlipperD
 
         private void AmbJobConfigButton_Click(object sender, EventArgs e)
         {
-            _ambuscade = new Ambuscade(fface);
+            if (_ambuscade == null)
+                _ambuscade = new Ambuscade(fface);
+
             _ambuscade?.JobClass.SettingsForm();
         }
     }

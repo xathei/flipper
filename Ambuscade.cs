@@ -81,6 +81,9 @@ namespace Flipper
                 case Job.WHM:
                     job = new WhiteMage(fface, Content.Ambuscade);
                     break;
+                case Job.GEO:
+                    job = new Geomancer(fface, Content.Ambuscade);
+                    break;
             }
         }
 
