@@ -122,6 +122,10 @@ namespace Flipper
             _HumanPlayers = settings.PartyCount;
             _FillTrusts = settings.FillTrusts;
 
+            fface.Windower.SendString("//lua load enternity");
+            Thread.Sleep(100);
+            fface.Windower.SendString("//lua load knockblock");
+
             if (_Network)
             {
                 // Connect to Network
@@ -260,9 +264,13 @@ namespace Flipper
                 case AmbuscadeTaskType.Fight:
                 {
                     WriteLog($"[TASK] Fighting -- Mob ID: {parameter}");
-                    int distance = fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion ? 50 : 35;
-                    bool noMovement = fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion;
+                    if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                    {
 
+                        _hasKeyItem = false;
+                        _initialKeyItem = false;
+                        _KeyCapped = false;
+                    }
                     Fight(parameter, Combat.Mode.None);
                     WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
                     break;
@@ -279,7 +287,7 @@ namespace Flipper
                     WriteLog($"[TASK] Obtaining KI until everyone has KI");
                     ObtainKI();
                     client.Send("DOCK_KI");
-                    WriteLog($"[REPLY] >> TASK ({task} OK");
+                    WriteLog($"[REPLY] >> TASK ({task}) OK");
 
                     break;
                 }
@@ -287,7 +295,7 @@ namespace Flipper
                 {
                     WriteLog($"[TASK] Capped KI");
                     _KeyCapped = true;
-                    WriteLog($"[REPLY] >> TASK ({task} OK");
+                    WriteLog($"[REPLY] >> TASK ({task}) OK");
                     break;
                 }
                 default:
@@ -314,8 +322,10 @@ namespace Flipper
             return false;
         }
 
+
         public bool ObtainKI()
         {
+            Combat.LoadBlacklist(Zone.Cape_Teriggan);
             Combat.LoadCoords(Zone.Cape_Teriggan);
             Combat.LoadHotspots(Zone.Cape_Teriggan);
             List<Hotspot> hotspots = Combat.GetHotspots();
@@ -372,10 +382,21 @@ namespace Flipper
 
         public bool Fight(int id, Combat.Mode mode)
         {
-            if (_Network && _Leader)
+            bool result = false;
+            if (_Network && _Leader && fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            {
                 client.Send("RELAY TASK 3 " + id);
+            }
+
             Combat.FailType fail = Combat.FailType.NoFail;
-            return  Combat.Fight(id, ambuscadeTargetMonster, mode, out fail);
+
+            result = Combat.Fight(id, ambuscadeTargetMonster, mode, out fail);
+
+            if (result == false)
+            {
+                Combat.AddBlacklist(id);
+            }
+            return result;
         }
 
         public void DoTask()
@@ -428,6 +449,8 @@ namespace Flipper
                     _proceed = false;
                 }
 
+                Thread.Sleep(3500); // allow time to disengage
+
                 // Tell clients to return home!
                 client.Send("RELAY TASK 2 0");
                 ReturnHome();
@@ -439,7 +462,7 @@ namespace Flipper
                         Thread.Sleep(100);
                 }
 
-             SkipRoEFarming:
+                SkipRoEFarming:
 
                 // Run to the book, and enter legion.
                 DoRoute(_route1);
@@ -450,7 +473,7 @@ namespace Flipper
                 {
                     Thread.Sleep(100);
                 }
-                
+
                 // Once in Legion, wait for everything to load.
                 Thread.Sleep(22000);
 
@@ -469,6 +492,7 @@ namespace Flipper
                 // Fight le target.
                 Fight(targs[0].Id, Combat.Mode.None);
 
+                _hasKeyItem = false;
                 _KeyCapped = false;
                 _initialKeyItem = false;
 
@@ -569,7 +593,9 @@ namespace Flipper
 
         public bool NavigateToZone(string zone, int target)
         {
+            Random r = new Random();
             Thread.Sleep(3000);
+
 
             MenuClosed:
             fface.Windower.SendKeyPress(KeyCode.EscapeKey);
@@ -580,18 +606,21 @@ namespace Flipper
             {
 
                 fface.Target.SetNPCTarget(target);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 fface.Target.SetNPCTarget(target);
                 fface.Windower.SendString("/target <t>");
                 Thread.Sleep(100);
+                fface.Windower.SendString("/lockon");
+                Thread.Sleep(5000);
             }
+            
 
             while (!fface.Menu.IsOpen)
             {
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                Thread.Sleep(3000);
+                Thread.Sleep(4000);
             }
-
+            
             if (MenuSelectedText("Travel to another home point."))
             {
                 if (!fface.Menu.IsOpen) goto MenuClosed;
@@ -600,9 +629,9 @@ namespace Flipper
             }
             else
             {
-                return false;
+                goto MenuClosed;
             }
-
+            
             while (!MenuSelectedText("Select from favorites."))
             {
                 if (!fface.Menu.IsOpen) goto MenuClosed;
@@ -610,6 +639,7 @@ namespace Flipper
                 Thread.Sleep(400);
             }
 
+            
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             Thread.Sleep(1000);
 
@@ -620,6 +650,8 @@ namespace Flipper
                 Thread.Sleep(400);
             }
 
+            
+
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             Thread.Sleep(1000);
 
@@ -629,6 +661,8 @@ namespace Flipper
                 fface.Windower.SendKeyPress(KeyCode.UpArrow);
                 Thread.Sleep(400);
             }
+
+            
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             while (fface.Player.Zone == Zone.Mhaura || fface.Player.GetLoginStatus == LoginStatus.Loading)

@@ -47,6 +47,7 @@ namespace FlipperD
         public List<Hotspot> Hotspots = new List<Hotspot>();
 
         public List<Blacklist> Blacklists = new List<Blacklist>();
+
         #endregion
 
         #region Fields

@@ -65,6 +65,9 @@ namespace Flipper
 
             for (short i = 0; i < 768; i++)
             {
+                if (Black.Contains(i))
+                    continue;
+
                 if (!IsRendered(i))
                     continue;
 
@@ -167,7 +170,7 @@ namespace Flipper
             }
 
             // battle routine
-            while (CanStillAttack(target) && DistanceTo(target) < 20 && _fighting)
+            while (CanStillAttack(target) && (DistanceTo(target) < 20 || fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) && _fighting)
             {
                 // TARGET
                 Target(target);
@@ -199,8 +202,6 @@ namespace Flipper
                 }
 
                 // ENGAGE
-
-
 
                 if (((fface.NPC.IsClaimed(target) && PartyHasHate(target)) ||
                     (DistanceTo(target) < monster.HitBox * 1.5 && !fface.NPC.IsClaimed(target)))
@@ -287,12 +288,25 @@ namespace Flipper
             if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
 
             _fighting = false;
+
+            Black.Clear();
             return true;
         }
 
         static Combat()
         {
+            if (Black == null)
+            {
+                WriteLog("Initializing Blacklist!");
+                Black = new List<int>();
+            }
+        }
 
+        public static List<int> Black { get; set; }
+
+        public static void AddBlacklist(int id)
+        {
+            Black.Add(id);
         }
 
         public static void Interrupt()
@@ -348,7 +362,7 @@ namespace Flipper
                 return false;
             }
 
-            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id))
+            if (fface.NPC.IsClaimed(id) && !PartyHasHate(id) && fface.Player.Status != Status.Fighting)
             {
                 WriteLog("[CANT ATTACK] Monster is claimed, and Party doesn't have hate.");
                 return false;
@@ -475,6 +489,33 @@ namespace Flipper
             return Hotspots;
         }
 
+
+        public static bool LoadBlacklist(Zone zone)
+        {
+            Blacklists.Clear();
+            string loadFile = AppDomain.CurrentDomain.BaseDirectory + @"\Assets\" + Convert.ToInt32(zone) + ".blackspot";
+            if (File.Exists(loadFile))
+            {
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(loadFile);
+                while ((line = file.ReadLine()) != null)
+                {
+                    string[] token = line.Split(',');
+                    if (Convert.ToInt32(token[0]) == Convert.ToInt32(zone))
+                    {
+
+                        Blacklist blacklist = new Blacklist();
+                        blacklist.Waypoint = new Node { X = (float)Convert.ToDouble(token[1], CultureInfo.InvariantCulture), Y = (float)Convert.ToDouble(token[2], CultureInfo.InvariantCulture), Z = (float)Convert.ToDouble(token[3], CultureInfo.InvariantCulture) };
+                        blacklist.Radius = Convert.ToDouble(token[4]);
+                        Blacklists.Add(blacklist);
+                    }
+                }
+                WriteLog($"Loaded {Blacklists.Count} blackspots.");
+
+            }
+            return true;
+        }
+
         /// <summary>
         /// Loads coordinates from a file.
         /// </summary>
@@ -521,7 +562,7 @@ namespace Flipper
                                 {
                                     inblackspot = true;
                                     caught++;
-                                    //WriteLog("In Blackpost (Ignoring!!): " + token[2] + " / " + token[4]);
+                                    WriteLog("In Blackpost (Ignoring!!): " + token[2] + " / " + token[4]);
                                 }
                             }
                             if (!inblackspot)

@@ -60,9 +60,9 @@ namespace Flipper.Classes
                 if (!IsAfflicted(StatusEffect.Warcry) && Ready(AbilityList.Warcry))
                     UseAbility(AbilityList.Warcry, 2, false);
 
+                if (Ready(AbilityList.Provoke))
+                    UseAbility(AbilityList.Provoke, 2, true);
 
-                //if (Ready(AbilityList.Berserk))
-                //    UseAbility(AbilityList.Berserk, 2, false);
             }
 
             if (Ready(AbilityList.Shield_Bash))
@@ -75,12 +75,14 @@ namespace Flipper.Classes
         {
             if (_fface.Player.HPPCurrent <= 75)
             {
-                if (Ready(AbilityList.Sentinel) && !IsAfflicted(StatusEffect.Invincible))
-                    UseAbility(AbilityList.Sentinel, 3, false);
-
                 if (Ready(AbilityList.Two_Hour) && !IsAfflicted(StatusEffect.Sentinel))
                     UseAbility("Invincible", AbilityList.Two_Hour, 3, false);
 
+            }
+            if (_fface.Player.HPPCurrent <= 50)
+            {
+                if (Ready(AbilityList.Sentinel) && !IsAfflicted(StatusEffect.Invincible))
+                    UseAbility(AbilityList.Sentinel, 3, false);
             }
             if (_fface.Player.HPPCurrent <= 60)
             {
@@ -94,6 +96,9 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
+            if (Ready(SpellList.Flash))
+                UseSpell(SpellList.Flash, 6, true);
+
             if (Ready(SpellList.Reprisal))
                 UseSpell(SpellList.Reprisal, 6, false);
 

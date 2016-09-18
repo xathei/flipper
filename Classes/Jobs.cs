@@ -84,14 +84,19 @@ namespace Flipper.Classes
             Thread.Sleep(7000);
             SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
+            SendCommand("/ma \"Apururu (UC)\" <me>");
+            Thread.Sleep(7000);
         }
 
         public void Warp()
         {
+            _fface.Windower.SendString("//gs disable lring");
+            Thread.Sleep(100);
             SendCommand("/equip l.ring \"Warp ring\"", 9);
             Thread.Sleep(10000);
             SendCommand("/item \"Warp Ring\" <me>", 10);
             Thread.Sleep(5000);
+            _fface.Windower.SendString("//gs enable lring");
         }
 
         /// <summary>

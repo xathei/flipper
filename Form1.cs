@@ -214,9 +214,9 @@ namespace FlipperD
             //fface.Windower.SendString("/echo Target: " + TargetHeading + "  Player: " + MyHeading + "  Calc: " + (TargetHeading - MyHeading) + "  Angle: " + lineAngle + " / " + difference);
         }
 
-        private double RadianToDegree(double angle)
+        private double RadianToDegree(double radians)
         {
-            return angle * (180.0 / Math.PI);
+            return radians * (180.0 / Math.PI);
         }
         public double PointAngle(PointF p1, PointF p2)
         {
@@ -225,8 +225,30 @@ namespace FlipperD
             return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
         }
 
+        private double GetAngleOfLineBetweenTwoPoints(PointF p1, PointF p2)
+        {
+            float xDiff = p2.X - p1.X;
+            float yDiff = p2.Y - p1.Y;
+            return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
+        }
+
+        private double GetSADifference(int i)
+        {
+            var TargetHeading = (int)(fface.Navigator.PosHToDegrees(fface.NPC.PosH(i)));
+            var MyHeading = (int)(fface.Navigator.GetPlayerPosHInDegrees());
+            double targetHeading = RadianToDegree(fface.NPC.PosH(i));
+
+            double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(i), Y = fface.NPC.PosZ(i) });
+            double difference = (targetHeading + lineAngle) % 360;
+
+            return difference;
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
+
+            double x = GetSADifference(fface.Target.ID);
+            fface.Windower.SendString($"/echo diff: {x}");
             //Thread t = new Thread(Claim);
             //t.Start();
 
