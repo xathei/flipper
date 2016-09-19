@@ -96,6 +96,11 @@ namespace Flipper.Classes
             {
                 UseSpell(SpellList.Cocoon, 3, false);
             }
+
+            if(_fface.Player.HPPCurrent <= 50)
+            {
+                UseSpell(SpellList.Plenilune_Embrace, 4, false);
+            }
         }
 
     }
