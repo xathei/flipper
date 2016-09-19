@@ -75,9 +75,12 @@ namespace Flipper
                 if (fface.NPC.IsClaimed(i) && !PartyHasHate(i))
                     continue;
 
-                if (fface.NPC.Distance(i) < 7 && fface.NPC.Status(i) == Status.Fighting &&
-                    (!fface.NPC.IsClaimed(i) || (fface.NPC.Status(i) == Status.Fighting && !fface.NPC.IsClaimed(i)) || PartyHasHate(i)) && IsFacingMe(i))
+                if (fface.NPC.Distance(i) < 10 && 
+                    fface.NPC.Status(i) == Status.Fighting &&
+                    (!fface.NPC.IsClaimed(i) || PartyHasHate(i)) 
+                    && IsFacingMe(i, 15.0))
                 {
+                    WriteLog($"[AGGRO] Found an aggroed mob! Killing it! [{fface.NPC.Name(i)}]");
                     return i;
                 }
 
@@ -356,12 +359,12 @@ namespace Flipper
         /// </summary>
         /// <param name="id">The ID of the target.</param>
         /// <returns></returns>
-        public static bool IsFacingMe(int id)
+        public static bool IsFacingMe(int id, double tolerance = 3.5)
         {
             double targetHeading = RadianToDegree(fface.NPC.PosH(id));
             double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(id), Y = fface.NPC.PosZ(id) });
             double difference = (targetHeading + lineAngle) - 180;
-            return difference < 3.5 && difference > -3.5;
+            return difference < tolerance && difference > (tolerance*-1);
         }
 
 
