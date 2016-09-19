@@ -207,7 +207,7 @@ namespace Flipper
 
                 // ENGAGE
 
-                if (fface.Player.Status != Status.Fighting && fface.Target.ID == target && job.CanStillAttack(target) && _fighting)
+                if (fface.Player.Status != Status.Fighting && job.CanStillAttack(target) && _fighting)
                 {
                     job.Engage();
                 }
@@ -227,7 +227,7 @@ namespace Flipper
 
                     job.UseSpells();
                 }
-                else
+                else if (fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO)
                 {
                     if (fface.Player.MainJob == Job.WHM)
                     {

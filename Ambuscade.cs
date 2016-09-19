@@ -334,7 +334,6 @@ namespace Flipper
             return false;
         }
 
-
         public bool ObtainKI()
         {
             Combat.LoadBlacklist(Zone.Cape_Teriggan);
@@ -367,9 +366,7 @@ namespace Flipper
                     if (_targetId > 0)
                     {
                         fface.Navigator.Reset();
-                        Thread.Sleep(200);
                         Fight(_targetId, Combat.Mode.Meshing);
-                        fface.Navigator.Reset();
                         _targetId = 0;
                         goto NoPath;
                     }
@@ -383,8 +380,6 @@ namespace Flipper
                 fface.Navigator.Reset();
                 Thread.Sleep(1);
             }
-
-            fface.Navigator.Reset();
             return true;
         }
 

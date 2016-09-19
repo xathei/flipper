@@ -49,33 +49,33 @@ namespace Flipper.Classes
 
             if (!IsRendered(id))
             {
-               //WriteLog("[STOP!] The target isn't rendered.");
+               WriteLog("[STOP!] The target isn't rendered.");
                 return false;
             }
 
             if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
             {
-               //WriteLog("[STOP!] The target is claimed to someone else.");
+               WriteLog("[STOP!] The target is claimed to someone else.");
                 return false;
             }
 
             // Skip if the mob more than 5 yalms above or below us
             if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
             {
-                //WriteLog("[STOP!] The target is too far above or below.");
+                WriteLog("[STOP!] The target is too far above or below.");
                 return false;
             }
 
             // Skip if the NPC's HP is 0
             if (_fface.NPC.HPPCurrent(id) == 0)
             {
-                //WriteLog("[STOP!] Target HP is 0 :(");
+                WriteLog("[STOP!] Target HP is 0 :(");
                 return false;
             }
 
             if (DistanceTo(id) > MaxDistance() && _fface.Player.Status == Status.Fighting)
             {
-                //WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
+                WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
                 return false;
             }
 
@@ -93,13 +93,11 @@ namespace Flipper.Classes
                 _fface.Navigator.Reset();
                 _fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
                 _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
-
             }
 
             // move back from the target
             if (DistanceTo(id) < (monster.HitBox*0.65) && CanStillAttack(id))
             {
-
                 _fface.Windower.SendKey(KeyCode.NP_Number2, true);
                 Thread.Sleep(50);
                 _fface.Windower.SendKey(KeyCode.NP_Number2, false);
@@ -187,11 +185,13 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Ulmia\" <me>");
+            //SendCommand("/ma \"Ulmia\" <me>");
+            //Thread.Sleep(7000);
+            //SendCommand("/ma \"Koru-Moru\" <me>");
+            //Thread.Sleep(7000);
+            SendCommand("/ma \"Apururu (UC)\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
-            Thread.Sleep(7000);
-            SendCommand("/ma \"Apururu (UC)\" <me>");
             Thread.Sleep(7000);
         }
 
