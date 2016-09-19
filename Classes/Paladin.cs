@@ -46,7 +46,7 @@ namespace Flipper.Classes
         /// </summary>
         public override void UseClaim()
         {
-            if (_fface.Player.SubJob == Job.WAR)
+            if (_fface.Player.SubJob == Job.WAR && DistanceTo(_fface.Target.ID) <= 15.8)
             {
                 if (Ready(AbilityList.Provoke))
                     UseAbility(AbilityList.Provoke, 2, true);

@@ -14,6 +14,13 @@ namespace Flipper.Classes
         {
             _content = content;
             _fface = instance;
+            Melee = true;
+        }
+
+        public override void Engage()
+        {
+            WriteLog("[BLU] Attempting to Engage...");
+            SendCommand("/attack <t>", 3);
         }
 
         public override void UseRangedClaim()
