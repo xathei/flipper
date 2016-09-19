@@ -19,7 +19,6 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
-            WriteLog("[BLU] Attempting to Engage...");
             SendCommand("/attack <t>", 3);
         }
 

@@ -148,7 +148,7 @@ namespace Flipper
                 if (!path.Any())
                 {
                     fail = FailType.NoPath;
-                    return false;
+                    _fighting = false;
                 }
 
 
@@ -163,6 +163,10 @@ namespace Flipper
                     {
                         targetX = path[0].X;
                         targetZ = path[0].Z;
+                        if (!IsPositionSafe(Convert.ToInt32(targetX), Convert.ToInt32(targetZ)))
+                        {
+                            _fighting = false;
+                        }
                         fface.Navigator.HeadingTolerance = 2;
                         fface.Navigator.DistanceTolerance = 0.7;
                         path.RemoveAt(0);
@@ -213,7 +217,10 @@ namespace Flipper
                 }
 
                 // make sure we're in the correct position
-                job.Position(target, monster);
+                if (!job.Position(target, monster, mode))
+                {
+                    _fighting = false;
+                }
 
                 // PLAYER STUFF
                 if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM)
@@ -245,6 +252,7 @@ namespace Flipper
             Thread.Sleep(500);
             if (!_fighting && fface.Player.Status == Status.Fighting)
             {
+                WriteLog("[NAV] Monsters is perhaps in a bad location. Giving up...");
                 fface.Windower.SendString("/attackoff");
                 Thread.Sleep(3000);
                 if (fface.Target.IsLocked)
@@ -455,6 +463,16 @@ namespace Flipper
         public static List<Hotspot> GetHotspots()
         {
             return Hotspots;
+        }
+
+        public static bool IsPositionSafe(int x, int z)
+        {
+            return Grid[x + offset, z + offset] == PathFinderHelper.EMPTY_TILE;
+        }
+
+        public static bool IsPositionSafe(double x, double z)
+        {
+            return Grid[(Convert.ToInt32(x) + offset), (Convert.ToInt32(z) + offset)] == PathFinderHelper.EMPTY_TILE;
         }
 
 

@@ -21,7 +21,7 @@ namespace Flipper.Classes
         void Warp();
         void SpawnTrusts();
         bool CanStillAttack(int id);
-        void Position(int id, Monster monster);
+        bool Position(int id, Monster monster, Combat.Mode mode);
         void SettingsForm();
         bool Engages();
     }

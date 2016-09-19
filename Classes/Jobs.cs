@@ -85,11 +85,14 @@ namespace Flipper.Classes
         /// <summary>
         /// Called continually during battle to ensure characters are in the correct position.
         /// </summary>
-        public virtual void Position(int id, Monster monster)
+        public virtual bool Position(int id, Monster monster, Combat.Mode mode)
         {
             // move closer to the mob
             if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
             {
+                if (mode == Combat.Mode.Meshing && !Combat.IsPositionSafe(_fface.NPC.PosX(id), _fface.NPC.PosZ(id)))
+                    return false;
+
                 _fface.Navigator.Reset();
                 _fface.Navigator.DistanceTolerance = (double) (monster.HitBox*0.95);
                 _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
@@ -103,6 +106,7 @@ namespace Flipper.Classes
                 _fface.Windower.SendKey(KeyCode.NP_Number2, false);
 
             }
+            return true;
         }
 
         /// <summary>
