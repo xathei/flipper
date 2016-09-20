@@ -11,7 +11,7 @@ namespace Flipper.Classes
 {
     public class Bard : Jobs
     {
-        public BardForm _settingsForm;
+        private BardForm _settingsForm;
 
         public override void SettingsForm()
         {
