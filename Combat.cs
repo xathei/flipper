@@ -19,6 +19,16 @@ namespace Flipper
 {
     public static class Combat
     {
+        [Flags]
+        public enum CombatRoutines
+        {
+            Heals,
+            Abilities,
+            Spells,
+            Weaponskills,
+            Stagger
+        }
+
         private static IJob job = new Jobs();
         private static FFACE fface;
         private static bool _fighting = true;

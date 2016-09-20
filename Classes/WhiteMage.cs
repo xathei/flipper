@@ -12,32 +12,36 @@ namespace Flipper.Classes
     {
         private Dictionary<string, bool> _hasteStates;
         private List<PartyMember> _partyMembers;
-        public WhiteMageForm _settingsForm = new WhiteMageForm();
+        public WhiteMageForm _settingsForm;
         
         public override void SettingsForm()
         {
-            //_settingsForm.Show();
+            _settingsForm.Show();
         }
 
         public WhiteMage(FFACE instance, Content content)
         {
             _content = content;
             _fface = instance;
+            _settingsForm = new WhiteMageForm(instance);
             _hasteStates = new Dictionary<string, bool>();
             _partyMembers = new List<PartyMember>();
 
             Melee = false;
 
-            //// Loop through each active party member in the party list.
-            //foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
-            //{
-            //    // Add a new PartyMember object to the list of party members.
-            //    _partyMembers.Add(new PartyMember {
-            //        Name = partyMember.Value.Name,
-            //        HpCurrent = partyMember.Value.HPCurrent,
-            //        HpCurrentMax = CalculateMaxHp(partyMember.Value.HPCurrent, partyMember.Value.HPPCurrent)
-            //    });
-            //}
+            // Loop through each active party member in the party list.
+            foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
+            {
+                // Add a new PartyMember object to the list of party members.
+                _partyMembers.Add(new PartyMember
+                {
+                    Name = partyMember.Value.Name,
+                    HpCurrent = partyMember.Value.HPCurrent,
+                    HpCurrentMax = CalculateMaxHp(partyMember.Value.HPCurrent, partyMember.Value.HPPCurrent)
+                });
+            }
+
+
         }
 
         public override int MaxDistance()
@@ -59,15 +63,7 @@ namespace Flipper.Classes
 
         public override void UseRangedClaim()
         {
-            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
-            {
-                return;
-            }
-            else
-            {
-                if (Ready(SpellList.Flash))
-                    UseSpell(SpellList.Flash, 6, true);
-            }
+            return;
         }
 
         public override void Engage()
@@ -282,6 +278,9 @@ namespace Flipper.Classes
         /// <returns></returns>
         private int CalculateMaxHp(int currentHp, int currentHpPercentage)
         {
+            if (currentHp == 0 || currentHpPercentage == 0)
+                return 0;
+
             decimal divisor = (decimal)currentHpPercentage / 100;
 
             return Convert.ToInt32(Math.Round(currentHp / divisor));
