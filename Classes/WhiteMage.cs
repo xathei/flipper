@@ -40,8 +40,6 @@ namespace Flipper.Classes
                     HpCurrentMax = CalculateMaxHp(partyMember.Value.HPCurrent, partyMember.Value.HPPCurrent)
                 });
             }
-
-
         }
 
         public override int MaxDistance()
@@ -252,7 +250,6 @@ namespace Flipper.Classes
         }
 
         #region Helper Methods
-
         private double RadianToDegree(double radians)
         {
             return radians * (180.0 / Math.PI);
