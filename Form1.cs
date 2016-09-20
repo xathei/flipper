@@ -984,6 +984,8 @@ namespace FlipperD
         private void button7_Click(object sender, EventArgs e)
         {
             fface.Windower.SendKey(KeyCode.NP_Number4,false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
 
             //IJob job = new Geomancer(fface, Content.Ambuscade);
             //Flipper.Monster mob = new Flipper.Monster()

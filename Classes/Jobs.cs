@@ -189,7 +189,7 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            //SendCommand("/ma \"Ulmia\" <me>");
+            //SendCommand("/ma \"Qultada\" <me>");
             //Thread.Sleep(7000);
             //SendCommand("/ma \"Koru-Moru\" <me>");
             //Thread.Sleep(7000);
@@ -325,11 +325,20 @@ namespace Flipper.Classes
             {
                 var members = _fface.PartyMember[Convert.ToByte(i)];
 
-                if (_fface.NPC.ClaimedID(id) == members.ServerID && _fface.NPC.HPPCurrent(id) > 0 && _fface.NPC.Status(id) != Status.Dead1 && _fface.NPC.Status(id) != Status.Dead2)
+                if (_fface.NPC.ClaimedID(id) == members.ServerID && _fface.NPC.HPPCurrent(id) > 0)
                 {
                     return true;
                 }
             }
+
+            WriteLog($"[PartyHasHate] false, claimed ID: {_fface.NPC.ClaimedID(id)}");
+
+            if (_fface.NPC.ClaimedID(id) == 0 && _fface.NPC.Status(id) == Status.Fighting)
+            {
+                WriteLog("Claimed ID is 0, assuming that party has hate!");
+                return true;
+            }
+
             return false;
         }
 
