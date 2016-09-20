@@ -158,6 +158,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.tabMisc2 = new System.Windows.Forms.TabPage();
+            this.button7 = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.ambClearButton = new System.Windows.Forms.Button();
             this.ambFilename = new System.Windows.Forms.TextBox();
@@ -172,7 +173,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.button7 = new System.Windows.Forms.Button();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1596,6 +1596,16 @@
             this.tabMisc2.Text = "Misc. 2";
             this.tabMisc2.UseVisualStyleBackColor = true;
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(22, 19);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(246, 76);
+            this.button7.TabIndex = 6;
+            this.button7.Text = "Booga\'s Geo Test";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.ambClearButton);
@@ -1742,16 +1752,6 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(22, 19);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(246, 76);
-            this.button7.TabIndex = 6;
-            this.button7.Text = "Booga\'s Geo Test";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // Form1
             // 

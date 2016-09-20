@@ -67,12 +67,15 @@ namespace Flipper.Classes
             return true;
         }
 
-        public override void Position(int id, Monster monster)
+        public override bool Position(int id, Monster monster, Combat.Mode mode)
         {
             if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
             {
+                if (mode == Combat.Mode.Meshing && !Combat.IsPositionSafe(_fface.NPC.PosX(id), _fface.NPC.PosZ(id)))
+                    return false;
+
                 _fface.Navigator.Reset();
-                _fface.Navigator.DistanceTolerance = 4;
+                _fface.Navigator.DistanceTolerance = monster.HitBox * 0.5;
                 _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
 
             }
@@ -89,7 +92,7 @@ namespace Flipper.Classes
                         _fface.Windower.SendString("/lockon");
                     }
                     _fface.Windower.SendKey(KeyCode.NP_Number6, true);
-                    Thread.Sleep(100);
+                    Thread.Sleep(80);
                     _fface.Windower.SendKey(KeyCode.NP_Number6, false);
                     difference = GetSADifference(id);
                 }
@@ -98,6 +101,7 @@ namespace Flipper.Classes
                     _fface.Windower.SendString("/lockon");
                 }
             }
+            return true;
         }
 
         private DateTime _useDematerializeAt = DateTime.MinValue;
@@ -147,7 +151,6 @@ namespace Flipper.Classes
                     }
                     else if (targetDistanceFromLuopan == 0)
                     {
-
 
                         if (Ready(AbilityList.Blaze_Glory))
                             UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);

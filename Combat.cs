@@ -85,9 +85,12 @@ namespace Flipper
                 if (fface.NPC.IsClaimed(i) && !PartyHasHate(i))
                     continue;
 
-                if (fface.NPC.Distance(i) < 7 && fface.NPC.Status(i) == Status.Fighting &&
-                    (!fface.NPC.IsClaimed(i) || (fface.NPC.Status(i) == Status.Fighting && !fface.NPC.IsClaimed(i)) || PartyHasHate(i)) && IsFacingMe(i))
+                if (fface.NPC.Distance(i) < 10 && 
+                    fface.NPC.Status(i) == Status.Fighting &&
+                    (!fface.NPC.IsClaimed(i) || PartyHasHate(i)) 
+                    && IsFacingMe(i, 15.0))
                 {
+                    WriteLog($"[AGGRO] Found an aggroed mob! Killing it! [{fface.NPC.Name(i)}]");
                     return i;
                 }
 
@@ -155,7 +158,7 @@ namespace Flipper
                 if (!path.Any())
                 {
                     fail = FailType.NoPath;
-                    return false;
+                    _fighting = false;
                 }
 
 
@@ -170,6 +173,10 @@ namespace Flipper
                     {
                         targetX = path[0].X;
                         targetZ = path[0].Z;
+                        if (!IsPositionSafe(Convert.ToInt32(targetX), Convert.ToInt32(targetZ)))
+                        {
+                            _fighting = false;
+                        }
                         fface.Navigator.HeadingTolerance = 2;
                         fface.Navigator.DistanceTolerance = 0.7;
                         path.RemoveAt(0);
@@ -214,13 +221,16 @@ namespace Flipper
 
                 // ENGAGE
 
-                if (fface.Player.Status != Status.Fighting && fface.Target.ID == target && job.CanStillAttack(target) && _fighting)
+                if (fface.Player.Status != Status.Fighting && job.CanStillAttack(target) && _fighting)
                 {
                     job.Engage();
                 }
 
                 // make sure we're in the correct position
-                job.Position(target, monster);
+                if (!job.Position(target, monster, mode))
+                {
+                    _fighting = false;
+                }
 
                 // PLAYER STUFF
                 if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM)
@@ -234,7 +244,7 @@ namespace Flipper
 
                     job.UseSpells();
                 }
-                else
+                else if (fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO)
                 {
                     if (fface.Player.MainJob == Job.WHM)
                     {
@@ -252,6 +262,7 @@ namespace Flipper
             Thread.Sleep(500);
             if (!_fighting && fface.Player.Status == Status.Fighting)
             {
+                WriteLog("[NAV] Monsters is perhaps in a bad location. Giving up...");
                 fface.Windower.SendString("/attackoff");
                 Thread.Sleep(3000);
                 if (fface.Target.IsLocked)
@@ -366,12 +377,12 @@ namespace Flipper
         /// </summary>
         /// <param name="id">The ID of the target.</param>
         /// <returns></returns>
-        public static bool IsFacingMe(int id)
+        public static bool IsFacingMe(int id, double tolerance = 3.5)
         {
             double targetHeading = RadianToDegree(fface.NPC.PosH(id));
             double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = fface.Player.PosX, Y = fface.Player.PosZ }, new PointF { X = fface.NPC.PosX(id), Y = fface.NPC.PosZ(id) });
             double difference = (targetHeading + lineAngle) - 180;
-            return difference < 3.5 && difference > -3.5;
+            return difference < tolerance && difference > (tolerance*-1);
         }
 
 
@@ -462,6 +473,16 @@ namespace Flipper
         public static List<Hotspot> GetHotspots()
         {
             return Hotspots;
+        }
+
+        public static bool IsPositionSafe(int x, int z)
+        {
+            return Grid[x + offset, z + offset] == PathFinderHelper.EMPTY_TILE;
+        }
+
+        public static bool IsPositionSafe(double x, double z)
+        {
+            return Grid[(Convert.ToInt32(x) + offset), (Convert.ToInt32(z) + offset)] == PathFinderHelper.EMPTY_TILE;
         }
 
 

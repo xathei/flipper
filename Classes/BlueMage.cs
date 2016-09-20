@@ -14,6 +14,23 @@ namespace Flipper.Classes
         {
             _content = content;
             _fface = instance;
+            Melee = true;
+        }
+
+        public virtual void Warp()
+        {
+            _fface.Windower.SendString("//lua unload gearswap");
+            Thread.Sleep(200);
+            SendCommand("/equip l.ring \"Warp ring\"", 9);
+            Thread.Sleep(11000);
+            SendCommand("/item \"Warp Ring\" <me>", 10);
+            Thread.Sleep(5000);
+            _fface.Windower.SendString("//lua load gearswap");
+        }
+
+        public override void Engage()
+        {
+            SendCommand("/attack <t>", 3);
         }
 
         public override void UseRangedClaim()
@@ -25,6 +42,12 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
+            if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
+            {
+                WriteLog("[KITCHEN] Using Sublime Sushi");
+                SendCommand("/item \"Sublime Sushi\" <me>", 4);
+            }
+
             if (_content == Content.Dynamis)
             {
                 if(Ready(AbilityList.Unbridled_Learning))
@@ -88,6 +111,11 @@ namespace Flipper.Classes
             if (!IsAfflicted(StatusEffect.Defense_Boost) && Ready(SpellList.Cocoon))
             {
                 UseSpell(SpellList.Cocoon, 3, false);
+            }
+
+            if(_fface.Player.HPPCurrent <= 50 && Ready(SpellList.Plenilune_Embrace))
+            {
+                UseSpell(SpellList.Plenilune_Embrace, 4, false);
             }
         }
 

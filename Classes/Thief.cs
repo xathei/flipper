@@ -83,6 +83,12 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
+            if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
+            {
+                WriteLog("[KITCHEN] Using Sublime Sushi");
+                SendCommand("/item \"Sublime Sushi\" <me>", 4);
+            }
+
             // stand behind the mob.
             if (_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {

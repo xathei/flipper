@@ -91,10 +91,13 @@ namespace Flipper.Classes
             return true;
         }
 
-        public override void Position(int id, Monster monster)
+        public override bool Position(int id, Monster monster, Combat.Mode mode)
         {
             if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
             {
+                if (mode == Combat.Mode.Meshing && !Combat.IsPositionSafe(_fface.NPC.PosX(id), _fface.NPC.PosZ(id)))
+                    return false;
+
                 _fface.Navigator.Reset();
                 _fface.Navigator.DistanceTolerance = 4;
                 _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
@@ -122,6 +125,7 @@ namespace Flipper.Classes
                     _fface.Windower.SendString("/lockon");
                 }
             }
+            return true;
         }
 
         public override void UseHeals()

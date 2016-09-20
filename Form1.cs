@@ -983,18 +983,22 @@ namespace FlipperD
 
         private void button7_Click(object sender, EventArgs e)
         {
-            IJob job = new Geomancer(fface, Content.Ambuscade);
-            Flipper.Monster mob = new Flipper.Monster()
-            {
-                HitBox = 2.5,
-                MonsterName = "Sylvestre",
-                TimeSpecific = false
-            };
+            fface.Windower.SendKey(KeyCode.NP_Number4,false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
 
-            Combat.SetInstance = fface;
-            Combat.SetJob = job;
-            Combat.FailType fail = Combat.FailType.NoFail;
-            Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
+            //IJob job = new Geomancer(fface, Content.Ambuscade);
+            //Flipper.Monster mob = new Flipper.Monster()
+            //{
+            //    HitBox = 2.5,
+            //    MonsterName = "Sylvestre",
+            //    TimeSpecific = false
+            //};
+
+            //Combat.SetInstance = fface;
+            //Combat.SetJob = job;
+            //Combat.FailType fail = Combat.FailType.NoFail;
+            //Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
         }
     }
 

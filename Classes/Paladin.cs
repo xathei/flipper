@@ -46,7 +46,7 @@ namespace Flipper.Classes
         /// </summary>
         public override void UseClaim()
         {
-            if (_fface.Player.SubJob == Job.WAR)
+            if (_fface.Player.SubJob == Job.WAR && DistanceTo(_fface.Target.ID) <= 15.8)
             {
                 if (Ready(AbilityList.Provoke))
                     UseAbility(AbilityList.Provoke, 2, true);
@@ -61,6 +61,12 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
+            if (_fface.Player.HPPCurrent > 80 && PDTSet)
+            {
+                PDTSet = false;
+                _fface.Windower.SendString("//gs c reset defense");
+            }
+
             if (_fface.Player.SubJob == Job.WAR)
             {
                 // use warcry
@@ -78,6 +84,8 @@ namespace Flipper.Classes
 
         }
 
+        private bool PDTSet = false;
+
         public override void UseHeals()
         {
             if (_fface.Player.HPPCurrent <= 75)
@@ -93,6 +101,12 @@ namespace Flipper.Classes
             }
             if (_fface.Player.HPPCurrent <= 60)
             {
+                if (!PDTSet)
+                {
+                    _fface.Windower.SendString("//gs c activate PhysicalDefense");
+                    PDTSet = true;
+                }
+
                 if (_fface.Player.MPCurrent >= 88 && Ready(SpellList.Cure_IV))
                     UseSpell(SpellList.Cure_IV, 8, false);
 
