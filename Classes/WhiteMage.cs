@@ -12,7 +12,7 @@ namespace Flipper.Classes
     {
         private Dictionary<string, bool> _hasteStates;
         private List<PartyMember> _partyMembers;
-        public WhiteMageForm _settingsForm;
+        private WhiteMageForm _settingsForm;
         
         public override void SettingsForm()
         {
