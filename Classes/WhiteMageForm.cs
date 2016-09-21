@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using FFACETools;
 using Flipper.Classes.JobSettings;
-using Flipper.Properties;
 using Newtonsoft.Json;
-using Trust;
 
 namespace Flipper.Classes
 {
@@ -21,6 +12,7 @@ namespace Flipper.Classes
     {
         private readonly FFACE _fface;
         private WhiteMageSettings _jobSettings;
+        private WhiteMage _whiteMage;
 
         /// <summary>
         /// Constructor.
@@ -33,7 +25,12 @@ namespace Flipper.Classes
             InitializeComponent();
         }
 
-        public void LoadJsonSettings()
+        public void InitJob(WhiteMage whiteMage)
+        {
+            _whiteMage = whiteMage;
+        }
+
+        public void LoadJobSettings()
         {
             // Initialize the _jsonSettings as a new object.
             _jobSettings = new WhiteMageSettings();
@@ -73,6 +70,19 @@ namespace Flipper.Classes
             whmComboBoostStat.SelectedIndex = !string.IsNullOrEmpty(_jobSettings.Spells.BoostStatSpell)
                 ? whmComboBoostStat.Items.IndexOf(_jobSettings.Spells.BoostStatSpell)
                 : 0;
+
+            // Set the Buffs values.
+            whmCbReraise.Checked = _jobSettings.SelfActions.Reraise;
+            whmCbProtectra.Checked = _jobSettings.SelfActions.Protectra;
+            whmCbShellra.Checked = _jobSettings.SelfActions.Shellra;
+
+            // Set the Curaga values.
+            whmCbCuragaV.Checked = _jobSettings.SelfActions.CuragaV;
+            whmCbCuragaIV.Checked = _jobSettings.SelfActions.CuragaIV;
+            whmCbCuragaIII.Checked = _jobSettings.SelfActions.CuragaIII;
+            whmCbCuragaII.Checked = _jobSettings.SelfActions.CuragaII;
+            whmCbCuraga.Checked = _jobSettings.SelfActions.Curaga;
+
         }
 
         public void SetPartyMemberDataRows()
@@ -128,6 +138,18 @@ namespace Flipper.Classes
             _jobSettings.Spells.BarStatusSpell = whmComboBarStatus.SelectedItem.ToString();
             _jobSettings.Spells.BoostStatSpell = whmComboBoostStat.SelectedItem.ToString();
 
+            // Set the Buffs values.
+            _jobSettings.SelfActions.Reraise = whmCbReraise.Checked;
+            _jobSettings.SelfActions.Protectra = whmCbProtectra.Checked;
+            _jobSettings.SelfActions.Shellra = whmCbShellra.Checked;
+
+            // Set the Curaga values.
+            _jobSettings.SelfActions.CuragaV = whmCbCuragaV.Checked;
+            _jobSettings.SelfActions.CuragaIV = whmCbCuragaIV.Checked;
+            _jobSettings.SelfActions.CuragaIII = whmCbCuragaIII.Checked;
+            _jobSettings.SelfActions.CuragaII = whmCbCuragaII.Checked;
+            _jobSettings.SelfActions.Curaga = whmCbCuraga.Checked;
+
             // Serialize the object to a json string.
             string jsonData = JsonConvert.SerializeObject(_jobSettings);
             
@@ -141,13 +163,17 @@ namespace Flipper.Classes
             SetPartyMemberDataRows();
 
             // Load the saved json settings.
-            LoadJsonSettings();
+            LoadJobSettings();
         }
 
         private void whmForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Hide the form.
             Hide();
+
+            // Set the Job Settings to the WhiteMage class object.
+            _whiteMage.WhiteMageSettings = _jobSettings;
+
             // Cancel the disposition event.
             e.Cancel = true;
         }

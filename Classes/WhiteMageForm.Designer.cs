@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.whmFormSave = new System.Windows.Forms.Button();
             this.whmGridView = new System.Windows.Forms.DataGridView();
             this.MemberName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,13 +43,25 @@
             this.whmComboBarStatus = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.whmComboBoostStat = new System.Windows.Forms.ComboBox();
+            this.whmBuffsGroupbox = new System.Windows.Forms.GroupBox();
+            this.whmCbShellra = new System.Windows.Forms.CheckBox();
+            this.whmCbProtectra = new System.Windows.Forms.CheckBox();
+            this.whmCbReraise = new System.Windows.Forms.CheckBox();
+            this.whmCuragaGroupbox = new System.Windows.Forms.GroupBox();
+            this.whmCbCuragaIV = new System.Windows.Forms.CheckBox();
+            this.whmCbCuragaV = new System.Windows.Forms.CheckBox();
+            this.whmCbCuraga = new System.Windows.Forms.CheckBox();
+            this.whmCbCuragaII = new System.Windows.Forms.CheckBox();
+            this.whmCbCuragaIII = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.whmGridView)).BeginInit();
+            this.whmBuffsGroupbox.SuspendLayout();
+            this.whmCuragaGroupbox.SuspendLayout();
             this.SuspendLayout();
             // 
             // whmFormSave
             // 
             this.whmFormSave.Font = new System.Drawing.Font("Roboto Condensed", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.whmFormSave.Location = new System.Drawing.Point(363, 188);
+            this.whmFormSave.Location = new System.Drawing.Point(363, 252);
             this.whmFormSave.Name = "whmFormSave";
             this.whmFormSave.Size = new System.Drawing.Size(78, 29);
             this.whmFormSave.TabIndex = 1;
@@ -68,38 +80,39 @@
             this.MemberRegen});
             this.whmGridView.Location = new System.Drawing.Point(12, 12);
             this.whmGridView.Name = "whmGridView";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.whmGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.whmGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.whmGridView.RowHeadersVisible = false;
             this.whmGridView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.whmGridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.whmGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.whmGridView.Size = new System.Drawing.Size(264, 153);
             this.whmGridView.TabIndex = 2;
             this.whmGridView.SelectionChanged += new System.EventHandler(this.whmFormGridView_SelectionChange);
             // 
             // MemberName
             // 
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.MemberName.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.MemberName.DefaultCellStyle = dataGridViewCellStyle5;
             this.MemberName.HeaderText = "Name";
             this.MemberName.Name = "MemberName";
             this.MemberName.ReadOnly = true;
             this.MemberName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.MemberName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.MemberName.Width = 141;
+            this.MemberName.Width = 130;
             // 
             // MemberHaste
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.NullValue = false;
-            this.MemberHaste.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.NullValue = false;
+            this.MemberHaste.DefaultCellStyle = dataGridViewCellStyle6;
             this.MemberHaste.HeaderText = "Haste";
             this.MemberHaste.Name = "MemberHaste";
             this.MemberHaste.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -107,10 +120,10 @@
             // 
             // MemberRegen
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle3.NullValue = false;
-            this.MemberRegen.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle7.NullValue = false;
+            this.MemberRegen.DefaultCellStyle = dataGridViewCellStyle7;
             this.MemberRegen.HeaderText = "Regen";
             this.MemberRegen.Name = "MemberRegen";
             this.MemberRegen.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -200,11 +213,119 @@
             this.whmComboBoostStat.Size = new System.Drawing.Size(150, 21);
             this.whmComboBoostStat.TabIndex = 7;
             // 
+            // whmBuffsGroupbox
+            // 
+            this.whmBuffsGroupbox.Controls.Add(this.whmCbShellra);
+            this.whmBuffsGroupbox.Controls.Add(this.whmCbProtectra);
+            this.whmBuffsGroupbox.Controls.Add(this.whmCbReraise);
+            this.whmBuffsGroupbox.Location = new System.Drawing.Point(12, 179);
+            this.whmBuffsGroupbox.Name = "whmBuffsGroupbox";
+            this.whmBuffsGroupbox.Size = new System.Drawing.Size(90, 102);
+            this.whmBuffsGroupbox.TabIndex = 9;
+            this.whmBuffsGroupbox.TabStop = false;
+            this.whmBuffsGroupbox.Text = "Buffs";
+            // 
+            // whmCbShellra
+            // 
+            this.whmCbShellra.AutoSize = true;
+            this.whmCbShellra.Location = new System.Drawing.Point(12, 70);
+            this.whmCbShellra.Name = "whmCbShellra";
+            this.whmCbShellra.Size = new System.Drawing.Size(58, 17);
+            this.whmCbShellra.TabIndex = 1;
+            this.whmCbShellra.Text = "Shellra";
+            this.whmCbShellra.UseVisualStyleBackColor = true;
+            // 
+            // whmCbProtectra
+            // 
+            this.whmCbProtectra.AutoSize = true;
+            this.whmCbProtectra.Location = new System.Drawing.Point(12, 47);
+            this.whmCbProtectra.Name = "whmCbProtectra";
+            this.whmCbProtectra.Size = new System.Drawing.Size(69, 17);
+            this.whmCbProtectra.TabIndex = 1;
+            this.whmCbProtectra.Text = "Protectra";
+            this.whmCbProtectra.UseVisualStyleBackColor = true;
+            // 
+            // whmCbReraise
+            // 
+            this.whmCbReraise.AutoSize = true;
+            this.whmCbReraise.Location = new System.Drawing.Point(12, 24);
+            this.whmCbReraise.Name = "whmCbReraise";
+            this.whmCbReraise.Size = new System.Drawing.Size(62, 17);
+            this.whmCbReraise.TabIndex = 0;
+            this.whmCbReraise.Text = "Reraise";
+            this.whmCbReraise.UseVisualStyleBackColor = true;
+            // 
+            // whmCuragaGroupbox
+            // 
+            this.whmCuragaGroupbox.Controls.Add(this.whmCbCuraga);
+            this.whmCuragaGroupbox.Controls.Add(this.whmCbCuragaII);
+            this.whmCuragaGroupbox.Controls.Add(this.whmCbCuragaIII);
+            this.whmCuragaGroupbox.Controls.Add(this.whmCbCuragaIV);
+            this.whmCuragaGroupbox.Controls.Add(this.whmCbCuragaV);
+            this.whmCuragaGroupbox.Location = new System.Drawing.Point(108, 179);
+            this.whmCuragaGroupbox.Name = "whmCuragaGroupbox";
+            this.whmCuragaGroupbox.Size = new System.Drawing.Size(168, 102);
+            this.whmCuragaGroupbox.TabIndex = 10;
+            this.whmCuragaGroupbox.TabStop = false;
+            this.whmCuragaGroupbox.Text = "Curaga";
+            // 
+            // whmCbCuragaIV
+            // 
+            this.whmCbCuragaIV.AutoSize = true;
+            this.whmCbCuragaIV.Location = new System.Drawing.Point(10, 47);
+            this.whmCbCuragaIV.Name = "whmCbCuragaIV";
+            this.whmCbCuragaIV.Size = new System.Drawing.Size(73, 17);
+            this.whmCbCuragaIV.TabIndex = 1;
+            this.whmCbCuragaIV.Text = "Curaga IV";
+            this.whmCbCuragaIV.UseVisualStyleBackColor = true;
+            // 
+            // whmCbCuragaV
+            // 
+            this.whmCbCuragaV.AutoSize = true;
+            this.whmCbCuragaV.Location = new System.Drawing.Point(10, 24);
+            this.whmCbCuragaV.Name = "whmCbCuragaV";
+            this.whmCbCuragaV.Size = new System.Drawing.Size(70, 17);
+            this.whmCbCuragaV.TabIndex = 1;
+            this.whmCbCuragaV.Text = "Curaga V";
+            this.whmCbCuragaV.UseVisualStyleBackColor = true;
+            // 
+            // whmCbCuraga
+            // 
+            this.whmCbCuraga.AutoSize = true;
+            this.whmCbCuraga.Location = new System.Drawing.Point(88, 47);
+            this.whmCbCuraga.Name = "whmCbCuraga";
+            this.whmCbCuraga.Size = new System.Drawing.Size(60, 17);
+            this.whmCbCuraga.TabIndex = 4;
+            this.whmCbCuraga.Text = "Curaga";
+            this.whmCbCuraga.UseVisualStyleBackColor = true;
+            // 
+            // whmCbCuragaII
+            // 
+            this.whmCbCuragaII.AutoSize = true;
+            this.whmCbCuragaII.Location = new System.Drawing.Point(88, 24);
+            this.whmCbCuragaII.Name = "whmCbCuragaII";
+            this.whmCbCuragaII.Size = new System.Drawing.Size(69, 17);
+            this.whmCbCuragaII.TabIndex = 3;
+            this.whmCbCuragaII.Text = "Curaga II";
+            this.whmCbCuragaII.UseVisualStyleBackColor = true;
+            // 
+            // whmCbCuragaIII
+            // 
+            this.whmCbCuragaIII.AutoSize = true;
+            this.whmCbCuragaIII.Location = new System.Drawing.Point(10, 70);
+            this.whmCbCuragaIII.Name = "whmCbCuragaIII";
+            this.whmCbCuragaIII.Size = new System.Drawing.Size(72, 17);
+            this.whmCbCuragaIII.TabIndex = 2;
+            this.whmCbCuragaIII.Text = "Curaga III";
+            this.whmCbCuragaIII.UseVisualStyleBackColor = true;
+            // 
             // WhiteMageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(452, 229);
+            this.ClientSize = new System.Drawing.Size(452, 291);
+            this.Controls.Add(this.whmCuragaGroupbox);
+            this.Controls.Add(this.whmBuffsGroupbox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.whmComboBoostStat);
             this.Controls.Add(this.label2);
@@ -218,6 +339,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.whmForm_FormClosing);
             this.Shown += new System.EventHandler(this.whmForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.whmGridView)).EndInit();
+            this.whmBuffsGroupbox.ResumeLayout(false);
+            this.whmBuffsGroupbox.PerformLayout();
+            this.whmCuragaGroupbox.ResumeLayout(false);
+            this.whmCuragaGroupbox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,8 +357,18 @@
         private System.Windows.Forms.ComboBox whmComboBarStatus;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox whmComboBoostStat;
+        private System.Windows.Forms.GroupBox whmBuffsGroupbox;
+        private System.Windows.Forms.CheckBox whmCbShellra;
+        private System.Windows.Forms.CheckBox whmCbProtectra;
+        private System.Windows.Forms.CheckBox whmCbReraise;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MemberRegen;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MemberHaste;
         private System.Windows.Forms.DataGridViewTextBoxColumn MemberName;
+        private System.Windows.Forms.GroupBox whmCuragaGroupbox;
+        private System.Windows.Forms.CheckBox whmCbCuragaIV;
+        private System.Windows.Forms.CheckBox whmCbCuragaV;
+        private System.Windows.Forms.CheckBox whmCbCuraga;
+        private System.Windows.Forms.CheckBox whmCbCuragaII;
+        private System.Windows.Forms.CheckBox whmCbCuragaIII;
     }
 }
