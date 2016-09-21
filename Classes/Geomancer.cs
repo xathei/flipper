@@ -127,9 +127,6 @@ namespace Flipper.Classes
                         Z = _fface.NPC.PosZ(monsterId),
                     });
                 }
-
-                if (_fface.Player.Name == "Dirtaru")
-                {
                     if (!IsAfflicted(StatusEffect.Geo_Haste) && Ready(SpellList.Indi_Haste))
                     {
                         UseSpell("Indi-Haste", SpellList.Indi_Haste, 10, false);
@@ -171,52 +168,6 @@ namespace Flipper.Classes
                         Thread.Sleep(2500);
                         UseAbility(AbilityList.Life_Cycle, 2, false);
                     }
-                }
-                else
-                {
-
-                    if (!IsAfflicted(StatusEffect.Geo_Fury) && Ready(SpellList.Indi_Fury))
-                    {
-                        UseSpell("Indi-Fury", SpellList.Indi_Fury, 10, false);
-                    }
-                    else if (Ready(SpellList.Geo_Torpor) &&
-                             (!FindTargetAll("luopan", 10).Any() || targetDistanceFromLuopan > 4))
-                    {
-                        if (targetDistanceFromLuopan != 0 && targetDistanceFromLuopan > 4)
-                        {
-                            UseAbility(AbilityList.Full_Circle, 2, false);
-                            Thread.Sleep(2500);
-
-
-                            if (Ready(AbilityList.Blaze_Glory))
-                                UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
-
-                            Thread.Sleep(2500);
-
-                            UseSpell("Geo-Torpor", SpellList.Geo_Torpor, 10, true);
-
-                            _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
-                        }
-                        else if (targetDistanceFromLuopan == 0)
-                        {
-
-                            if (Ready(AbilityList.Blaze_Glory))
-                                UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
-
-                            Thread.Sleep(2500);
-
-                            UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
-                            _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
-                        }
-                    }
-                    else if (FindTargetAll("luopan", 10).Any() && Ready(AbilityList.Dematerialize) &&
-                             Ready(AbilityList.Life_Cycle) && DateTime.Now > _useDematerializeAt)
-                    {
-                        UseAbility(AbilityList.Dematerialize, 2, false);
-                        Thread.Sleep(2500);
-                        UseAbility(AbilityList.Life_Cycle, 2, false);
-                    }
-                }
             }
         }
 

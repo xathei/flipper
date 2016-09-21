@@ -17,7 +17,7 @@ namespace Flipper.Classes
             Melee = true;
         }
 
-        public virtual void Warp()
+        public override void Warp()
         {
             _fface.Windower.SendString("//lua unload gearswap");
             Thread.Sleep(200);

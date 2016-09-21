@@ -13,7 +13,7 @@ using FFACETools;
 using Flipper.Classes.JobSettings;
 using Flipper.Properties;
 using Newtonsoft.Json;
-using Trust;
+
 
 namespace Flipper.Classes
 {
@@ -38,10 +38,10 @@ namespace Flipper.Classes
             // Initialize the _jsonSettings as a new object.
             _jobSettings = new WhiteMageSettings();
 
-            // Check if the .json settings file exists.
-            if (Utilities.IsFileValid(_jobSettings.FolderPath + _jobSettings.FileName))
-                // Get the data from the file and deserialize the data into the _jsonSettings object.
-                _jobSettings = JsonConvert.DeserializeObject<WhiteMageSettings>(Utilities.GetFileContents(_jobSettings.FolderPath + _jobSettings.FileName));
+            //// Check if the .json settings file exists.
+            //if (Utilities.IsFileValid(_jobSettings.FolderPath + _jobSettings.FileName))
+            //    // Get the data from the file and deserialize the data into the _jsonSettings object.
+            //    _jobSettings = JsonConvert.DeserializeObject<WhiteMageSettings>(Utilities.GetFileContents(_jobSettings.FolderPath + _jobSettings.FileName));
 
             // Loop through each row in the DataGridView.
             foreach (DataGridViewRow row in whmGridView.Rows)
@@ -132,7 +132,7 @@ namespace Flipper.Classes
             string jsonData = JsonConvert.SerializeObject(_jobSettings);
             
             // Save the data to a .json file.
-            Utilities.SaveToFile(_jobSettings.FolderPath, _jobSettings.FileName, jsonData);
+            //Utilities.SaveToFile(_jobSettings.FolderPath, _jobSettings.FileName, jsonData);
         }
 
         private void whmForm_Shown(object sender, EventArgs e)
