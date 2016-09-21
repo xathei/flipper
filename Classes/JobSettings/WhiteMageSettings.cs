@@ -10,16 +10,17 @@ namespace Flipper.Classes.JobSettings
     public class WhiteMageSettings : JobSetting
     {
         public WhiteMageSelfActions SelfActions { get; set; }
-        public List<WhiteMageCharacterActions> Characters { get; set; }
+        public List<WhiteMageCharacterActions> CharacterActions { get; set; }
         public WhiteMageSpells Spells { get; set; }
 
         public WhiteMageSettings()
         {
-            FolderPath = "assets\\json\\";
-            FileName = "whmsettings.json";
+            FileName = "\\WhiteMageSettings.json";
+            Engages = false;
+            Role = JobRole.Healer;
 
             SelfActions = new WhiteMageSelfActions();
-            Characters = new List<WhiteMageCharacterActions>();
+            CharacterActions = new List<WhiteMageCharacterActions>();
             Spells = new WhiteMageSpells();
         }
     }
@@ -27,6 +28,9 @@ namespace Flipper.Classes.JobSettings
     public class WhiteMageSelfActions : CharacterActions
     {
         public bool Reraise { get; set; }
+        public bool Stoneskin { get; set; }
+        public bool Blink { get; set; }
+        public bool Aquaveil { get; set; }
         public bool Protectra { get; set; }
         public bool Shellra { get; set; }
         public bool CuragaV { get; set; }

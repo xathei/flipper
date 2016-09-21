@@ -71,8 +71,10 @@ namespace Flipper.Classes
                 UseSpell(SpellList.Crusade, 6, false);
             if (Ready(SpellList.Stoneskin) && !IsAfflicted(StatusEffect.Stoneskin))
                 UseSpell(SpellList.Stoneskin, 6, false);
-            if (Ready(SpellList.Foil) && !IsAfflicted(StatusEffect.Foil))
-                UseSpell(SpellList.Foil, 6, false);
+            // JW - StatusEffect.Foil doesn't exist. Cast Foil on yourself and loop through your StatusEffects to see
+            //      what the status effect is to see what effect you need to check for.
+            //if (Ready(SpellList.Foil) && !IsAfflicted(StatusEffect.Foil))
+                //UseSpell(SpellList.Foil, 6, false);
             if (Ready(SpellList.Shock_Spikes) && !IsAfflicted(StatusEffect.Shock_Spikes))
                 UseSpell(SpellList.Shock_Spikes, 6, false);
 
@@ -106,13 +108,14 @@ namespace Flipper.Classes
             SendCommand("/attack <t>", 3);
         }
         //void Warp();
-        public override void SpawnTrusts()
-        {
-            /* select which trusts to spawn when lowmanning
-            SendCommand("/ma \"Some NPC\" <me>");
-            Thread.Sleep(7000);
-            */
-        }
+        // JW - SpawnTrusts is not virtual in the Jobs.cs therefore it can not be overwritten at the moment.
+        //public override void SpawnTrusts()
+        //{
+        //    /* select which trusts to spawn when lowmanning
+        //    SendCommand("/ma \"Some NPC\" <me>");
+        //    Thread.Sleep(7000);
+        //    */
+        //}
         //bool CanStillAttack(int id);
         //bool Position(int id, Monster monster, Combat.Mode mode);
         //void SettingsForm();

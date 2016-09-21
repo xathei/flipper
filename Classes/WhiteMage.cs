@@ -16,7 +16,8 @@ namespace Flipper.Classes
         private Dictionary<string, bool> _regenStates;
         private List<PartyMember> _partyMembers;
         private WhiteMageForm _settingsForm;
-        public WhiteMageSettings WhiteMageSettings = new WhiteMageSettings();
+
+        public WhiteMageSettings WhiteMageSettings;
         
         public override void SettingsForm()
         {
@@ -33,6 +34,11 @@ namespace Flipper.Classes
             _regenStates = new Dictionary<string, bool>();
             _partyMembers = new List<PartyMember>();
 
+            WhiteMageSettings = new WhiteMageSettings
+            {
+                CharacterFolder = _fface.Player.Name
+            };
+
             Melee = false;
 
             // Loop through each active party member in the party list.
@@ -47,7 +53,9 @@ namespace Flipper.Classes
                 });
             }
 
-            WhiteMageSettings = JsonConvert.DeserializeObject<WhiteMageSettings>(Utilities.GetFileContents(WhiteMageSettings.FolderPath + WhiteMageSettings.FileName));
+            // Check if the .json settings file exists.
+            if (Utilities.IsFileValid(WhiteMageSettings.SettingsFolder + WhiteMageSettings.CharacterFolder + WhiteMageSettings.FileName))
+                WhiteMageSettings = JsonConvert.DeserializeObject<WhiteMageSettings>(Utilities.GetFileContents(WhiteMageSettings.SettingsFolder + WhiteMageSettings.CharacterFolder + WhiteMageSettings.FileName));
         }
 
         public override int MaxDistance()
@@ -336,7 +344,7 @@ namespace Flipper.Classes
                 if (Ready(SpellList.Haste))
                     // Search for the party member's key in the dictionary and check to see if the value is false.
                     if (!_hasteStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value
-                        && WhiteMageSettings.Characters.Single(x => x.Name == partyMember.Value.Name).CastHasteOn)
+                        && WhiteMageSettings.CharacterActions.Single(x => x.Name == partyMember.Value.Name).CastHasteOn)
                         // Cast the spell on the target party member.
                         if (UseSpell(SpellList.Haste, 8, partyMember.Value.Name))
                             // Add the current user to the dictionary and set their haste state to true.
@@ -355,7 +363,7 @@ namespace Flipper.Classes
                 if (Ready(SpellList.Regen_IV))
                     // Search for the party member's key in the dictionary and check to see if the value is false.
                     if (!_regenStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value
-                        && WhiteMageSettings.Characters.Single(x => x.Name == partyMember.Value.Name).CastRegenOn)
+                        && WhiteMageSettings.CharacterActions.Single(x => x.Name == partyMember.Value.Name).CastRegenOn)
                         // Cast the spell on the target party member.
                         if (UseSpell(SpellList.Regen_IV, 8, partyMember.Value.Name))
                             // Add the current user to the dictionary and set their haste state to true.
