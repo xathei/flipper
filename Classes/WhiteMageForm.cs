@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using FFACETools;
 using Flipper.Classes.JobSettings;
-using Flipper.Properties;
 using Newtonsoft.Json;
-
 
 namespace Flipper.Classes
 {
@@ -21,42 +12,57 @@ namespace Flipper.Classes
     {
         private readonly FFACE _fface;
         private WhiteMageSettings _jobSettings;
+        private WhiteMage _whiteMage;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public WhiteMageForm(FFACE fface)
         {
+            // Set the local FFACe value.
             _fface = fface;
 
             // Initialize base form components.
             InitializeComponent();
         }
 
-        public void LoadJsonSettings()
+        public void InitJob(WhiteMage whiteMage)
+        {
+            // Set a reference to the WhiteMage class.
+            _whiteMage = whiteMage;
+        }
+
+        public void LoadJobSettings()
         {
             // Initialize the _jsonSettings as a new object.
-            _jobSettings = new WhiteMageSettings();
+            _jobSettings = new WhiteMageSettings
+            {
+                CharacterFolder = _fface.Player.Name
+            };
 
-            //// Check if the .json settings file exists.
-            //if (Utilities.IsFileValid(_jobSettings.FolderPath + _jobSettings.FileName))
-            //    // Get the data from the file and deserialize the data into the _jsonSettings object.
-            //    _jobSettings = JsonConvert.DeserializeObject<WhiteMageSettings>(Utilities.GetFileContents(_jobSettings.FolderPath + _jobSettings.FileName));
+            // Check if the .json settings file exists.
+            if (Utilities.IsFileValid(_jobSettings.SettingsFolder + _jobSettings.CharacterFolder + _jobSettings.FileName))
+                // Get the data from the file and deserialize the data into the _jsonSettings object.
+                _jobSettings = JsonConvert.DeserializeObject<WhiteMageSettings>(Utilities.GetFileContents(_jobSettings.SettingsFolder + _jobSettings.CharacterFolder + _jobSettings.FileName));
+
+            // Set the character values.
+            _jobSettings.CharacterFolder = _fface.Player.Name;
+            _jobSettings.SelfActions.Name = _fface.Player.Name;
 
             // Loop through each row in the DataGridView.
             foreach (DataGridViewRow row in whmGridView.Rows)
             {
                 // Get the character data from the settings.
-                WhiteMageCharacterActions character = _jobSettings.Characters.SingleOrDefault(x => x.Name == row.Cells[0].Value.ToString());
+                WhiteMageCharacterActions characterAction = _jobSettings.CharacterActions.SingleOrDefault(x => x.Name == row.Cells[0].Value.ToString());
 
                 // Continue the loop if the character is not found.
-                if (character == null) continue;
+                if (characterAction == null) continue;
 
                 // Get the haste/regen values and set their checkboxes accordingly.
                 DataGridViewCheckBoxCell hastecell = (DataGridViewCheckBoxCell) row.Cells[1];
+                hastecell.Value = characterAction.CastHasteOn;
                 DataGridViewCheckBoxCell regenCell = (DataGridViewCheckBoxCell) row.Cells[2];
-                hastecell.Value = character.CastHasteOn;
-                regenCell.Value = character.CastRegenOn;
+                regenCell.Value = characterAction.CastRegenOn;
             }
 
             // Check if the BarElemental spell was defined, otherwise select default.
@@ -73,6 +79,23 @@ namespace Flipper.Classes
             whmComboBoostStat.SelectedIndex = !string.IsNullOrEmpty(_jobSettings.Spells.BoostStatSpell)
                 ? whmComboBoostStat.Items.IndexOf(_jobSettings.Spells.BoostStatSpell)
                 : 0;
+
+            // Set the Self Buffs values.
+            whmCbReraise.Checked = _jobSettings.SelfActions.Reraise;
+            whmCbStoneskin.Checked = _jobSettings.SelfActions.Stoneskin;
+            whmCbBlink.Checked = _jobSettings.SelfActions.Blink;
+            whmCbAquaveil.Checked = _jobSettings.SelfActions.Aquaveil;
+
+            // Set the Party Buffs values.
+            whmCbProtectra.Checked = _jobSettings.SelfActions.Protectra;
+            whmCbShellra.Checked = _jobSettings.SelfActions.Shellra;
+
+            // Set the Curaga values.
+            whmCbCuragaV.Checked = _jobSettings.SelfActions.CuragaV;
+            whmCbCuragaIV.Checked = _jobSettings.SelfActions.CuragaIV;
+            whmCbCuragaIII.Checked = _jobSettings.SelfActions.CuragaIII;
+            whmCbCuragaII.Checked = _jobSettings.SelfActions.CuragaII;
+            whmCbCuraga.Checked = _jobSettings.SelfActions.Curaga;
         }
 
         public void SetPartyMemberDataRows()
@@ -93,6 +116,7 @@ namespace Flipper.Classes
 
         private void whmFormGridView_SelectionChange(object sendor, EventArgs e)
         {
+            // Do not allow cell selection in the grid view.
             whmGridView.ClearSelection();
         }
 
@@ -102,13 +126,13 @@ namespace Flipper.Classes
             foreach (DataGridViewRow row in whmGridView.Rows)
             {
                 // Get the character data from the settings.
-                WhiteMageCharacterActions character = _jobSettings.Characters.SingleOrDefault(x => x.Name == row.Cells[0].Value.ToString());
+                WhiteMageCharacterActions character = _jobSettings.CharacterActions.SingleOrDefault(x => x.Name == row.Cells[0].Value.ToString());
 
                 // If no character was found.
                 if (character == null)
                 {
                     // Add a new CharacterAction.
-                    _jobSettings.Characters.Add(new WhiteMageCharacterActions
+                    _jobSettings.CharacterActions.Add(new WhiteMageCharacterActions
                     {
                         Name = row.Cells[0].Value.ToString(),
                         CastHasteOn = (bool?) row.Cells[1].Value ?? false,
@@ -128,11 +152,31 @@ namespace Flipper.Classes
             _jobSettings.Spells.BarStatusSpell = whmComboBarStatus.SelectedItem.ToString();
             _jobSettings.Spells.BoostStatSpell = whmComboBoostStat.SelectedItem.ToString();
 
+            // Set the Self Buffs values.
+            _jobSettings.SelfActions.Reraise = whmCbReraise.Checked;
+            _jobSettings.SelfActions.Stoneskin = whmCbStoneskin.Checked;
+            _jobSettings.SelfActions.Blink = whmCbBlink.Checked;
+            _jobSettings.SelfActions.Aquaveil = whmCbAquaveil.Checked;
+
+            // Set the Party Buffs values.
+            _jobSettings.SelfActions.Protectra = whmCbProtectra.Checked;
+            _jobSettings.SelfActions.Shellra = whmCbShellra.Checked;
+
+            // Set the Curaga values.
+            _jobSettings.SelfActions.CuragaV = whmCbCuragaV.Checked;
+            _jobSettings.SelfActions.CuragaIV = whmCbCuragaIV.Checked;
+            _jobSettings.SelfActions.CuragaIII = whmCbCuragaIII.Checked;
+            _jobSettings.SelfActions.CuragaII = whmCbCuragaII.Checked;
+            _jobSettings.SelfActions.Curaga = whmCbCuraga.Checked;
+
             // Serialize the object to a json string.
-            string jsonData = JsonConvert.SerializeObject(_jobSettings);
-            
+            string jsonData = JsonConvert.SerializeObject(_jobSettings, Formatting.Indented);
+
             // Save the data to a .json file.
-            //Utilities.SaveToFile(_jobSettings.FolderPath, _jobSettings.FileName, jsonData);
+            Utilities.SaveToFile(_jobSettings.SettingsFolder + _jobSettings.CharacterFolder, _jobSettings.FileName, jsonData);
+
+            // Close the form.
+            Close();
         }
 
         private void whmForm_Shown(object sender, EventArgs e)
@@ -141,13 +185,17 @@ namespace Flipper.Classes
             SetPartyMemberDataRows();
 
             // Load the saved json settings.
-            LoadJsonSettings();
+            LoadJobSettings();
         }
 
         private void whmForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Hide the form.
             Hide();
+
+            // Set the Job Settings to the WhiteMage class object.
+            _whiteMage.WhiteMageSettings = _jobSettings;
+
             // Cancel the disposition event.
             e.Cancel = true;
         }
