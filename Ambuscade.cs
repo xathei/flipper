@@ -239,6 +239,15 @@ namespace Flipper
                 _KeyCapped = true;
             }
 
+            if (token[0] == "LIST")
+            {
+                string[] members = token[2].Split(',');
+                foreach (string member in members)
+                {
+                    
+                }
+            }
+
             if (token[0] == "MEMBER")
             {
                 if (token[1] == "0")
@@ -533,11 +542,16 @@ namespace Flipper
         // calculates and summons appropriate trusts.
         public void SummonTrusts()
         {
+            if (!_ambuscade)
+                return;
+
             job.SpawnTrusts();
         }
 
         public void DoEntry()
         {
+            if (!_ambuscade)
+                return;
 
             Thread.Sleep(3000);
             int bookId = 146;
@@ -591,6 +605,9 @@ namespace Flipper
 
         private void ReturnHome()
         {
+            if (!_ambuscade)
+                return;
+
             do
             {
                 job.Warp();
@@ -618,6 +635,9 @@ namespace Flipper
 
         public bool NavigateToZone(string zone, int target)
         {
+            if (!_ambuscade)
+                return false;
+
             Random r = new Random();
             Thread.Sleep(3000);
 
@@ -699,6 +719,9 @@ namespace Flipper
 
         public bool DoRoute(string route)
         {
+            if (!_ambuscade)
+                return false;
+
             fface.Windower.SendString("/echo running route: " + route);
             List<string> nodes = File.ReadAllLines($"assets\\paths\\{route}").ToList();
             List<Node> path = new List<Node>();
