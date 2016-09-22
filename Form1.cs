@@ -75,7 +75,7 @@ namespace FlipperD
         private void Form1_Load(object sender, EventArgs e)
         {
             cmbMode.SelectedIndex = 0;
-            ambDifficulty.SelectedIndex = 0;
+            ambDifficulty.SelectedIndex = 3;
             fface = null;
         }
 
@@ -934,31 +934,54 @@ namespace FlipperD
 
         private void ambStartButton_Click(object sender, EventArgs e)
         {
-            if (_ambuscade == null)
-                _ambuscade = new Ambuscade(fface);
-
-           Flipper.Monster roe = new Flipper.Monster()
+            if (ambStartButton.Text == "Start Ambuscade")
             {
-                MonsterName = ambRoETarget.Text,
-                HitBox = Double.Parse(ambRoEHitbox.Text)
-            };
 
-            Flipper.Monster amb = new Flipper.Monster()
+                ambStartButton.Text = "Stop Ambuscade";
+
+
+                if (fface.Party.Party0LeaderID == 0 || fface.Party.Party0Count == 1)
+                {
+                    MessageBox.Show("You must be in a party to start Ambuscade!");
+                    return;
+                }
+                if (fface.Player.Zone != Zone.Mhaura)
+                {
+                    MessageBox.Show("You must be in Mhaura!");
+                    return;
+                }
+
+                if (_ambuscade == null)
+                    _ambuscade = new Ambuscade(fface);
+
+                Flipper.Monster roe = new Flipper.Monster()
+                {
+                    MonsterName = ambRoETarget.Text,
+                    HitBox = Double.Parse(ambRoEHitbox.Text)
+                };
+
+                Flipper.Monster amb = new Flipper.Monster()
+                {
+                    MonsterName = ambTarget.Text,
+                    HitBox = Double.Parse(ambHitbox.Text)
+                };
+
+
+                AmbuscadeSettings settings = new AmbuscadeSettings()
+                {
+                    Leader = fface.Party.Party0LeaderID == fface.Player.PlayerCoreID,
+                    Role = DetermineJobRole(),
+                    PartyCount = fface.Party.Party0Count - 1
+                };
+
+                _ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, settings,
+                    ambDifficulty.SelectedItem.ToString());
+            }
+            else
             {
-                MonsterName = ambTarget.Text,
-                HitBox = Double.Parse(ambHitbox.Text)
-            };
-
-            AmbuscadeSettings settings = new AmbuscadeSettings()
-            {
-                FillTrusts = ambTrustCheckbox.Checked,
-                Leader = ambLeaderCheckbox.Checked,
-                Network = ambNetworkMode.Checked,
-                Role = DetermineJobRole(),
-                PartyCount = Convert.ToInt32(ambPartyCount.Text)
-            };
-
-            _ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, settings, ambDifficulty.SelectedItem.ToString());
+                ambStartButton.Text = "Start Ambuscade";
+                _ambuscade.EndAmbuscade();
+            }
         }
 
         public JobRole DetermineJobRole()

@@ -558,7 +558,7 @@ namespace Flipper
                                 {
                                     inblackspot = true;
                                     caught++;
-                                    WriteLog("In Blackpost (Ignoring!!): " + token[2] + " / " + token[4]);
+                                    //WriteLog("In Blackpost (Ignoring!!): " + token[2] + " / " + token[4]);
                                 }
                             }
                             if (!inblackspot)
@@ -574,7 +574,7 @@ namespace Flipper
                             }
                         }
                     }
-                    WriteLog($"Excluded {caught} nodes, due to being in blackspots.");
+                    //WriteLog($"Excluded {caught} nodes, due to being in blackspots.");
                     WriteLog($"Loaded {Waypoints.Count} ({f.Split(Convert.ToChar(@"\"))[f.Split(Convert.ToChar(@"\")).Count() - 1].Replace(".mesh", "")}) nodes.");
                     file.Close();
                 }

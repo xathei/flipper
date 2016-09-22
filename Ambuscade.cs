@@ -45,13 +45,13 @@ namespace Flipper
         private string _route1 = "1-amb-homepoint-book.list";
         private string _route2 = "2-amb-exit-homepoint.list";
         private string _route3 = "3-amb-monstercircular.list";
-        private volatile bool _Network = false;
         private volatile bool _Leader = false;
         private volatile int _HumanPlayers = 0;
         private volatile int _KeyItemCount = 0;
         private volatile ClientInfo client;
         public volatile bool _proceed;
-        public volatile bool _FillTrusts = false;
+        public volatile bool _KeyCapped = false;
+        public int PartyID = 0;
 
         public IJob JobClass => job;
         #endregion
@@ -85,6 +85,13 @@ namespace Flipper
                     job = new Geomancer(fface, Content.Ambuscade);
                     break;
             }
+        }
+
+        public void EndAmbuscade()
+        {
+            _ambuscade = false;
+            Combat.Interrupt();
+            return;
         }
 
         /// <summary>
@@ -125,65 +132,86 @@ namespace Flipper
             Combat.SetJob = job;
 
             // Network and Other Settings:
-            _Network = settings.Network;
             _Leader = settings.Leader;
             _HumanPlayers = settings.PartyCount;
-            _FillTrusts = settings.FillTrusts;
-
             fface.Windower.SendString("//lua load enternity");
             Thread.Sleep(100);
             fface.Windower.SendString("//lua load knockblock");
 
-            if (_Network)
+
+            // Connect to Network
+            Socket sock;
+            if (fface.Player.Name == "Kamery")
             {
-                // Connect to Network
-                Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
-                client = new ClientInfo(sock, false);
-                client.Delimiter = "\r\n";
-                client.OnRead += new ConnectionRead(ReadData);
-                client.OnClose += Client_OnClose;
-                client.OnReady += Client_OnReady;
-                client.BeginReceive();
-                Thread.Sleep(100);
-                client.Send(_Leader ? $"RESET {_HumanPlayers}" : "DOCK_MHAURA");
-                if (_initialKeyItem && !_Leader)
-                {
-                    WriteLog("[REPLY] >> KEY");
-                    client.Send("KEY");
-                }
+                sock = Sockets.CreateTCPSocket("86.17.131.81", 6993);
             }
             else
             {
-                _proceed = true;
+                sock = Sockets.CreateTCPSocket("127.0.0.1", 6993);
             }
-
-            if ((_Network && _Leader) || !_Network)
+             
+            client = new ClientInfo(sock, false);
+            client.Delimiter = "\r\n";
+            client.OnRead += new ConnectionRead(ReadData);
+            client.OnReady += Client_OnReady;
+            client.BeginReceive();
+            Thread.Sleep(100);
+            if (_initialKeyItem && !_Leader)
             {
+                client.Send("KEY");
+                Thread.Sleep(1000);
+            }
+            if (_Leader)
+            {
+                client.Send($"PARTY {fface.Player.Name} {string.Join(",", GetPartyMembers())}");
                 taskThread = new Thread(DoTask);
                 taskThread.Start();
             }
-
+            else
+            {
+                client.Send($"JOIN {fface.Player.Name}");
+            }
             chatThread = new Thread(DoChat);
             chatThread.Start();
         }
 
+        /// <summary>
+        /// Event for the client connecting to the server.
+        /// </summary>
+        /// <param name="ci"></param>
         private void Client_OnReady(ClientInfo ci)
         {
-            WriteLog("[CLIENT] Connected!");
+            WriteLog("[SERVER] Connected!");
         }
 
-        private void Client_OnClose(ClientInfo ci)
+        /// <summary>
+        /// Get a string list of party members.
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetPartyMembers()
         {
-            WriteLog("[ERROR] Disconnected from server!");
-            WriteLog("[ERROR] Attempting to reconnect...");
-            Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
-            client = new ClientInfo(sock, false);
-            client.Delimiter = "\r\n";
-            client.OnRead += new ConnectionRead(ReadData);
-            client.OnClose += Client_OnClose;
-            client.BeginReceive();
-            client.Send(_Leader ? "RECOVERY_L" : "RECOVERY");
+            List<string> membersList = new List<string>();
+
+            for (int i = 0; i < 6; i++)
+            {
+                var member = fface.PartyMember[Convert.ToByte(i)];
+
+                if (member.HPPCurrent > 0 && member.Active)
+                {
+                    membersList.Add(member.Name);
+                }
+            }
+
+            return membersList;
         }
+
+        public enum MemberEvent
+        {
+            Join = 0,
+            Part = 1,
+            Stop = 2
+        }
+
 
         /// <summary>
         /// Data read from the network socket.
@@ -198,7 +226,7 @@ namespace Flipper
 
             if (text != "PING!")
             {
-                WriteLog("[SERVER] " + text);
+                //WriteLog("[DEBUG_S>>] " + text);
             }
 
             // Always reply to ping.
@@ -218,13 +246,28 @@ namespace Flipper
                 _KeyCapped = true;
             }
 
+            if (token[0] == "MEMBER")
+            {
+                if (token[1] == "0")
+                    WriteLog("[PARTY JOIN]: " + token[2]);
+                if (token[1] == "1")
+                    WriteLog("[PARTY PART]: " + token[2]);
+                if (token[1] == "2")
+                {
+                    WriteLog("[PARTY STOP]: " + token[2]);
+                    EndAmbuscade();
+                }
+                if (token[1] == "3")
+                    WriteLog("[PARTY WAIT]: Waiting for the party leader to Connect...");
+            }
+
             if (token[0] == "TASK" && !_Leader)
             {
                 // When the server requests a new task, let's run it on another thread.
                 if (!_inTask)
                 {
                     // task is always an int.
-                    AmbuscadeTaskType task = (AmbuscadeTaskType) Convert.ToInt32(token[1]);
+                    AmbuscadeTaskType task = (AmbuscadeTaskType)Convert.ToInt32(token[1]);
                     // parameter is usually a monster ID.
                     int parameter = token.Count() == 3 ? Convert.ToInt32(token[2]) : 0;
 
@@ -242,94 +285,89 @@ namespace Flipper
             Fight = 3,
             CancelEngage = 4,
             ObtainKI = 5,
-            CappedKI
+            CappedKI = 6
         }
-
-        public volatile bool _KeyCapped = false;
 
         public void NetworkTask(AmbuscadeTaskType task, int parameter = 0)
         {
+            if (!_ambuscade)
+                return;
+
             switch (task)
             {
                 case AmbuscadeTaskType.GotoMonsterZone:
-                {
-                    WriteLog("[TASK] Moving to RoE Zone");
-                    DoRoute(_route2);
-                    NavigateToZone(_hpMenuItemString, 41);
-                    client.Send("DOCK_ROE");
-                    WriteLog($"[REPLY] >> TASK ({task}) OK");
-                    break;
-                }
+                    {
+                        WriteLog($"[TASK] >> PERFORMING ({task}) ...");
+                        DoRoute(_route2);
+                        NavigateToZone(_hpMenuItemString, 41);
+                        client.Send("DOCK_ROE");
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+                        break;
+                    }
                 case AmbuscadeTaskType.ReturnHome:
-                {
-                    WriteLog("[TASK] Returning Home");
-                    ReturnHome();
-                    client.Send("DOCK_MHAURA");
-                    WriteLog($"[REPLY] >> TASK ({task}) OK");
-                    break;
+                    {
+                        WriteLog($"[TASK] >> PERFORMING ({task}) ...");
+                        ReturnHome();
+                        client.Send("DOCK_MHAURA");
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+                        break;
 
-                }
+                    }
                 case AmbuscadeTaskType.Fight:
-                {
-                    WriteLog($"[TASK] Fighting -- Mob ID: {parameter}");
-                    if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
                     {
+                        WriteLog($"[TASK] >> PERFORMING ({task}) ...");
+                        if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                        {
 
-                        _hasKeyItem = false;
-                        _initialKeyItem = false;
-                        _KeyCapped = false;
+                            _hasKeyItem = false;
+                            _initialKeyItem = false;
+                            _KeyCapped = false;
+                        }
+                        Fight(parameter, Combat.Mode.None);
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+                        break;
                     }
-                    Fight(parameter, Combat.Mode.None);
-                    WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
-                    break;
-                }
                 case AmbuscadeTaskType.CancelEngage:
-                {
-                    WriteLog($"[TASK] Cancel Engage -- Mob ID: {parameter}");
-                    Combat.Interrupt();
-                    WriteLog($"[REPLY] >> TASK ({task})({parameter}) OK");
-                    break;
-                }
-                case AmbuscadeTaskType.ObtainKI:
-                {
-                    WriteLog($"[TASK] Obtaining KI until everyone has KI");
-                    ObtainKI();
-                    client.Send("DOCK_KI");
-                    WriteLog($"[REPLY] >> TASK ({task}) OK");
-
-                    break;
-                }
-                case AmbuscadeTaskType.CappedKI:
-                {
-                    WriteLog($"[TASK] Capped KI");
-                    _KeyCapped = true;
-                    if (!job.Engages())
                     {
+                        WriteLog($"[TASK] >> PERFORMING ({task}) ...");
                         Combat.Interrupt();
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+                        break;
                     }
-                    WriteLog($"[REPLY] >> TASK ({task}) OK");
-                    break;
-                }
+                case AmbuscadeTaskType.ObtainKI:
+                    {
+                        WriteLog($"[TASK] >> PERFORMING ({task}) ...");
+                        ObtainKI();
+                        client.Send("DOCK_KI");
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+
+                        break;
+                    }
+                case AmbuscadeTaskType.CappedKI:
+                    {
+                        WriteLog($"[TASK] >> PERFORMING ({task}) ...");
+                        _KeyCapped = true;
+                        if (!job.Engages())
+                        {
+                            Combat.Interrupt();
+                        }
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+                        break;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(task), task, null);
             }
-            WriteLog("[TASK] Task Complete! Accepting new task");
+            WriteLog("[TASK] >> IDLE. Waiting for a new task...");
             _inTask = false;
         }
 
         public bool HasKeyItem()
         {
-            if (!_Network && _hasKeyItem)
+            if (_Leader && _hasKeyItem && _KeyCapped)
                 return true;
 
-            if (_Network)
-            {
-                if (_Leader && _hasKeyItem && _KeyCapped)
-                    return true;
-
-                if (!_Leader && _hasKeyItem && _KeyCapped)
-                    return true;
-            }
+            if (!_Leader && _hasKeyItem && _KeyCapped)
+                return true;
 
             return false;
         }
@@ -346,8 +384,8 @@ namespace Flipper
             while (!HasKeyItem() && _ambuscade)
             {
 
-              NoPath:
-                hotspotIndex = (hotspotIndex + 1)%hotspots.Count;
+                NoPath:
+                hotspotIndex = (hotspotIndex + 1) % hotspots.Count;
 
                 float destx = hotspots[hotspotIndex].Waypoint.X;
                 float destz = hotspots[hotspotIndex].Waypoint.Z;
@@ -387,13 +425,13 @@ namespace Flipper
         public bool Fight(int id, Combat.Mode mode)
         {
             bool result = false;
-            if (_Network && _Leader && fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            // If we're in Ambuscade, let people know it's time to fight.
+            if (_Leader && fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
                 client.Send("RELAY TASK 3 " + id);
             }
 
             Combat.FailType fail = Combat.FailType.NoFail;
-
             result = Combat.Fight(id, ambuscadeTargetMonster, mode, out fail);
 
             if (result == false)
@@ -409,15 +447,12 @@ namespace Flipper
             {
 
                 // Wait for all palyers to start.
-                if (_Network)
-                {
-                    while (!_proceed)
-                        Thread.Sleep(100);
-                    _proceed = false;
-                }
+                while (!_proceed && _ambuscade)
+                    Thread.Sleep(100);
+                _proceed = false;
                 Thread.Sleep(1000);
 
-                if (_Network && _KeyCapped && _initialKeyItem)
+                if (_KeyCapped && _initialKeyItem)
                 {
                     _proceed = true;
                     goto SkipRoEFarming;
@@ -430,13 +465,9 @@ namespace Flipper
 
 
                 // Wait for all players to arrive at the RoE Zone.
-                if (_Network)
-                {
-                    while (!_proceed)
-                        Thread.Sleep(100);
-                    _proceed = false;
-                }
-
+                while (!_proceed && _ambuscade)
+                    Thread.Sleep(100);
+                _proceed = false;
 
                 // Farm Key Item, then ReturnHome()
                 //DoRoute(_route3, true);
@@ -446,12 +477,10 @@ namespace Flipper
                 Thread.Sleep(4000);
                 client.Send("RELAY TASK 6 0"); // -- tell players to stop farming KI
 
-                if (_Network)
-                {
-                    while (!_proceed)
-                        Thread.Sleep(100);
-                    _proceed = false;
-                }
+
+                while (!_proceed && _ambuscade)
+                    Thread.Sleep(100);
+                _proceed = false;
 
                 Thread.Sleep(3500); // allow time to disengage
 
@@ -460,11 +489,8 @@ namespace Flipper
                 ReturnHome();
 
                 // Wait for everyone to return home.
-                if (_Network)
-                {
-                    while (!_proceed)
-                        Thread.Sleep(100);
-                }
+                while (!_proceed && _ambuscade)
+                    Thread.Sleep(100);
 
                 SkipRoEFarming:
 
@@ -473,34 +499,35 @@ namespace Flipper
                 DoEntry();
 
                 // Wait until I'm in legion to proceed.
-                while (fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion)
+                while (fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion && _ambuscade)
                 {
                     Thread.Sleep(100);
                 }
 
                 // Once in Legion, wait for everything to load.
-                Thread.Sleep(22000);
+                Thread.Sleep(15000);
 
                 // Add trusts to the party.
-                if (_FillTrusts)
-                    SpawnTrusts();
+                if (fface.Party.Party0Count < 6 && _ambuscade)
+                    SummonTrusts();
 
                 // Look for a target
                 List<TargetInfo> targs = Combat.FindTarget(ambuscadeTargetMonster.MonsterName);
-                while (!targs.Any())
+                while (!targs.Any() && _ambuscade)
                 {
                     targs = Combat.FindTarget(ambuscadeTargetMonster.MonsterName);
                     Thread.Sleep(1);
                 }
 
-                // Fight le target.
-                Fight(targs[0].Id, Combat.Mode.None);
+                if (targs.Any() && _ambuscade)
+                    // Fight le target.
+                    Fight(targs[0].Id, Combat.Mode.None);
 
                 _hasKeyItem = false;
                 _KeyCapped = false;
                 _initialKeyItem = false;
 
-                while (fface.Player.Zone != Zone.Mhaura)
+                while (fface.Player.Zone != Zone.Mhaura && _ambuscade)
                 {
                     Thread.Sleep(100);
                 }
@@ -510,7 +537,8 @@ namespace Flipper
             }
         }
 
-        public void SpawnTrusts()
+        // calculates and summons appropriate trusts.
+        public void SummonTrusts()
         {
             job.SpawnTrusts();
         }
@@ -617,14 +645,14 @@ namespace Flipper
                 fface.Windower.SendString("/lockon");
                 Thread.Sleep(5000);
             }
-            
+
 
             while (!fface.Menu.IsOpen)
             {
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
                 Thread.Sleep(4000);
             }
-            
+
             if (MenuSelectedText("Travel to another home point."))
             {
                 if (!fface.Menu.IsOpen) goto MenuClosed;
@@ -635,7 +663,7 @@ namespace Flipper
             {
                 goto MenuClosed;
             }
-            
+
             while (!MenuSelectedText("Select from favorites."))
             {
                 if (!fface.Menu.IsOpen) goto MenuClosed;
@@ -643,7 +671,7 @@ namespace Flipper
                 Thread.Sleep(400);
             }
 
-            
+
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             Thread.Sleep(1000);
 
@@ -654,7 +682,7 @@ namespace Flipper
                 Thread.Sleep(400);
             }
 
-            
+
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             Thread.Sleep(1000);
@@ -666,7 +694,7 @@ namespace Flipper
                 Thread.Sleep(400);
             }
 
-            
+
 
             fface.Windower.SendKeyPress(KeyCode.EnterKey);
             while (fface.Player.Zone == Zone.Mhaura || fface.Player.GetLoginStatus == LoginStatus.Loading)
@@ -687,7 +715,7 @@ namespace Flipper
                 string[] token = node.Split(',');
                 var x = float.Parse((token[0]), CultureInfo.InvariantCulture);
                 var z = float.Parse((token[1]), CultureInfo.InvariantCulture);
-                path.Add(new Node() {X = x, Z = z});
+                path.Add(new Node() { X = x, Z = z });
             }
 
             float X = 0;
@@ -748,9 +776,9 @@ namespace Flipper
 
                     if (newChat.Contains("obtained an Ambuscade Primer Volume Two"))
                     {
-                        WriteLog("[CLIENT] >> REPORTING KEY ITEM");
-                        if (_Network && !_Leader)
+                        if (!_Leader)
                         {
+                            //WriteLog("[REPLY] >> REPORTING KEY ITEM");
                             client.Send("KEY");
                         }
                         _hasKeyItem = true;

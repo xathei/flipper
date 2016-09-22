@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FFACETools;
+using Flipper.Classes;
 
 namespace Flipper
 {
     public static class Utilities
     {
+
         /// <summary>
         /// Determines whether or not the file is exists and is a valid JSON file.
         /// </summary>
