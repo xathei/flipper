@@ -34,7 +34,7 @@
             this.btnStopDynamis = new System.Windows.Forms.Button();
             this.uxLog = new System.Windows.Forms.ListBox();
             this.uxTabs = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.Dynamis = new System.Windows.Forms.TabPage();
             this.uxJobConfig = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.uxDontWS = new System.Windows.Forms.CheckBox();
@@ -52,7 +52,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Farming = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label11 = new System.Windows.Forms.Label();
             this.uxPercent = new System.Windows.Forms.NumericUpDown();
@@ -87,12 +87,12 @@
             this.uxSlave = new System.Windows.Forms.CheckBox();
             this.favouredWeaponskill = new System.Windows.Forms.TextBox();
             this.btnFarming = new System.Windows.Forms.Button();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.Voidwatch = new System.Windows.Forms.TabPage();
             this.uxFightOnry = new System.Windows.Forms.CheckBox();
             this.uxUnity = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.uxUnityWS = new System.Windows.Forms.TextBox();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.UnityTab = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.UnityItemContainerLabel = new System.Windows.Forms.Label();
             this.UnityItemContainer = new System.Windows.Forms.TextBox();
@@ -107,7 +107,8 @@
             this.UnityItemStop2 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
-            this.tabAmbuscade = new System.Windows.Forms.TabPage();
+            this.Ambuscade = new System.Windows.Forms.TabPage();
+            this.uxAmbuscadeServer = new System.Windows.Forms.ComboBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.ambMem6 = new System.Windows.Forms.Label();
             this.AmbMem5 = new System.Windows.Forms.Label();
@@ -136,7 +137,7 @@
             this.ambLblHomePoint = new System.Windows.Forms.Label();
             this.ambHomePoint = new System.Windows.Forms.TextBox();
             this.ambRoETarget = new System.Windows.Forms.TextBox();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.Misc = new System.Windows.Forms.TabPage();
             this.Dualbox = new System.Windows.Forms.GroupBox();
             this.uxButtonDBox = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -159,7 +160,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
-            this.tabMisc2 = new System.Windows.Forms.TabPage();
+            this.Misc2 = new System.Windows.Forms.TabPage();
             this.button7 = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.ambClearButton = new System.Windows.Forms.Button();
@@ -167,7 +168,7 @@
             this.ambStartRecording = new System.Windows.Forms.Button();
             this.ambSaveWaypoints = new System.Windows.Forms.Button();
             this.ambWaypointList = new System.Windows.Forms.ListBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.Logging = new System.Windows.Forms.TabPage();
             this.cmbMode = new System.Windows.Forms.ComboBox();
             this.numBreakSeconds = new System.Windows.Forms.NumericUpDown();
             this.chkTA = new System.Windows.Forms.CheckBox();
@@ -175,35 +176,34 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.uxAmbuscadeServer = new System.Windows.Forms.ComboBox();
             this.uxTabs.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.uxTurnAt)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.Farming.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.uxPercent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.uxCapacityCharges)).BeginInit();
             this.smnGroup.SuspendLayout();
             this.networkGroup.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage6.SuspendLayout();
+            this.Voidwatch.SuspendLayout();
+            this.UnityTab.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            this.tabAmbuscade.SuspendLayout();
+            this.Ambuscade.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            this.tabPage5.SuspendLayout();
+            this.Misc.SuspendLayout();
             this.Dualbox.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.tabMisc2.SuspendLayout();
+            this.Misc2.SuspendLayout();
             this.groupBox9.SuspendLayout();
-            this.tabPage4.SuspendLayout();
+            this.Logging.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -253,14 +253,14 @@
             // 
             // uxTabs
             // 
-            this.uxTabs.Controls.Add(this.tabPage1);
-            this.uxTabs.Controls.Add(this.tabPage2);
-            this.uxTabs.Controls.Add(this.tabPage3);
-            this.uxTabs.Controls.Add(this.tabPage6);
-            this.uxTabs.Controls.Add(this.tabAmbuscade);
-            this.uxTabs.Controls.Add(this.tabPage5);
-            this.uxTabs.Controls.Add(this.tabMisc2);
-            this.uxTabs.Controls.Add(this.tabPage4);
+            this.uxTabs.Controls.Add(this.Dynamis);
+            this.uxTabs.Controls.Add(this.Farming);
+            this.uxTabs.Controls.Add(this.Voidwatch);
+            this.uxTabs.Controls.Add(this.UnityTab);
+            this.uxTabs.Controls.Add(this.Ambuscade);
+            this.uxTabs.Controls.Add(this.Misc);
+            this.uxTabs.Controls.Add(this.Misc2);
+            this.uxTabs.Controls.Add(this.Logging);
             this.uxTabs.Location = new System.Drawing.Point(12, 12);
             this.uxTabs.Name = "uxTabs";
             this.uxTabs.SelectedIndex = 0;
@@ -268,19 +268,19 @@
             this.uxTabs.TabIndex = 5;
             this.uxTabs.Visible = false;
             // 
-            // tabPage1
+            // Dynamis
             // 
-            this.tabPage1.Controls.Add(this.uxJobConfig);
-            this.tabPage1.Controls.Add(this.groupBox6);
-            this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.btnStart);
-            this.tabPage1.Location = new System.Drawing.Point(4, 26);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(755, 465);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Dynamis";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.Dynamis.Controls.Add(this.uxJobConfig);
+            this.Dynamis.Controls.Add(this.groupBox6);
+            this.Dynamis.Controls.Add(this.groupBox2);
+            this.Dynamis.Controls.Add(this.btnStart);
+            this.Dynamis.Location = new System.Drawing.Point(4, 26);
+            this.Dynamis.Name = "Dynamis";
+            this.Dynamis.Padding = new System.Windows.Forms.Padding(3);
+            this.Dynamis.Size = new System.Drawing.Size(755, 465);
+            this.Dynamis.TabIndex = 0;
+            this.Dynamis.Text = "Dynamis";
+            this.Dynamis.UseVisualStyleBackColor = true;
             // 
             // uxJobConfig
             // 
@@ -461,25 +461,25 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "O. Bronzepiece:";
             // 
-            // tabPage2
+            // Farming
             // 
-            this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Controls.Add(this.smnGroup);
-            this.tabPage2.Controls.Add(this.networkGroup);
-            this.tabPage2.Controls.Add(this.uxWaitFor2000TP);
-            this.tabPage2.Controls.Add(this.uxAMWS);
-            this.tabPage2.Controls.Add(this.uxAM3);
-            this.tabPage2.Controls.Add(this.uxMaster);
-            this.tabPage2.Controls.Add(this.uxSlave);
-            this.tabPage2.Controls.Add(this.favouredWeaponskill);
-            this.tabPage2.Controls.Add(this.btnFarming);
-            this.tabPage2.Location = new System.Drawing.Point(4, 26);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(755, 465);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Farming";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.Farming.Controls.Add(this.groupBox1);
+            this.Farming.Controls.Add(this.smnGroup);
+            this.Farming.Controls.Add(this.networkGroup);
+            this.Farming.Controls.Add(this.uxWaitFor2000TP);
+            this.Farming.Controls.Add(this.uxAMWS);
+            this.Farming.Controls.Add(this.uxAM3);
+            this.Farming.Controls.Add(this.uxMaster);
+            this.Farming.Controls.Add(this.uxSlave);
+            this.Farming.Controls.Add(this.favouredWeaponskill);
+            this.Farming.Controls.Add(this.btnFarming);
+            this.Farming.Location = new System.Drawing.Point(4, 26);
+            this.Farming.Name = "Farming";
+            this.Farming.Padding = new System.Windows.Forms.Padding(3);
+            this.Farming.Size = new System.Drawing.Size(755, 465);
+            this.Farming.TabIndex = 1;
+            this.Farming.Text = "Farming";
+            this.Farming.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -870,19 +870,19 @@
             this.btnFarming.UseVisualStyleBackColor = true;
             this.btnFarming.Click += new System.EventHandler(this.btnFarming_Click);
             // 
-            // tabPage3
+            // Voidwatch
             // 
-            this.tabPage3.Controls.Add(this.uxFightOnry);
-            this.tabPage3.Controls.Add(this.uxUnity);
-            this.tabPage3.Controls.Add(this.label1);
-            this.tabPage3.Controls.Add(this.uxUnityWS);
-            this.tabPage3.Location = new System.Drawing.Point(4, 26);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(755, 465);
-            this.tabPage3.TabIndex = 4;
-            this.tabPage3.Text = "Voidwatch";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.Voidwatch.Controls.Add(this.uxFightOnry);
+            this.Voidwatch.Controls.Add(this.uxUnity);
+            this.Voidwatch.Controls.Add(this.label1);
+            this.Voidwatch.Controls.Add(this.uxUnityWS);
+            this.Voidwatch.Location = new System.Drawing.Point(4, 26);
+            this.Voidwatch.Name = "Voidwatch";
+            this.Voidwatch.Padding = new System.Windows.Forms.Padding(3);
+            this.Voidwatch.Size = new System.Drawing.Size(755, 465);
+            this.Voidwatch.TabIndex = 4;
+            this.Voidwatch.Text = "Voidwatch";
+            this.Voidwatch.UseVisualStyleBackColor = true;
             // 
             // uxFightOnry
             // 
@@ -920,18 +920,18 @@
             this.uxUnityWS.Size = new System.Drawing.Size(565, 24);
             this.uxUnityWS.TabIndex = 0;
             // 
-            // tabPage6
+            // UnityTab
             // 
-            this.tabPage6.Controls.Add(this.groupBox8);
-            this.tabPage6.Controls.Add(this.uxUnityNM);
-            this.tabPage6.Controls.Add(this.groupBox7);
-            this.tabPage6.Location = new System.Drawing.Point(4, 26);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(755, 465);
-            this.tabPage6.TabIndex = 6;
-            this.tabPage6.Text = "Unity";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.UnityTab.Controls.Add(this.groupBox8);
+            this.UnityTab.Controls.Add(this.uxUnityNM);
+            this.UnityTab.Controls.Add(this.groupBox7);
+            this.UnityTab.Location = new System.Drawing.Point(4, 26);
+            this.UnityTab.Name = "UnityTab";
+            this.UnityTab.Padding = new System.Windows.Forms.Padding(3);
+            this.UnityTab.Size = new System.Drawing.Size(755, 465);
+            this.UnityTab.TabIndex = 6;
+            this.UnityTab.Text = "Unity";
+            this.UnityTab.UseVisualStyleBackColor = true;
             // 
             // groupBox8
             // 
@@ -1063,22 +1063,36 @@
             this.UnityItemStop1.Size = new System.Drawing.Size(260, 24);
             this.UnityItemStop1.TabIndex = 3;
             // 
-            // tabAmbuscade
+            // Ambuscade
             // 
-            this.tabAmbuscade.Controls.Add(this.uxAmbuscadeServer);
-            this.tabAmbuscade.Controls.Add(this.groupBox13);
-            this.tabAmbuscade.Controls.Add(this.AmbJobConfigButton);
-            this.tabAmbuscade.Controls.Add(this.groupBox12);
-            this.tabAmbuscade.Controls.Add(this.ambStartButton);
-            this.tabAmbuscade.Controls.Add(this.groupBox11);
-            this.tabAmbuscade.Controls.Add(this.groupBox10);
-            this.tabAmbuscade.Location = new System.Drawing.Point(4, 26);
-            this.tabAmbuscade.Name = "tabAmbuscade";
-            this.tabAmbuscade.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAmbuscade.Size = new System.Drawing.Size(755, 465);
-            this.tabAmbuscade.TabIndex = 8;
-            this.tabAmbuscade.Text = "Ambuscade";
-            this.tabAmbuscade.UseVisualStyleBackColor = true;
+            this.Ambuscade.Controls.Add(this.uxAmbuscadeServer);
+            this.Ambuscade.Controls.Add(this.groupBox13);
+            this.Ambuscade.Controls.Add(this.AmbJobConfigButton);
+            this.Ambuscade.Controls.Add(this.groupBox12);
+            this.Ambuscade.Controls.Add(this.ambStartButton);
+            this.Ambuscade.Controls.Add(this.groupBox11);
+            this.Ambuscade.Controls.Add(this.groupBox10);
+            this.Ambuscade.Location = new System.Drawing.Point(4, 26);
+            this.Ambuscade.Name = "Ambuscade";
+            this.Ambuscade.Padding = new System.Windows.Forms.Padding(3);
+            this.Ambuscade.Size = new System.Drawing.Size(755, 465);
+            this.Ambuscade.TabIndex = 8;
+            this.Ambuscade.Text = "Ambuscade";
+            this.Ambuscade.UseVisualStyleBackColor = true;
+            // 
+            // uxAmbuscadeServer
+            // 
+            this.uxAmbuscadeServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.uxAmbuscadeServer.Enabled = false;
+            this.uxAmbuscadeServer.FormattingEnabled = true;
+            this.uxAmbuscadeServer.Items.AddRange(new object[] {
+            "ambuscade.dazusu.com",
+            "86.17.131.81",
+            "127.0.0.1"});
+            this.uxAmbuscadeServer.Location = new System.Drawing.Point(546, 430);
+            this.uxAmbuscadeServer.Name = "uxAmbuscadeServer";
+            this.uxAmbuscadeServer.Size = new System.Drawing.Size(203, 25);
+            this.uxAmbuscadeServer.TabIndex = 12;
             // 
             // groupBox13
             // 
@@ -1094,6 +1108,7 @@
             this.groupBox13.TabIndex = 11;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Connection Status";
+            this.groupBox13.Visible = false;
             // 
             // ambMem6
             // 
@@ -1266,6 +1281,7 @@
             this.groupBox11.TabIndex = 2;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Party Settings";
+            this.groupBox11.Visible = false;
             // 
             // ambRoleDamage
             // 
@@ -1366,19 +1382,19 @@
             this.ambRoETarget.TabIndex = 0;
             this.ambRoETarget.Text = "Greater Manticore";
             // 
-            // tabPage5
+            // Misc
             // 
-            this.tabPage5.Controls.Add(this.Dualbox);
-            this.tabPage5.Controls.Add(this.groupBox5);
-            this.tabPage5.Controls.Add(this.groupBox4);
-            this.tabPage5.Controls.Add(this.groupBox3);
-            this.tabPage5.Location = new System.Drawing.Point(4, 26);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(755, 465);
-            this.tabPage5.TabIndex = 5;
-            this.tabPage5.Text = "Misc.";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.Misc.Controls.Add(this.Dualbox);
+            this.Misc.Controls.Add(this.groupBox5);
+            this.Misc.Controls.Add(this.groupBox4);
+            this.Misc.Controls.Add(this.groupBox3);
+            this.Misc.Location = new System.Drawing.Point(4, 26);
+            this.Misc.Name = "Misc";
+            this.Misc.Padding = new System.Windows.Forms.Padding(3);
+            this.Misc.Size = new System.Drawing.Size(755, 465);
+            this.Misc.TabIndex = 5;
+            this.Misc.Text = "Misc.";
+            this.Misc.UseVisualStyleBackColor = true;
             // 
             // Dualbox
             // 
@@ -1603,17 +1619,17 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // tabMisc2
+            // Misc2
             // 
-            this.tabMisc2.Controls.Add(this.button7);
-            this.tabMisc2.Controls.Add(this.groupBox9);
-            this.tabMisc2.Location = new System.Drawing.Point(4, 26);
-            this.tabMisc2.Name = "tabMisc2";
-            this.tabMisc2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMisc2.Size = new System.Drawing.Size(755, 465);
-            this.tabMisc2.TabIndex = 7;
-            this.tabMisc2.Text = "Misc. 2";
-            this.tabMisc2.UseVisualStyleBackColor = true;
+            this.Misc2.Controls.Add(this.button7);
+            this.Misc2.Controls.Add(this.groupBox9);
+            this.Misc2.Location = new System.Drawing.Point(4, 26);
+            this.Misc2.Name = "Misc2";
+            this.Misc2.Padding = new System.Windows.Forms.Padding(3);
+            this.Misc2.Size = new System.Drawing.Size(755, 465);
+            this.Misc2.TabIndex = 7;
+            this.Misc2.Text = "Misc. 2";
+            this.Misc2.UseVisualStyleBackColor = true;
             // 
             // button7
             // 
@@ -1687,16 +1703,16 @@
             this.ambWaypointList.Size = new System.Drawing.Size(310, 191);
             this.ambWaypointList.TabIndex = 2;
             // 
-            // tabPage4
+            // Logging
             // 
-            this.tabPage4.Controls.Add(this.uxLog);
-            this.tabPage4.Location = new System.Drawing.Point(4, 26);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(755, 465);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Logging";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.Logging.Controls.Add(this.uxLog);
+            this.Logging.Location = new System.Drawing.Point(4, 26);
+            this.Logging.Name = "Logging";
+            this.Logging.Padding = new System.Windows.Forms.Padding(3);
+            this.Logging.Size = new System.Drawing.Size(755, 465);
+            this.Logging.TabIndex = 3;
+            this.Logging.Text = "Logging";
+            this.Logging.UseVisualStyleBackColor = true;
             // 
             // cmbMode
             // 
@@ -1748,7 +1764,7 @@
             this.uxCharacter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.uxCharacter.Font = new System.Drawing.Font("Verdana", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.uxCharacter.FormattingEnabled = true;
-            this.uxCharacter.Location = new System.Drawing.Point(12, 513);
+            this.uxCharacter.Location = new System.Drawing.Point(12, 511);
             this.uxCharacter.Name = "uxCharacter";
             this.uxCharacter.Size = new System.Drawing.Size(199, 30);
             this.uxCharacter.TabIndex = 6;
@@ -1760,35 +1776,24 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 549);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 546);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(787, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(784, 28);
             this.statusStrip1.TabIndex = 18;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
+            this.toolStripStatusLabel1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
-            this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
-            // 
-            // uxAmbuscadeServer
-            // 
-            this.uxAmbuscadeServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.uxAmbuscadeServer.FormattingEnabled = true;
-            this.uxAmbuscadeServer.Items.AddRange(new object[] {
-            "ambuscade.dazusu.com",
-            "86.17.131.81"});
-            this.uxAmbuscadeServer.Location = new System.Drawing.Point(546, 430);
-            this.uxAmbuscadeServer.Name = "uxAmbuscadeServer";
-            this.uxAmbuscadeServer.Size = new System.Drawing.Size(203, 25);
-            this.uxAmbuscadeServer.TabIndex = 12;
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
+            this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 574);
+            this.ClientSize = new System.Drawing.Size(784, 574);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.uxCharacter);
             this.Controls.Add(this.uxTabs);
@@ -1804,14 +1809,14 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.uxTabs.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.Dynamis.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.uxTurnAt)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.Farming.ResumeLayout(false);
+            this.Farming.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.uxPercent)).EndInit();
@@ -1820,14 +1825,14 @@
             this.smnGroup.PerformLayout();
             this.networkGroup.ResumeLayout(false);
             this.networkGroup.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
+            this.Voidwatch.ResumeLayout(false);
+            this.Voidwatch.PerformLayout();
+            this.UnityTab.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            this.tabAmbuscade.ResumeLayout(false);
+            this.Ambuscade.ResumeLayout(false);
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.groupBox12.ResumeLayout(false);
@@ -1836,17 +1841,17 @@
             this.groupBox11.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
+            this.Misc.ResumeLayout(false);
             this.Dualbox.ResumeLayout(false);
             this.Dualbox.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
-            this.tabMisc2.ResumeLayout(false);
+            this.Misc2.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
+            this.Logging.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -1861,9 +1866,9 @@
         private System.Windows.Forms.Button btnStopDynamis;
         public System.Windows.Forms.CheckBox chkVerboseLogging;
         public System.Windows.Forms.ListBox uxLog;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage Dynamis;
+        private System.Windows.Forms.TabPage Farming;
+        private System.Windows.Forms.TabPage Logging;
         private System.Windows.Forms.Button btnFarming;
         public System.Windows.Forms.CheckBox chkUseQuickstep;
         public System.Windows.Forms.CheckBox chkStayBehind;
@@ -1890,7 +1895,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.CheckBox uxCapacityRing;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage Voidwatch;
         private System.Windows.Forms.Button uxUnity;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox uxUnityWS;
@@ -1925,7 +1930,7 @@
         private System.Windows.Forms.GroupBox groupBox6;
         public System.Windows.Forms.TextBox uxDynamisWeaponskill;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage Misc;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label7;
@@ -1940,7 +1945,7 @@
         private System.Windows.Forms.CheckBox uxTimeExtensions;
         private System.Windows.Forms.Label label12;
         public System.Windows.Forms.CheckBox uxDontWS;
-        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TabPage UnityTab;
         private System.Windows.Forms.Button uxUnityNM;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
@@ -1966,14 +1971,14 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button uxButtonDBox;
-        private System.Windows.Forms.TabPage tabMisc2;
+        private System.Windows.Forms.TabPage Misc2;
         public System.Windows.Forms.Button ambStartRecording;
         public System.Windows.Forms.ListBox ambWaypointList;
         public System.Windows.Forms.Button ambSaveWaypoints;
         public System.Windows.Forms.TextBox ambFilename;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Button ambClearButton;
-        private System.Windows.Forms.TabPage tabAmbuscade;
+        private System.Windows.Forms.TabPage Ambuscade;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label ambLblRoETarget;

@@ -92,6 +92,9 @@ namespace Flipper
             _ambuscade = false;
             client.Close();
             Combat.Interrupt();
+            fface.Windower.SendKey(KeyCode.NP_Number4, false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
             return;
         }
 

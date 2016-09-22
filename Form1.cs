@@ -74,6 +74,10 @@ namespace FlipperD
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            uxTabs.TabPages.Remove(UnityTab);
+            uxTabs.TabPages.Remove(Misc);
+            uxTabs.TabPages.Remove(Misc2);
+            uxTabs.TabPages.Remove(Voidwatch);
             uxAmbuscadeServer.SelectedIndex = 0;
             cmbMode.SelectedIndex = 0;
             ambDifficulty.SelectedIndex = 3;
@@ -983,6 +987,7 @@ namespace FlipperD
             {
                 ambStartButton.Text = "Start Ambuscade";
                 _ambuscade.EndAmbuscade();
+                _ambuscade = null;
             }
         }
 
