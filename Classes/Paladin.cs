@@ -61,6 +61,12 @@ namespace Flipper.Classes
 
         public override void UseAbilities()
         {
+            if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
+            {
+                WriteLog("[KITCHEN] Using Sublime Sushi");
+                SendCommand("/item \"Sublime Sushi\" <me>", 4);
+            }
+
             if (_fface.Player.HPPCurrent > 80 && PDTSet)
             {
                 PDTSet = false;

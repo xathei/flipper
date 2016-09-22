@@ -331,11 +331,11 @@ namespace Flipper.Classes
                 }
             }
 
-            WriteLog($"[PartyHasHate] false, claimed ID: {_fface.NPC.ClaimedID(id)}");
+            //WriteLog($"[PartyHasHate] false, claimed ID: {_fface.NPC.ClaimedID(id)}");
 
             if (_fface.NPC.ClaimedID(id) == 0 && _fface.NPC.Status(id) == Status.Fighting)
             {
-                WriteLog("Claimed ID is 0, assuming that party has hate!");
+                //WriteLog("Claimed ID is 0, assuming that party has hate!");
                 return true;
             }
 

@@ -90,7 +90,7 @@ namespace Flipper
                     (!fface.NPC.IsClaimed(i) || PartyHasHate(i)) 
                     && IsFacingMe(i, 15.0))
                 {
-                    WriteLog($"[AGGRO] Found an aggroed mob! Killing it! [{fface.NPC.Name(i)}]");
+                    WriteLog($"[AGGRO>>] {fface.NPC.Name(i)}");
                     return i;
                 }
 
@@ -262,7 +262,7 @@ namespace Flipper
             Thread.Sleep(500);
             if (!_fighting && fface.Player.Status == Status.Fighting)
             {
-                WriteLog("[NAV] Monsters is perhaps in a bad location. Giving up...");
+                WriteLog("[NAV] Monster is out of mesh. Giving up...");
                 fface.Windower.SendString("/attackoff");
                 Thread.Sleep(3000);
                 if (fface.Target.IsLocked)
@@ -284,7 +284,6 @@ namespace Flipper
         {
             if (Black == null)
             {
-                WriteLog("Initializing Blacklist!");
                 Black = new List<int>();
             }
         }
@@ -344,28 +343,28 @@ namespace Flipper
 
             if (!IsRendered(id))
             {
-                WriteLog("[CANT ATTACK] Monster is not rendered.");
+                //WriteLog("[CANT ATTACK] Monster is not rendered.");
                 return false;
             }
 
             if (fface.NPC.IsClaimed(id) && !PartyHasHate(id) && fface.Player.Status != Status.Fighting)
             {
-                WriteLog("[CANT ATTACK] Monster is claimed, and Party doesn't have hate.");
+                //WriteLog("[CANT ATTACK] Monster is claimed, and Party doesn't have hate.");
                 return false;
             }
 
             // Skip if the mob more than 5 yalms above or below us
             if (Math.Abs(Math.Abs(fface.NPC.PosY(id)) - Math.Abs(fface.Player.PosY)) > 15)
             {
-                WriteLog("[CANT ATTACK] Mob is too far below/above me!");
+                //WriteLog("[CANT ATTACK] Mob is too far below/above me!");
                 return false;
             }
 
             // Skip if the NPC's HP is 0
             if (fface.NPC.HPPCurrent(id) == 0 || !IsRendered(id))
             {
-                WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
-                WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
+                //WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
+                //WriteLog("[CANT ATTACK] Mobs HP is 0, or it's not rendered.");
                 return false;
             }
 
@@ -520,9 +519,7 @@ namespace Flipper
         {
             List<string> files = new List<string>();
 
-            Grid =
-                    new byte[PathFinderHelper.RoundToNearestPowerOfTwo(4000),
-                        PathFinderHelper.RoundToNearestPowerOfTwo(4000)];
+            Grid = new byte[PathFinderHelper.RoundToNearestPowerOfTwo(4000),PathFinderHelper.RoundToNearestPowerOfTwo(4000)];
             for (int i = 0; i < 4096; i++)
             {
                 for (int j = 0; j < 4096; j++)

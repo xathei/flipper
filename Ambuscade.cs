@@ -170,6 +170,7 @@ namespace Flipper
             chatThread.Start();
         }
 
+
         /// <summary>
         /// Event for the client connecting to the server.
         /// </summary>
@@ -178,6 +179,7 @@ namespace Flipper
         {
             WriteLog("[SERVER] Connected!");
         }
+
 
         /// <summary>
         /// Get a string list of party members.
@@ -200,14 +202,6 @@ namespace Flipper
             return membersList;
         }
 
-        public enum MemberEvent
-        {
-            Join = 0,
-            Part = 1,
-            Stop = 2
-        }
-
-
         /// <summary>
         /// Data read from the network socket.
         /// </summary>
@@ -215,7 +209,9 @@ namespace Flipper
         /// <param name="text">The string of data that was read, appended with \r\n.</param>
         private void ReadData(ClientInfo ci, string text)
         {
-            text = text.Replace("\r\n", "");
+            text = text.Replace("\r\n", "|");
+            string[] packets = text.Split('|');
+            text = packets[0];
 
             string[] token = text.Split(' ');
 
