@@ -140,15 +140,8 @@ namespace Flipper
 
 
             // Connect to Network
-            Socket sock;
-            if (fface.Player.Name == "Kamery")
-            {
-                sock = Sockets.CreateTCPSocket("86.17.131.81", 6993);
-            }
-            else
-            {
-                sock = Sockets.CreateTCPSocket("127.0.0.1", 6993);
-            }
+            Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
+
              
             client = new ClientInfo(sock, false);
             client.Delimiter = "\r\n";
