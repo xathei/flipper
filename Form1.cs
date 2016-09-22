@@ -74,6 +74,7 @@ namespace FlipperD
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            uxAmbuscadeServer.SelectedIndex = 0;
             cmbMode.SelectedIndex = 0;
             ambDifficulty.SelectedIndex = 3;
             fface = null;
@@ -971,7 +972,8 @@ namespace FlipperD
                 {
                     Leader = fface.Party.Party0LeaderID == fface.Player.PlayerCoreID,
                     Role = DetermineJobRole(),
-                    PartyCount = fface.Party.Party0Count - 1
+                    PartyCount = fface.Party.Party0Count - 1,
+                    Server = uxAmbuscadeServer.SelectedItem.ToString()
                 };
 
                 _ambuscade.Start(fface, roe, amb, ambHomePoint.Text, uxAmbKeyItem.Checked, settings,

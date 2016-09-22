@@ -141,7 +141,7 @@ namespace Flipper
 
 
             // Connect to Network
-            Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
+            Socket sock = Sockets.CreateTCPSocket(settings.Server, 6993);
             //Socket sock = Sockets.CreateTCPSocket("127.0.0.1", 6993);
 
 
@@ -841,5 +841,6 @@ namespace Flipper
         public bool FillTrusts;
         public JobRole Role;
         public int PartyCount;
+        public string Server;
     }
 }

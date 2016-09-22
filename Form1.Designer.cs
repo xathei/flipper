@@ -108,6 +108,13 @@
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
             this.tabAmbuscade = new System.Windows.Forms.TabPage();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.ambMem6 = new System.Windows.Forms.Label();
+            this.AmbMem5 = new System.Windows.Forms.Label();
+            this.ambMem4 = new System.Windows.Forms.Label();
+            this.ambMem3 = new System.Windows.Forms.Label();
+            this.ambMem2 = new System.Windows.Forms.Label();
+            this.ambMem1 = new System.Windows.Forms.Label();
             this.AmbJobConfigButton = new System.Windows.Forms.Button();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.ambHitbox = new System.Windows.Forms.TextBox();
@@ -168,13 +175,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.ambMem1 = new System.Windows.Forms.Label();
-            this.ambMem2 = new System.Windows.Forms.Label();
-            this.ambMem3 = new System.Windows.Forms.Label();
-            this.ambMem4 = new System.Windows.Forms.Label();
-            this.AmbMem5 = new System.Windows.Forms.Label();
-            this.ambMem6 = new System.Windows.Forms.Label();
+            this.uxAmbuscadeServer = new System.Windows.Forms.ComboBox();
             this.uxTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -191,6 +192,7 @@
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.tabAmbuscade.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
@@ -204,7 +206,6 @@
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            this.groupBox13.SuspendLayout();
             this.SuspendLayout();
             // 
             // chkVerboseLogging
@@ -220,9 +221,9 @@
             // btnStart
             // 
             this.btnStart.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStart.Location = new System.Drawing.Point(586, 404);
+            this.btnStart.Location = new System.Drawing.Point(546, 404);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(163, 55);
+            this.btnStart.Size = new System.Drawing.Size(203, 55);
             this.btnStart.TabIndex = 2;
             this.btnStart.Text = "Start Dynamis";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -285,11 +286,11 @@
             // 
             this.uxJobConfig.Enabled = false;
             this.uxJobConfig.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.uxJobConfig.Location = new System.Drawing.Point(586, 343);
+            this.uxJobConfig.Location = new System.Drawing.Point(546, 343);
             this.uxJobConfig.Name = "uxJobConfig";
-            this.uxJobConfig.Size = new System.Drawing.Size(163, 55);
+            this.uxJobConfig.Size = new System.Drawing.Size(203, 55);
             this.uxJobConfig.TabIndex = 15;
-            this.uxJobConfig.Text = "Job Config (Coming soon)";
+            this.uxJobConfig.Text = "Job Config";
             this.uxJobConfig.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -398,7 +399,7 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Location = new System.Drawing.Point(6, 337);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(565, 122);
+            this.groupBox2.Size = new System.Drawing.Size(534, 122);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Statistics";
@@ -775,7 +776,7 @@
             this.networkGroup.Controls.Add(this.uxNetMaster);
             this.networkGroup.Location = new System.Drawing.Point(6, 397);
             this.networkGroup.Name = "networkGroup";
-            this.networkGroup.Size = new System.Drawing.Size(574, 62);
+            this.networkGroup.Size = new System.Drawing.Size(528, 62);
             this.networkGroup.TabIndex = 40;
             this.networkGroup.TabStop = false;
             this.networkGroup.Text = "Network Settings";
@@ -861,9 +862,9 @@
             // btnFarming
             // 
             this.btnFarming.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFarming.Location = new System.Drawing.Point(586, 404);
+            this.btnFarming.Location = new System.Drawing.Point(546, 404);
             this.btnFarming.Name = "btnFarming";
-            this.btnFarming.Size = new System.Drawing.Size(163, 55);
+            this.btnFarming.Size = new System.Drawing.Size(203, 55);
             this.btnFarming.TabIndex = 0;
             this.btnFarming.Text = "Start Farming";
             this.btnFarming.UseVisualStyleBackColor = true;
@@ -998,9 +999,9 @@
             // uxUnityNM
             // 
             this.uxUnityNM.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.uxUnityNM.Location = new System.Drawing.Point(586, 404);
+            this.uxUnityNM.Location = new System.Drawing.Point(546, 404);
             this.uxUnityNM.Name = "uxUnityNM";
-            this.uxUnityNM.Size = new System.Drawing.Size(163, 55);
+            this.uxUnityNM.Size = new System.Drawing.Size(203, 55);
             this.uxUnityNM.TabIndex = 10;
             this.uxUnityNM.Text = "Start Unity";
             this.uxUnityNM.UseVisualStyleBackColor = true;
@@ -1064,6 +1065,7 @@
             // 
             // tabAmbuscade
             // 
+            this.tabAmbuscade.Controls.Add(this.uxAmbuscadeServer);
             this.tabAmbuscade.Controls.Add(this.groupBox13);
             this.tabAmbuscade.Controls.Add(this.AmbJobConfigButton);
             this.tabAmbuscade.Controls.Add(this.groupBox12);
@@ -1078,12 +1080,81 @@
             this.tabAmbuscade.Text = "Ambuscade";
             this.tabAmbuscade.UseVisualStyleBackColor = true;
             // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.ambMem6);
+            this.groupBox13.Controls.Add(this.AmbMem5);
+            this.groupBox13.Controls.Add(this.ambMem4);
+            this.groupBox13.Controls.Add(this.ambMem3);
+            this.groupBox13.Controls.Add(this.ambMem2);
+            this.groupBox13.Controls.Add(this.ambMem1);
+            this.groupBox13.Location = new System.Drawing.Point(6, 181);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(203, 278);
+            this.groupBox13.TabIndex = 11;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Connection Status";
+            // 
+            // ambMem6
+            // 
+            this.ambMem6.AutoSize = true;
+            this.ambMem6.Location = new System.Drawing.Point(18, 165);
+            this.ambMem6.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.ambMem6.Name = "ambMem6";
+            this.ambMem6.Size = new System.Drawing.Size(0, 17);
+            this.ambMem6.TabIndex = 5;
+            // 
+            // AmbMem5
+            // 
+            this.AmbMem5.AutoSize = true;
+            this.AmbMem5.Location = new System.Drawing.Point(18, 138);
+            this.AmbMem5.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.AmbMem5.Name = "AmbMem5";
+            this.AmbMem5.Size = new System.Drawing.Size(0, 17);
+            this.AmbMem5.TabIndex = 4;
+            // 
+            // ambMem4
+            // 
+            this.ambMem4.AutoSize = true;
+            this.ambMem4.Location = new System.Drawing.Point(18, 111);
+            this.ambMem4.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.ambMem4.Name = "ambMem4";
+            this.ambMem4.Size = new System.Drawing.Size(0, 17);
+            this.ambMem4.TabIndex = 3;
+            // 
+            // ambMem3
+            // 
+            this.ambMem3.AutoSize = true;
+            this.ambMem3.Location = new System.Drawing.Point(18, 84);
+            this.ambMem3.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.ambMem3.Name = "ambMem3";
+            this.ambMem3.Size = new System.Drawing.Size(0, 17);
+            this.ambMem3.TabIndex = 2;
+            // 
+            // ambMem2
+            // 
+            this.ambMem2.AutoSize = true;
+            this.ambMem2.Location = new System.Drawing.Point(18, 57);
+            this.ambMem2.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.ambMem2.Name = "ambMem2";
+            this.ambMem2.Size = new System.Drawing.Size(0, 17);
+            this.ambMem2.TabIndex = 1;
+            // 
+            // ambMem1
+            // 
+            this.ambMem1.AutoSize = true;
+            this.ambMem1.Location = new System.Drawing.Point(18, 30);
+            this.ambMem1.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.ambMem1.Name = "ambMem1";
+            this.ambMem1.Size = new System.Drawing.Size(0, 17);
+            this.ambMem1.TabIndex = 0;
+            // 
             // AmbJobConfigButton
             // 
             this.AmbJobConfigButton.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AmbJobConfigButton.Location = new System.Drawing.Point(586, 343);
+            this.AmbJobConfigButton.Location = new System.Drawing.Point(546, 308);
             this.AmbJobConfigButton.Name = "AmbJobConfigButton";
-            this.AmbJobConfigButton.Size = new System.Drawing.Size(163, 55);
+            this.AmbJobConfigButton.Size = new System.Drawing.Size(203, 55);
             this.AmbJobConfigButton.TabIndex = 10;
             this.AmbJobConfigButton.Text = "Job Config";
             this.AmbJobConfigButton.UseVisualStyleBackColor = true;
@@ -1176,9 +1247,9 @@
             // ambStartButton
             // 
             this.ambStartButton.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ambStartButton.Location = new System.Drawing.Point(586, 404);
+            this.ambStartButton.Location = new System.Drawing.Point(546, 369);
             this.ambStartButton.Name = "ambStartButton";
-            this.ambStartButton.Size = new System.Drawing.Size(163, 55);
+            this.ambStartButton.Size = new System.Drawing.Size(203, 55);
             this.ambStartButton.TabIndex = 3;
             this.ambStartButton.Text = "Start Ambuscade";
             this.ambStartButton.UseVisualStyleBackColor = true;
@@ -1701,74 +1772,17 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(103, 20);
             this.toolStripStatusLabel1.Text = "Version 5.0.0.2";
             // 
-            // groupBox13
+            // uxAmbuscadeServer
             // 
-            this.groupBox13.Controls.Add(this.ambMem6);
-            this.groupBox13.Controls.Add(this.AmbMem5);
-            this.groupBox13.Controls.Add(this.ambMem4);
-            this.groupBox13.Controls.Add(this.ambMem3);
-            this.groupBox13.Controls.Add(this.ambMem2);
-            this.groupBox13.Controls.Add(this.ambMem1);
-            this.groupBox13.Location = new System.Drawing.Point(6, 181);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(203, 278);
-            this.groupBox13.TabIndex = 11;
-            this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "Connection Status";
-            // 
-            // ambMem1
-            // 
-            this.ambMem1.AutoSize = true;
-            this.ambMem1.Location = new System.Drawing.Point(18, 30);
-            this.ambMem1.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.ambMem1.Name = "ambMem1";
-            this.ambMem1.Size = new System.Drawing.Size(0, 17);
-            this.ambMem1.TabIndex = 0;
-            // 
-            // ambMem2
-            // 
-            this.ambMem2.AutoSize = true;
-            this.ambMem2.Location = new System.Drawing.Point(18, 57);
-            this.ambMem2.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.ambMem2.Name = "ambMem2";
-            this.ambMem2.Size = new System.Drawing.Size(0, 17);
-            this.ambMem2.TabIndex = 1;
-            // 
-            // ambMem3
-            // 
-            this.ambMem3.AutoSize = true;
-            this.ambMem3.Location = new System.Drawing.Point(18, 84);
-            this.ambMem3.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.ambMem3.Name = "ambMem3";
-            this.ambMem3.Size = new System.Drawing.Size(0, 17);
-            this.ambMem3.TabIndex = 2;
-            // 
-            // ambMem4
-            // 
-            this.ambMem4.AutoSize = true;
-            this.ambMem4.Location = new System.Drawing.Point(18, 111);
-            this.ambMem4.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.ambMem4.Name = "ambMem4";
-            this.ambMem4.Size = new System.Drawing.Size(0, 17);
-            this.ambMem4.TabIndex = 3;
-            // 
-            // AmbMem5
-            // 
-            this.AmbMem5.AutoSize = true;
-            this.AmbMem5.Location = new System.Drawing.Point(18, 138);
-            this.AmbMem5.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.AmbMem5.Name = "AmbMem5";
-            this.AmbMem5.Size = new System.Drawing.Size(0, 17);
-            this.AmbMem5.TabIndex = 4;
-            // 
-            // ambMem6
-            // 
-            this.ambMem6.AutoSize = true;
-            this.ambMem6.Location = new System.Drawing.Point(18, 165);
-            this.ambMem6.Margin = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.ambMem6.Name = "ambMem6";
-            this.ambMem6.Size = new System.Drawing.Size(0, 17);
-            this.ambMem6.TabIndex = 5;
+            this.uxAmbuscadeServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.uxAmbuscadeServer.FormattingEnabled = true;
+            this.uxAmbuscadeServer.Items.AddRange(new object[] {
+            "ambuscade.dazusu.com",
+            "86.17.131.81"});
+            this.uxAmbuscadeServer.Location = new System.Drawing.Point(546, 430);
+            this.uxAmbuscadeServer.Name = "uxAmbuscadeServer";
+            this.uxAmbuscadeServer.Size = new System.Drawing.Size(203, 25);
+            this.uxAmbuscadeServer.TabIndex = 12;
             // 
             // Form1
             // 
@@ -1814,6 +1828,8 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.tabAmbuscade.ResumeLayout(false);
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             this.groupBox11.ResumeLayout(false);
@@ -1834,8 +1850,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.groupBox13.ResumeLayout(false);
-            this.groupBox13.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1989,6 +2003,7 @@
         private System.Windows.Forms.Label ambMem3;
         private System.Windows.Forms.Label ambMem2;
         private System.Windows.Forms.Label ambMem1;
+        private System.Windows.Forms.ComboBox uxAmbuscadeServer;
     }
 }
 
