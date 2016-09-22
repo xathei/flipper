@@ -90,6 +90,7 @@ namespace Flipper
         public void EndAmbuscade()
         {
             _ambuscade = false;
+            client.Close();
             Combat.Interrupt();
             return;
         }
@@ -141,8 +142,9 @@ namespace Flipper
 
             // Connect to Network
             Socket sock = Sockets.CreateTCPSocket("ambuscade.dazusu.com", 6993);
+            //Socket sock = Sockets.CreateTCPSocket("127.0.0.1", 6993);
 
-             
+
             client = new ClientInfo(sock, false);
             client.Delimiter = "\r\n";
             client.OnRead += new ConnectionRead(ReadData);
