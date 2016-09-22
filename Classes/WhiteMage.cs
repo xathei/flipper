@@ -342,13 +342,18 @@ namespace Flipper.Classes
             foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
                 // Check if the Haste Spell is ready to be cast.
                 if (Ready(SpellList.Haste))
-                    // Search for the party member's key in the dictionary and check to see if the value is false.
-                    if (!_hasteStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value
-                        && WhiteMageSettings.CharacterActions.Single(x => x.Name == partyMember.Value.Name).CastHasteOn)
-                        // Cast the spell on the target party member.
-                        if (UseSpell(SpellList.Haste, 8, partyMember.Value.Name))
-                            // Add the current user to the dictionary and set their haste state to true.
-                            _hasteStates.Add(partyMember.Value.Name, true);
+                {
+                    // Get the Character Data from the WhiteMageSettings.
+                    WhiteMageCharacterActions character = WhiteMageSettings.CharacterActions .SingleOrDefault(x => x.Name == partyMember.Value.Name);
+                    // Check if the character was set.
+                    if (character != null)
+                        // Search for the party member's key in the dictionary and check to see if the value is false.
+                        if (!_hasteStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value && character.CastHasteOn)
+                            // Cast the spell on the target party member.
+                            if (UseSpell(SpellList.Haste, 8, partyMember.Value.Name))
+                                // Add the current user to the dictionary and set their haste state to true.
+                                _hasteStates.Add(partyMember.Value.Name, true);
+                }
 
             // Check if the player is not under the effect of Haste and if Haste is not on cooldown.
             if (!IsAfflicted(StatusEffect.Regen) && Ready(SpellList.Regen))
@@ -361,13 +366,18 @@ namespace Flipper.Classes
             foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
                 // Check if the Haste Spell is ready to be cast.
                 if (Ready(SpellList.Regen_IV))
-                    // Search for the party member's key in the dictionary and check to see if the value is false.
-                    if (!_regenStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value
-                        && WhiteMageSettings.CharacterActions.Single(x => x.Name == partyMember.Value.Name).CastRegenOn)
-                        // Cast the spell on the target party member.
-                        if (UseSpell(SpellList.Regen_IV, 8, partyMember.Value.Name))
-                            // Add the current user to the dictionary and set their haste state to true.
-                            _regenStates.Add(partyMember.Value.Name, true);
+                {
+                    // Get the Character Data from the WhiteMageSettings.
+                    WhiteMageCharacterActions character = WhiteMageSettings.CharacterActions.SingleOrDefault(x => x.Name == partyMember.Value.Name);
+                    // Check if the character was set.
+                    if (character != null)
+                        // Search for the party member's key in the dictionary and check to see if the value is false.
+                        if (!_regenStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value && character.CastRegenOn)
+                            // Cast the spell on the target party member.
+                            if (UseSpell(SpellList.Regen_IV, 8, partyMember.Value.Name))
+                                // Add the current user to the dictionary and set their haste state to true.
+                                _regenStates.Add(partyMember.Value.Name, true);
+                }
         }
 
         public override void UseWeaponskills()
