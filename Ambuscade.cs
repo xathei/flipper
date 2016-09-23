@@ -84,6 +84,9 @@ namespace Flipper
                 case Job.GEO:
                     job = new Geomancer(fface, Content.Ambuscade);
                     break;
+                case Job.BRD:
+                    job = new Bard(fface, Content.Ambuscade);
+                    break;
             }
         }
 
@@ -835,7 +838,8 @@ namespace Flipper
     {
         Tank,
         Healer,
-        Damage
+        Damage,
+        Support
     }
     public class AmbuscadeSettings
     {
