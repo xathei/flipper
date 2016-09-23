@@ -2038,7 +2038,7 @@
         private System.Windows.Forms.Label ambMem1;
         private System.Windows.Forms.ComboBox uxAmbuscadeServer;
         private System.Windows.Forms.Button RUNTestbtn;
-        private System.Windows.Forms.NumericUpDown rngDelay;
+        public System.Windows.Forms.NumericUpDown rngDelay;
     }
 }
 
