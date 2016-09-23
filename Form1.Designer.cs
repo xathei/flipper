@@ -161,6 +161,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.Misc2 = new System.Windows.Forms.TabPage();
+            this.RUNTestbtn = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.ambClearButton = new System.Windows.Forms.Button();
@@ -176,6 +177,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.rngDelay = new System.Windows.Forms.NumericUpDown();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -206,6 +208,7 @@
             this.Logging.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // chkVerboseLogging
@@ -248,7 +251,7 @@
             this.uxLog.ItemHeight = 17;
             this.uxLog.Location = new System.Drawing.Point(0, 1);
             this.uxLog.Name = "uxLog";
-            this.uxLog.Size = new System.Drawing.Size(755, 459);
+            this.uxLog.Size = new System.Drawing.Size(755, 442);
             this.uxLog.TabIndex = 4;
             // 
             // uxTabs
@@ -1065,6 +1068,7 @@
             // 
             // Ambuscade
             // 
+            this.Ambuscade.Controls.Add(this.rngDelay);
             this.Ambuscade.Controls.Add(this.uxAmbuscadeServer);
             this.Ambuscade.Controls.Add(this.groupBox13);
             this.Ambuscade.Controls.Add(this.AmbJobConfigButton);
@@ -1621,6 +1625,7 @@
             // 
             // Misc2
             // 
+            this.Misc2.Controls.Add(this.RUNTestbtn);
             this.Misc2.Controls.Add(this.button7);
             this.Misc2.Controls.Add(this.groupBox9);
             this.Misc2.Location = new System.Drawing.Point(4, 26);
@@ -1630,6 +1635,16 @@
             this.Misc2.TabIndex = 7;
             this.Misc2.Text = "Misc. 2";
             this.Misc2.UseVisualStyleBackColor = true;
+            // 
+            // RUNTestbtn
+            // 
+            this.RUNTestbtn.Location = new System.Drawing.Point(450, 45);
+            this.RUNTestbtn.Name = "RUNTestbtn";
+            this.RUNTestbtn.Size = new System.Drawing.Size(75, 23);
+            this.RUNTestbtn.TabIndex = 7;
+            this.RUNTestbtn.Text = "RUN Test";
+            this.RUNTestbtn.UseVisualStyleBackColor = true;
+            this.RUNTestbtn.Click += new System.EventHandler(this.RUNTestbtn_Click);
             // 
             // button7
             // 
@@ -1700,7 +1715,7 @@
             this.ambWaypointList.ItemHeight = 17;
             this.ambWaypointList.Location = new System.Drawing.Point(6, 76);
             this.ambWaypointList.Name = "ambWaypointList";
-            this.ambWaypointList.Size = new System.Drawing.Size(310, 191);
+            this.ambWaypointList.Size = new System.Drawing.Size(310, 174);
             this.ambWaypointList.TabIndex = 2;
             // 
             // Logging
@@ -1789,6 +1804,18 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
+            // rngDelay
+            // 
+            this.rngDelay.Location = new System.Drawing.Point(546, 274);
+            this.rngDelay.Name = "rngDelay";
+            this.rngDelay.Size = new System.Drawing.Size(203, 24);
+            this.rngDelay.TabIndex = 13;
+            this.rngDelay.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1855,6 +1882,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2009,6 +2037,8 @@
         private System.Windows.Forms.Label ambMem2;
         private System.Windows.Forms.Label ambMem1;
         private System.Windows.Forms.ComboBox uxAmbuscadeServer;
+        private System.Windows.Forms.Button RUNTestbtn;
+        public System.Windows.Forms.NumericUpDown rngDelay;
     }
 }
 
