@@ -84,6 +84,9 @@ namespace Flipper
                 case Job.GEO:
                     job = new Geomancer(fface, Content.Ambuscade);
                     break;
+                case Job.RNG:
+                    job = new Ranger(fface, Content.Ambuscade);
+                    break;
             }
         }
 

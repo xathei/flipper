@@ -108,6 +108,8 @@
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
             this.Ambuscade = new System.Windows.Forms.TabPage();
+            this.rngDelay = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
             this.uxAmbuscadeServer = new System.Windows.Forms.ComboBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.ambMem6 = new System.Windows.Forms.Label();
@@ -176,6 +178,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.target1 = new System.Windows.Forms.TextBox();
+            this.target2 = new System.Windows.Forms.TextBox();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -192,6 +196,7 @@
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.Ambuscade.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).BeginInit();
             this.groupBox13.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -463,9 +468,9 @@
             // 
             // Farming
             // 
+            this.Farming.Controls.Add(this.target2);
+            this.Farming.Controls.Add(this.target1);
             this.Farming.Controls.Add(this.groupBox1);
-            this.Farming.Controls.Add(this.smnGroup);
-            this.Farming.Controls.Add(this.networkGroup);
             this.Farming.Controls.Add(this.uxWaitFor2000TP);
             this.Farming.Controls.Add(this.uxAMWS);
             this.Farming.Controls.Add(this.uxAM3);
@@ -732,12 +737,13 @@
             this.smnGroup.Controls.Add(this.label12);
             this.smnGroup.Controls.Add(this.uxAvatar);
             this.smnGroup.Controls.Add(this.label2);
-            this.smnGroup.Location = new System.Drawing.Point(6, 289);
+            this.smnGroup.Location = new System.Drawing.Point(861, 202);
             this.smnGroup.Name = "smnGroup";
             this.smnGroup.Size = new System.Drawing.Size(743, 102);
             this.smnGroup.TabIndex = 41;
             this.smnGroup.TabStop = false;
             this.smnGroup.Text = "Summoner Options";
+            this.smnGroup.Visible = false;
             // 
             // label12
             // 
@@ -774,7 +780,7 @@
             // 
             this.networkGroup.Controls.Add(this.uxNetSlave);
             this.networkGroup.Controls.Add(this.uxNetMaster);
-            this.networkGroup.Location = new System.Drawing.Point(6, 397);
+            this.networkGroup.Location = new System.Drawing.Point(861, 323);
             this.networkGroup.Name = "networkGroup";
             this.networkGroup.Size = new System.Drawing.Size(528, 62);
             this.networkGroup.TabIndex = 40;
@@ -1065,6 +1071,8 @@
             // 
             // Ambuscade
             // 
+            this.Ambuscade.Controls.Add(this.rngDelay);
+            this.Ambuscade.Controls.Add(this.label18);
             this.Ambuscade.Controls.Add(this.uxAmbuscadeServer);
             this.Ambuscade.Controls.Add(this.groupBox13);
             this.Ambuscade.Controls.Add(this.AmbJobConfigButton);
@@ -1079,6 +1087,32 @@
             this.Ambuscade.TabIndex = 8;
             this.Ambuscade.Text = "Ambuscade";
             this.Ambuscade.UseVisualStyleBackColor = true;
+            // 
+            // rngDelay
+            // 
+            this.rngDelay.Location = new System.Drawing.Point(629, 239);
+            this.rngDelay.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.rngDelay.Name = "rngDelay";
+            this.rngDelay.Size = new System.Drawing.Size(120, 24);
+            this.rngDelay.TabIndex = 15;
+            this.rngDelay.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(478, 243);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(145, 17);
+            this.label18.TabIndex = 14;
+            this.label18.Text = "(For RNG) /ra delay";
             // 
             // uxAmbuscadeServer
             // 
@@ -1202,9 +1236,11 @@
             // uxAmbKeyItem
             // 
             this.uxAmbKeyItem.AutoSize = true;
+            this.uxAmbKeyItem.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.uxAmbKeyItem.ForeColor = System.Drawing.Color.Red;
             this.uxAmbKeyItem.Location = new System.Drawing.Point(144, 130);
             this.uxAmbKeyItem.Name = "uxAmbKeyItem";
-            this.uxAmbKeyItem.Size = new System.Drawing.Size(200, 21);
+            this.uxAmbKeyItem.Size = new System.Drawing.Size(226, 21);
             this.uxAmbKeyItem.TabIndex = 9;
             this.uxAmbKeyItem.Text = "I have \"Primer Vol. 2\" KI";
             this.uxAmbKeyItem.UseVisualStyleBackColor = true;
@@ -1778,7 +1814,7 @@
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 546);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(784, 28);
+            this.statusStrip1.Size = new System.Drawing.Size(786, 28);
             this.statusStrip1.TabIndex = 18;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -1787,14 +1823,32 @@
             this.toolStripStatusLabel1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
-            this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
+            this.toolStripStatusLabel1.Text = "Version 5.1.1.0";
+            // 
+            // target1
+            // 
+            this.target1.Location = new System.Drawing.Point(43, 312);
+            this.target1.Name = "target1";
+            this.target1.Size = new System.Drawing.Size(264, 24);
+            this.target1.TabIndex = 43;
+            this.target1.Text = "Fortalice Bats";
+            // 
+            // target2
+            // 
+            this.target2.Location = new System.Drawing.Point(43, 342);
+            this.target2.Name = "target2";
+            this.target2.Size = new System.Drawing.Size(264, 24);
+            this.target2.TabIndex = 44;
+            this.target2.Text = "Warder Beetle";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 574);
+            this.ClientSize = new System.Drawing.Size(786, 574);
             this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.networkGroup);
+            this.Controls.Add(this.smnGroup);
             this.Controls.Add(this.uxCharacter);
             this.Controls.Add(this.uxTabs);
             this.Controls.Add(this.chkTA);
@@ -1833,6 +1887,8 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.Ambuscade.ResumeLayout(false);
+            this.Ambuscade.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).EndInit();
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.groupBox12.ResumeLayout(false);
@@ -2009,6 +2065,10 @@
         private System.Windows.Forms.Label ambMem2;
         private System.Windows.Forms.Label ambMem1;
         private System.Windows.Forms.ComboBox uxAmbuscadeServer;
+        public System.Windows.Forms.NumericUpDown rngDelay;
+        private System.Windows.Forms.Label label18;
+        public System.Windows.Forms.TextBox target2;
+        public System.Windows.Forms.TextBox target1;
     }
 }
 

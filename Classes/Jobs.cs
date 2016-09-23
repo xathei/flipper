@@ -193,8 +193,8 @@ namespace Flipper.Classes
             //Thread.Sleep(7000);
             SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
-            //SendCommand("/ma \"Apururu (UC)\" <me>");
-            //Thread.Sleep(7000);
+            SendCommand("/ma \"Apururu (UC)\" <me>");
+            Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
         }
@@ -383,7 +383,8 @@ namespace Flipper.Classes
                 else
                     NextCommandAllowed = DateTime.MinValue;
 
-                Debug.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Sent Command: " + command);
+                
+                //Debug.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Sent Command: " + command);
 
                 _fface.Windower.SendString(command);
 

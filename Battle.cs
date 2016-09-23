@@ -839,6 +839,12 @@ namespace FlipperD
                     // Finally, let's check if the mob is in our list...
                     if (CurrentTargets.Count(x => x.MonsterName == fface.NPC.Name(i)) > 0 && mode != Mode.Einherjar)
                     {
+                        if (!_target1Required && fface.NPC.Name(i) == "Fortalice Bats")
+                            continue;
+
+                        if (!_target2Required && fface.NPC.Name(i) == "Warden Beetle")
+                            continue;
+
                         BestTarget = i;
                         BestDistance = fface.NPC.Distance(i);
                     }
@@ -1886,7 +1892,7 @@ namespace FlipperD
                     // couldn't generate path!
                     Blacklisted.Add(target, monster);
                     // continue to skip this iteration
-                    WriteLog($"Couldn't generate a path to {targetName} ({target})!");
+                    //WriteLog($"Couldn't generate a path to {targetName} ({target})!");
 
                     goto TryAgain;
                 }
@@ -1931,7 +1937,7 @@ namespace FlipperD
                     if (movedDistance > monster.HitBox * 0.5 && lastRegenerate <= DateTime.Now && _battle)
                     {
                         lastRegenerate = DateTime.Now.AddSeconds(1);
-                        WriteLog($"Target has moved {movedDistance} yalms. Generating a new path");
+                        //WriteLog($"Target has moved {movedDistance} yalms. Generating a new path");
                         fface.Navigator.Reset();
                         goto RegeneratePath;
                     }
@@ -2140,6 +2146,10 @@ namespace FlipperD
             return true;
         }
 
+        private string _lastKilled;
+        private bool _target1Required = true;
+        private bool _target2Required = true;
+
         public bool chatEnabled = true;
         public bool TargetStaggered = false;
         public bool TimeTicked = false;
@@ -2164,6 +2174,38 @@ namespace FlipperD
                     oldChat = newChat;
                     //WriteLog("Chat Line: " + newChat, true);
                     string[] token = newChat.Split(' ');
+
+                    if (newChat.Contains("You have successfully completed the training"))
+                    {
+                        WriteLog("Completed Training Regime.");
+                        _target1Required = true;
+                        _target2Required = true;
+                    }
+
+                    if (newChat.Contains("defeats the Warden Beetle"))
+                    {
+                        _lastKilled = "Warden Beetle";
+                    }
+                    if (newChat.Contains("defeats the Fortalice Bats"))
+                    {
+                        _lastKilled = "Fortalice Bats";
+                    }
+                    if (newChat.Contains("Progress: 4/4"))
+                    {
+                        if (_lastKilled == "Fortalice Bats")
+                        {
+                            WriteLog("Completed Fortalice Bats objective.");
+                            _target1Required = false;
+                        }
+                    }
+                    if (newChat.Contains("Progress: 3/3"))
+                    {
+                        if (_lastKilled == "Warden Beetle")
+                        {
+                            WriteLog("Completed Warden Beetle objective.");
+                            _target2Required = false;
+                        }
+                    }
 
                     if (newChat.Contains("You cannot see") || newChat.Contains("Unable to see"))
                         _cantSee = true;

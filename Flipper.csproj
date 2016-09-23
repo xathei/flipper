@@ -99,6 +99,7 @@
       <DependentUpon>BardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\BlueMage.cs" />
+    <Compile Include="Classes\Ranger.cs" />
     <Compile Include="Classes\RuneFencer.cs" />
     <Compile Include="Classes\Geomancer.cs" />
     <Compile Include="Classes\IJob.cs" />
