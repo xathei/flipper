@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Flipper.Classes
 {
@@ -119,5 +120,65 @@ namespace Flipper.Classes
             }
         }
 
+        public override bool Position(int id, Monster monster, Combat.Mode mode)
+        {
+            if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
+            {
+                if (mode == Combat.Mode.Meshing && !Combat.IsPositionSafe(_fface.NPC.PosX(id), _fface.NPC.PosZ(id)))
+                    return false;
+
+                _fface.Navigator.Reset();
+                _fface.Navigator.DistanceTolerance = monster.HitBox * 0.5;
+                _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
+
+            }
+
+            bool wasLocked = true;
+            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            {
+                var difference = GetSADifference(id);
+                while (difference < 66 || difference > 89)
+                {
+                    if (!_fface.Target.IsLocked)
+                    {
+                        wasLocked = false;
+                        _fface.Windower.SendString("/lockon");
+                    }
+                    _fface.Windower.SendKey(KeyCode.NP_Number6, true);
+                    Thread.Sleep(80);
+                    _fface.Windower.SendKey(KeyCode.NP_Number6, false);
+                    difference = GetSADifference(id);
+                }
+                if (!wasLocked && _fface.Target.IsLocked)
+                {
+                    _fface.Windower.SendString("/lockon");
+                }
+            }
+            return true;
+        }
+
+        private double GetSADifference(int i)
+        {
+            var TargetHeading = (int)(_fface.Navigator.PosHToDegrees(_fface.NPC.PosH(i)));
+            var MyHeading = (int)(_fface.Navigator.GetPlayerPosHInDegrees());
+            double targetHeading = RadianToDegree(_fface.NPC.PosH(i));
+
+            double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = _fface.Player.PosX, Y = _fface.Player.PosZ }, new PointF { X = _fface.NPC.PosX(i), Y = _fface.NPC.PosZ(i) });
+            double difference = (targetHeading + lineAngle) % 360;
+
+            return difference;
+        }
+
+        private double RadianToDegree(double angle)
+        {
+            return angle * (180.0 / Math.PI);
+        }
+
+        private double GetAngleOfLineBetweenTwoPoints(PointF p1, PointF p2)
+        {
+            float xDiff = p2.X - p1.X;
+            float yDiff = p2.Y - p1.Y;
+            return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
+        }
     }
 }
