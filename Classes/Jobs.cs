@@ -189,7 +189,7 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            //SendCommand("/ma \"Qultada\" <me>");
+            //SendCommand("/ma \"Joachim\" <me>");
             //Thread.Sleep(7000);
             SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
@@ -524,6 +524,25 @@ namespace Flipper.Classes
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Determines if a player is afflicted by a number (count) of status effects
+        /// </summary>
+        /// <param name="effect">Name of status effect</param>
+        /// <param name="count">Count of status effect</param>
+        /// <returns>True if effect count matches quantity found else False</returns>
+        public bool IsAfflicted(StatusEffect effect, int count)
+        {
+            int found = 0;
+            foreach (StatusEffect status in _fface.Player.StatusEffects)
+            {
+                if (status == effect)
+                {
+                    found++;
+                }
+            }
+            return found == count;
         }
 
         /// <summary>
