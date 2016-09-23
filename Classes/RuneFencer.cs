@@ -14,8 +14,8 @@ namespace Flipper.Classes
     
     public class RuneFencer : Jobs
     {
-        private bool wardAlt;
-        private bool effusionAlt;
+        private bool wardAlt = false;
+        private bool effusionAlt = false;
         //private RuneFencerForm settingsForm = new RuneFencerForm();
         public RuneFencer(FFACE instance, Content content)
         {
@@ -49,34 +49,70 @@ namespace Flipper.Classes
         }
         public override void UseAbilities()
         {
-            //keep 3 runes up -- count how many runes and update when effused
-            //alternate between vallation and valiance
+            if(!IsAfflicted(StatusEffect.Lux, 3) && Ready(AbilityList.Rune_Enchantment))
+            {
+                UseAbility("Lux", AbilityList.Rune_Enchantment);
+            }
+            if(IsAfflicted(StatusEffect.Lux, 3))
+            {
+                if (Ready(AbilityList.Valiance) && !IsAfflicted(StatusEffect.Vallation))
+                     UseAbility(AbilityList.Valiance);
+
+                if (Ready(AbilityList.Vallation) && !IsAfflicted(StatusEffect.Valiance))
+                    UseAbility(AbilityList.Vallation);
+
+                if (Ready(AbilityList.Lunge))
+                    UseAbility(AbilityList.Lunge, 2, true);
+            }
+
+            if (Ready(AbilityList.Provoke))
+                UseAbility(AbilityList.Provoke, 2, true);
+
+            if (Ready(AbilityList.Swordplay))
+                    UseAbility(AbilityList.Swordplay);
+
+            if(Ready(AbilityList.Defender) && _fface.Player.HPPCurrent <= 60)
+                    UseAbility(AbilityList.Defender);
+
+
             //alternate between Rayke and Gambit
-            //use lunge when?
-            //Keep defender up
-            //provoke
-            //swordplay
+
+            if (Ready(AbilityList.Embolden) && !IsAfflicted(StatusEffect.Stoneskin) && Ready(SpellList.Stoneskin))
+                UseAbility(AbilityList.Embolden);
             //when embolden is up use stoneskin with it
             //one for all?
             //use vivacious pulse when afflicted by silence, blind, poison, paralyze, curse, virus
+            if(Ready(AbilityList.Vivacious_Pulse) && ( IsAfflicted(StatusEffect.Silence) ||
+                                                       IsAfflicted(StatusEffect.Blindness) ||
+                                                       IsAfflicted(StatusEffect.Poison) || 
+                                                       IsAfflicted(StatusEffect.Paralysis) || 
+                                                       IsAfflicted(StatusEffect.Curse) || 
+                                                       IsAfflicted(StatusEffect.Plague) ) )
+            {
+                UseAbility(AbilityList.Vivacious_Pulse);
+            }
 
         }
         public override void UseSpells()
         {
+            if (Ready(SpellList.Stoneskin) && !IsAfflicted(StatusEffect.Stoneskin))
+                UseSpell(SpellList.Stoneskin, 6, false);
             if (Ready(SpellList.Flash))
                 UseSpell(SpellList.Flash, 6, true);
             if (Ready(SpellList.Phalanx) && !IsAfflicted(StatusEffect.Phalanx))
                 UseSpell(SpellList.Phalanx, 6, false);
             if (Ready(SpellList.Crusade) && !IsAfflicted(StatusEffect.Enmity_Boost))
                 UseSpell(SpellList.Crusade, 6, false);
-            if (Ready(SpellList.Stoneskin) && !IsAfflicted(StatusEffect.Stoneskin))
-                UseSpell(SpellList.Stoneskin, 6, false);
-            // JW - StatusEffect.Foil doesn't exist. Cast Foil on yourself and loop through your StatusEffects to see
-            //      what the status effect is to see what effect you need to check for.
-            //if (Ready(SpellList.Foil) && !IsAfflicted(StatusEffect.Foil))
-                //UseSpell(SpellList.Foil, 6, false);
+            if (Ready(SpellList.Foil) && !IsAfflicted(StatusEffect.Foil))
+                UseSpell(SpellList.Foil, 6, false);
             if (Ready(SpellList.Shock_Spikes) && !IsAfflicted(StatusEffect.Shock_Spikes))
                 UseSpell(SpellList.Shock_Spikes, 6, false);
+            if (Ready(SpellList.Refresh) && _fface.Player.MPPCurrent <= 50 && !IsAfflicted(StatusEffect.Refresh) )
+                UseSpell(SpellList.Refresh, 6, false);
+            if (Ready(SpellList.Regen_IV) && _fface.Player.HPPCurrent <= 50 && !IsAfflicted(StatusEffect.Regen))
+                UseSpell(SpellList.Regen_IV, 6, false);        
+            
+
 
         }
         public override void UseHeals()

@@ -63,7 +63,8 @@
       <HintPath>bin\Release\FAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FFACETools">
+    <Reference Include="FFACETools, Version=1.3.1.21, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\FFACETools.dll</HintPath>
     </Reference>
     <Reference Include="Hook, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
