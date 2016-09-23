@@ -173,7 +173,10 @@ namespace Flipper.Classes
             foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
             {
                 // Get the PartyMember object from the current list.
-                PartyMember member = _partyMembers.Single(x => x.Name == partyMember.Value.Name);
+                PartyMember member = _partyMembers.SingleOrDefault(x => x.Name == partyMember.Value.Name);
+
+                // Continue if the member is null.
+                if (member == null) continue;
 
                 // Update the HP values for the object.
                 member.HpCurrent = partyMember.Value.HPCurrent;
