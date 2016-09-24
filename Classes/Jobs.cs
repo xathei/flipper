@@ -444,6 +444,11 @@ namespace Flipper.Classes
             return SendCommand("/ma \"" + spell + "\" " + (Offensive ? "<t>" : "<me>"), castTime);
         }
 
+        public bool UseSpell(string spell, SpellList spellGroup, int castTime, string targetName)
+        {
+            return SendCommand("/ma \"" + spell + "\" " + targetName, castTime);
+        }
+
         /// <summary>
         /// Uses a spell from the SpellList enum by target name.
         /// </summary>
