@@ -1033,11 +1033,13 @@ namespace FlipperD
 
         private void RUNTestbtn_Click(object sender, EventArgs e)
         {
+
+            //MessageBox.Show(fface.Timer.GetAbilityRecast(AbilityList.Double_Shot).ToString());
             /*foreach (StatusEffect status in fface.Player.StatusEffects)
             {
                 Debug.WriteLine($"Status Effect: {status}");
             }*/
-            Debug.WriteLine(fface.Timer.GetAbilityRecast(AbilityList.Ward));
+            //Debug.WriteLine(fface.Timer.GetAbilityRecast(AbilityList.Ward));
         }
     }
 
