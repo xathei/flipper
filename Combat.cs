@@ -161,7 +161,6 @@ namespace Flipper
                     _fighting = false;
                 }
 
-
                 while (path.Any() && job.CanStillAttack(target) && DistanceTo(target) > (monster.HitBox*1.5) && _fighting)
                 {
                     if (!fface.NPC.IsClaimed(target))

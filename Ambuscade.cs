@@ -390,12 +390,16 @@ namespace Flipper
             List<Node> path = new List<Node>();
             int hotspotIndex = 0;
 
+
             while (!HasKeyItem() && _ambuscade)
             {
-
                 NoPath:
-                hotspotIndex = (hotspotIndex + 1) % hotspots.Count;
+                if (HasKeyItem())
+                {
+                    goto done;
+                }
 
+                hotspotIndex = (hotspotIndex + 1) % hotspots.Count;
                 float destx = hotspots[hotspotIndex].Waypoint.X;
                 float destz = hotspots[hotspotIndex].Waypoint.Z;
 
@@ -410,12 +414,11 @@ namespace Flipper
                 while (path.Any() && !HasKeyItem() && _ambuscade)
                 {
                     _targetId = Combat.FindTarget(50, roeTargetMonster.MonsterName);
-                    if (_targetId > 0)
+                    if (_targetId > 0 && !HasKeyItem())
                     {
                         fface.Navigator.Reset();
                         Fight(_targetId, Combat.Mode.Meshing);
                         _targetId = 0;
-                        goto NoPath;
                     }
                     fface.Navigator.HeadingTolerance = 1;
                     fface.Navigator.DistanceTolerance = 0.7;
@@ -427,6 +430,7 @@ namespace Flipper
                 fface.Navigator.Reset();
                 Thread.Sleep(1);
             }
+            done:
             return true;
         }
 
