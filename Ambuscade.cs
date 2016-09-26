@@ -406,6 +406,8 @@ namespace Flipper
                 float destx = hotspots[hotspotIndex].Waypoint.X;
                 float destz = hotspots[hotspotIndex].Waypoint.Z;
 
+
+                NewPath:
                 path = Combat.GetPath(destx, destz);
 
                 if (path == null)
@@ -422,6 +424,7 @@ namespace Flipper
                         fface.Navigator.Reset();
                         Fight(_targetId, Combat.Mode.Meshing);
                         _targetId = 0;
+                        goto NewPath;
                     }
                     fface.Navigator.HeadingTolerance = 1;
                     fface.Navigator.DistanceTolerance = 0.7;
