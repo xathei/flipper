@@ -127,9 +127,9 @@ namespace Flipper.Classes
                         Z = _fface.NPC.PosZ(monsterId),
                     });
                 }
-                    if (!IsAfflicted(StatusEffect.Geo_Haste) && Ready(SpellList.Indi_Haste))
+                    if (!IsAfflicted(StatusEffect.Geo_Fury) && Ready(SpellList.Indi_Fury))
                     {
-                        UseSpell("Indi-Haste", SpellList.Indi_Haste, 10, false);
+                        UseSpell("Indi-Fury", SpellList.Indi_Fury, 10, false);
                     }
                     else if (Ready(SpellList.Geo_Frailty) &&
                              (!FindTargetAll("luopan", 10).Any() || targetDistanceFromLuopan > 4))

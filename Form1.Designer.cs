@@ -108,6 +108,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
             this.Ambuscade = new System.Windows.Forms.TabPage();
+            this.rngDelay = new System.Windows.Forms.NumericUpDown();
             this.uxAmbuscadeServer = new System.Windows.Forms.ComboBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.ambMem6 = new System.Windows.Forms.Label();
@@ -177,7 +178,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.rngDelay = new System.Windows.Forms.NumericUpDown();
+            this.button8 = new System.Windows.Forms.Button();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -194,6 +195,7 @@
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.Ambuscade.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).BeginInit();
             this.groupBox13.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -208,7 +210,6 @@
             this.Logging.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // chkVerboseLogging
@@ -1084,6 +1085,18 @@
             this.Ambuscade.Text = "Ambuscade";
             this.Ambuscade.UseVisualStyleBackColor = true;
             // 
+            // rngDelay
+            // 
+            this.rngDelay.Location = new System.Drawing.Point(546, 274);
+            this.rngDelay.Name = "rngDelay";
+            this.rngDelay.Size = new System.Drawing.Size(203, 24);
+            this.rngDelay.TabIndex = 13;
+            this.rngDelay.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
             // uxAmbuscadeServer
             // 
             this.uxAmbuscadeServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1625,6 +1638,7 @@
             // 
             // Misc2
             // 
+            this.Misc2.Controls.Add(this.button8);
             this.Misc2.Controls.Add(this.RUNTestbtn);
             this.Misc2.Controls.Add(this.button7);
             this.Misc2.Controls.Add(this.groupBox9);
@@ -1804,17 +1818,15 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
-            // rngDelay
+            // button8
             // 
-            this.rngDelay.Location = new System.Drawing.Point(546, 274);
-            this.rngDelay.Name = "rngDelay";
-            this.rngDelay.Size = new System.Drawing.Size(203, 24);
-            this.rngDelay.TabIndex = 13;
-            this.rngDelay.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+            this.button8.Location = new System.Drawing.Point(476, 168);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "button8";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // Form1
             // 
@@ -1860,6 +1872,7 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.Ambuscade.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).EndInit();
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.groupBox12.ResumeLayout(false);
@@ -1882,7 +1895,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numBreakSeconds)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2039,6 +2051,7 @@
         private System.Windows.Forms.ComboBox uxAmbuscadeServer;
         private System.Windows.Forms.Button RUNTestbtn;
         public System.Windows.Forms.NumericUpDown rngDelay;
+        private System.Windows.Forms.Button button8;
     }
 }
 

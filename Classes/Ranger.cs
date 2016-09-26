@@ -232,17 +232,17 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-            if (!IsAfflicted(StatusEffect.Aftermath))
-            {
-                SendCommand("/ws \"Coronach\" <t>", 3, false);
+            //if (!IsAfflicted(StatusEffect.Aftermath))
+            //{
+            //    SendCommand("/ws \"Coronach\" <t>", 3, false);
 
-            }
-            if (IsAfflicted(StatusEffect.Aftermath))
-            {
-                SendCommand("/ws \"Last Stand\" <t>", 3, false);
-            }
+            //}
+            //if (IsAfflicted(StatusEffect.Aftermath))
+            //{
+            //    SendCommand("/ws \"Last Stand\" <t>", 3, false);
+            //}
 
-            SendCommand("/ws \"Coronach\" <t>", 3, false);
+            SendCommand("/ws \"Last Stand\" <t>", 3, false);
         }
 
     }
