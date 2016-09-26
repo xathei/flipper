@@ -232,7 +232,7 @@ namespace Flipper
                 }
 
                 // PLAYER STUFF
-                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM)
+                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM && fface.Player.MainJob != Job.BRD)
                 {
                     job.UseHeals();
 
@@ -243,15 +243,8 @@ namespace Flipper
 
                     job.UseSpells();
                 }
-                else if (fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO)
+                else if (fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO || fface.Player.MainJob == Job.BRD)
                 {
-                    if (fface.Player.MainJob == Job.WHM)
-                    {
-                        job.UseHeals();
-
-                        job.UseAbilities();
-                    }
-
                     fface.Navigator.Reset();
                     job.UseSpells();
                 }

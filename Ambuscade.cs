@@ -90,6 +90,9 @@ namespace Flipper
                 case Job.RNG:
                     job = new Ranger(fface, Content.Ambuscade);
                     break;
+                case Job.RUN:
+                    job = new RuneFencer(fface, Content.Ambuscade);
+                    break;
             }
         }
 

@@ -28,6 +28,8 @@ namespace Flipper.Classes.JobSettings
 
     public class BardSelfActions : CharacterActions
     {
+        public bool Perform { get; set; }
+
         public bool Troubadour { get; set; }
 
         public bool Nightingale { get; set; }

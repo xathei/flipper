@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.brdGridView = new System.Windows.Forms.DataGridView();
             this.MemberName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MemberBalladII = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -46,11 +46,14 @@
             this.brdSongOne = new System.Windows.Forms.ComboBox();
             this.brdFormSave = new System.Windows.Forms.Button();
             this.brdAbilities = new System.Windows.Forms.GroupBox();
-            this.brdCbTroubadour = new System.Windows.Forms.CheckBox();
             this.brdCbNightingale = new System.Windows.Forms.CheckBox();
+            this.brdCbTroubadour = new System.Windows.Forms.CheckBox();
+            this.brdGbModes = new System.Windows.Forms.GroupBox();
+            this.brdCbStageMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.brdGridView)).BeginInit();
             this.brdSongsContainer.SuspendLayout();
             this.brdAbilities.SuspendLayout();
+            this.brdGbModes.SuspendLayout();
             this.SuspendLayout();
             // 
             // brdGridView
@@ -62,16 +65,16 @@
             this.MemberName,
             this.MemberBalladII,
             this.MemberBalladIII});
-            this.brdGridView.Location = new System.Drawing.Point(12, 12);
+            this.brdGridView.Location = new System.Drawing.Point(13, 72);
             this.brdGridView.Name = "brdGridView";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.brdGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.brdGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.brdGridView.RowHeadersVisible = false;
             this.brdGridView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.brdGridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -82,8 +85,8 @@
             // 
             // MemberName
             // 
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.MemberName.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.MemberName.DefaultCellStyle = dataGridViewCellStyle1;
             this.MemberName.HeaderText = "Name";
             this.MemberName.Name = "MemberName";
             this.MemberName.ReadOnly = true;
@@ -93,10 +96,10 @@
             // 
             // MemberBalladII
             // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.NullValue = false;
-            this.MemberBalladII.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.NullValue = false;
+            this.MemberBalladII.DefaultCellStyle = dataGridViewCellStyle2;
             this.MemberBalladII.HeaderText = "Ballad II";
             this.MemberBalladII.Name = "MemberBalladII";
             this.MemberBalladII.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -104,10 +107,10 @@
             // 
             // MemberBalladIII
             // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle7.NullValue = false;
-            this.MemberBalladIII.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle3.NullValue = false;
+            this.MemberBalladIII.DefaultCellStyle = dataGridViewCellStyle3;
             this.MemberBalladIII.HeaderText = "Ballad III";
             this.MemberBalladIII.Name = "MemberBalladIII";
             this.MemberBalladIII.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -122,7 +125,7 @@
             this.brdSongsContainer.Controls.Add(this.brdSongOneLabel);
             this.brdSongsContainer.Controls.Add(this.brdSongTwo);
             this.brdSongsContainer.Controls.Add(this.brdSongOne);
-            this.brdSongsContainer.Location = new System.Drawing.Point(13, 239);
+            this.brdSongsContainer.Location = new System.Drawing.Point(14, 299);
             this.brdSongsContainer.Name = "brdSongsContainer";
             this.brdSongsContainer.Size = new System.Drawing.Size(264, 122);
             this.brdSongsContainer.TabIndex = 4;
@@ -217,7 +220,7 @@
             // brdFormSave
             // 
             this.brdFormSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.brdFormSave.Location = new System.Drawing.Point(181, 373);
+            this.brdFormSave.Location = new System.Drawing.Point(182, 433);
             this.brdFormSave.Name = "brdFormSave";
             this.brdFormSave.Size = new System.Drawing.Size(97, 29);
             this.brdFormSave.TabIndex = 5;
@@ -229,22 +232,12 @@
             // 
             this.brdAbilities.Controls.Add(this.brdCbNightingale);
             this.brdAbilities.Controls.Add(this.brdCbTroubadour);
-            this.brdAbilities.Location = new System.Drawing.Point(12, 175);
+            this.brdAbilities.Location = new System.Drawing.Point(13, 235);
             this.brdAbilities.Name = "brdAbilities";
             this.brdAbilities.Size = new System.Drawing.Size(264, 58);
             this.brdAbilities.TabIndex = 6;
             this.brdAbilities.TabStop = false;
             this.brdAbilities.Text = "Abilities";
-            // 
-            // brdCbTroubadour
-            // 
-            this.brdCbTroubadour.AutoSize = true;
-            this.brdCbTroubadour.Location = new System.Drawing.Point(13, 25);
-            this.brdCbTroubadour.Name = "brdCbTroubadour";
-            this.brdCbTroubadour.Size = new System.Drawing.Size(81, 17);
-            this.brdCbTroubadour.TabIndex = 0;
-            this.brdCbTroubadour.Text = "Troubadour";
-            this.brdCbTroubadour.UseVisualStyleBackColor = true;
             // 
             // brdCbNightingale
             // 
@@ -256,11 +249,42 @@
             this.brdCbNightingale.Text = "Nightingale";
             this.brdCbNightingale.UseVisualStyleBackColor = true;
             // 
+            // brdCbTroubadour
+            // 
+            this.brdCbTroubadour.AutoSize = true;
+            this.brdCbTroubadour.Location = new System.Drawing.Point(13, 25);
+            this.brdCbTroubadour.Name = "brdCbTroubadour";
+            this.brdCbTroubadour.Size = new System.Drawing.Size(81, 17);
+            this.brdCbTroubadour.TabIndex = 0;
+            this.brdCbTroubadour.Text = "Troubadour";
+            this.brdCbTroubadour.UseVisualStyleBackColor = true;
+            // 
+            // brdGbModes
+            // 
+            this.brdGbModes.Controls.Add(this.brdCbStageMode);
+            this.brdGbModes.Location = new System.Drawing.Point(14, 13);
+            this.brdGbModes.Name = "brdGbModes";
+            this.brdGbModes.Size = new System.Drawing.Size(263, 48);
+            this.brdGbModes.TabIndex = 7;
+            this.brdGbModes.TabStop = false;
+            this.brdGbModes.Text = "Modes";
+            // 
+            // brdCbStageMode
+            // 
+            this.brdCbStageMode.AutoSize = true;
+            this.brdCbStageMode.Location = new System.Drawing.Point(12, 20);
+            this.brdCbStageMode.Name = "brdCbStageMode";
+            this.brdCbStageMode.Size = new System.Drawing.Size(136, 17);
+            this.brdCbStageMode.TabIndex = 0;
+            this.brdCbStageMode.Text = "Only act during content";
+            this.brdCbStageMode.UseVisualStyleBackColor = true;
+            // 
             // BardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 416);
+            this.ClientSize = new System.Drawing.Size(289, 473);
+            this.Controls.Add(this.brdGbModes);
             this.Controls.Add(this.brdAbilities);
             this.Controls.Add(this.brdFormSave);
             this.Controls.Add(this.brdSongsContainer);
@@ -274,6 +298,8 @@
             this.brdSongsContainer.PerformLayout();
             this.brdAbilities.ResumeLayout(false);
             this.brdAbilities.PerformLayout();
+            this.brdGbModes.ResumeLayout(false);
+            this.brdGbModes.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -296,5 +322,7 @@
         private System.Windows.Forms.GroupBox brdAbilities;
         private System.Windows.Forms.CheckBox brdCbNightingale;
         private System.Windows.Forms.CheckBox brdCbTroubadour;
+        private System.Windows.Forms.GroupBox brdGbModes;
+        private System.Windows.Forms.CheckBox brdCbStageMode;
     }
 }

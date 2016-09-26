@@ -136,6 +136,9 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
+            if (_content == Content.Ambuscade && _fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion)
+                return;
+
             // Keep haste on self.
             if (_fface.Player.SubJob == Job.WHM)
                 if (!IsAfflicted(StatusEffect.Haste) && Ready(SpellList.Haste))
