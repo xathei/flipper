@@ -195,12 +195,12 @@ namespace Flipper.Classes
             //Thread.Sleep(7000);
             //SendCommand("/ma \"Joachim\" <me>");
             //Thread.Sleep(7000);
-            SendCommand("/ma \"Ulmia\" <me>");
-            Thread.Sleep(7000);
+            //SendCommand("/ma \"Ulmia\" <me>");
+            //Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
             Thread.Sleep(7000);
-            SendCommand("/ma \"Koru-Moru\" <me>");
-            Thread.Sleep(7000);
+            //SendCommand("/ma \"Koru-Moru\" <me>");
+            //Thread.Sleep(7000);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -50,6 +51,32 @@ namespace Flipper.Classes
         {
             SendCommand("/attack <t>", 3);
         }
+        private double RadianToDegree(double radians)
+        {
+            return radians * (180.0 / Math.PI);
+        }
+        public double PointAngle(PointF p1, PointF p2)
+        {
+            float xDiff = p2.X - p1.X;
+            float yDiff = p2.Y - p1.Y;
+            return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
+        }
+
+        private double GetAngleOfLineBetweenTwoPoints(PointF p1, PointF p2)
+        {
+            float xDiff = p2.X - p1.X;
+            float yDiff = p2.Y - p1.Y;
+            return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
+        }
+
+        private double GetSADifference(int i)
+        {
+            double targetHeading = RadianToDegree(_fface.NPC.PosH(i));
+            double lineAngle = GetAngleOfLineBetweenTwoPoints(new PointF { X = _fface.Player.PosX, Y = _fface.Player.PosZ }, new PointF { X = _fface.NPC.PosX(i), Y = _fface.NPC.PosZ(i) });
+            double difference = (targetHeading + lineAngle) % 360;
+
+            return difference;
+        }
 
         public override bool Position(int id, Monster monster, Combat.Mode mode)
         {
@@ -59,7 +86,7 @@ namespace Flipper.Classes
                 if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
                 {
                     int fail = 900;
-                    while (_fface.NPC.Distance(id) < 7 && fail > 0)
+                    while (_fface.NPC.Distance(id) < 5 && fail > 0)
                     {
                         if (!_fface.Target.IsLocked)
                         {
@@ -71,8 +98,8 @@ namespace Flipper.Classes
                         Thread.Sleep(100);
                         _fface.Windower.SendKey(KeyCode.NP_Number2, false);
                     }
-                    fail = 500;
-                    while (_fface.NPC.Distance(id) > 10 && fail > 0)
+                    fail = 1000;
+                    while (_fface.NPC.Distance(id) > 7 && fail > 0)
                     {
                         if (!_fface.Target.IsLocked)
                         {
@@ -88,6 +115,25 @@ namespace Flipper.Classes
                     {
                         _fface.Windower.SendString("/lockon");
                         Thread.Sleep(500);
+                    }
+
+                    bool wasLocked = true;
+                    var difference = GetSADifference(id);
+                    while (difference < 66 || difference > 89 && DistanceTo(id) <= 7)
+                    {
+                        if (!_fface.Target.IsLocked)
+                        {
+                            wasLocked = false;
+                            _fface.Windower.SendString("/lockon");
+                        }
+                        _fface.Windower.SendKey(KeyCode.NP_Number6, true);
+                        Thread.Sleep(80);
+                        _fface.Windower.SendKey(KeyCode.NP_Number6, false);
+                        difference = GetSADifference(id);
+                    }
+                    if (!wasLocked && _fface.Target.IsLocked)
+                    {
+                        _fface.Windower.SendString("/lockon");
                     }
                 }
             }
@@ -134,9 +180,9 @@ namespace Flipper.Classes
             {
                 _fface.Windower.SendString("/equip Ammo \"Chrono Bullet\"");
             }
-            else if (HasItem(21331))
+            else if (HasItem(21327))
             {
-                _fface.Windower.SendString("/equip Ammo \"Eminent Bullet\"");
+                _fface.Windower.SendString("/equip Ammo \"Eradicating Bullet\"");
             } 
 
             if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
@@ -156,15 +202,18 @@ namespace Flipper.Classes
                     UseAbility(AbilityList.Berserk, 2, false);
             }
 
+            if (Ready(AbilityList.Scavenge))
+                UseAbility(AbilityList.Scavenge, 2, false);
+
             if (!IsAfflicted(StatusEffect.Velocity_Shot) && Ready(AbilityList.Velocity_Shot))
             {
                 UseAbility(AbilityList.Velocity_Shot, 2, false);
             }
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
-                if (!IsAfflicted(StatusEffect.Double_Shot) && Ready(AbilityList.Double_Up) && _fface.NPC.HPPCurrent(_fface.Target.ID) > 25)
+                if (!IsAfflicted(StatusEffect.Double_Shot) && Ready(AbilityList.Unlimited_Shot) && _fface.NPC.HPPCurrent(_fface.Target.ID) > 25)
                 {
-                    UseAbility(AbilityList.Velocity_Shot, 2, false);
+                    UseAbility("Double Shot", AbilityList.Unlimited_Shot, 2, false);
                 }
 
                 if (Ready(AbilityList.Sharpshot) && Ready(AbilityList.Barrage))
@@ -183,7 +232,17 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-            SendCommand("/ws \"Last Stand\" <t>", 3);
+            //if (!IsAfflicted(StatusEffect.Aftermath))
+            //{
+            //    SendCommand("/ws \"Coronach\" <t>", 3, false);
+
+            //}
+            //if (IsAfflicted(StatusEffect.Aftermath))
+            //{
+            //    SendCommand("/ws \"Last Stand\" <t>", 3, false);
+            //}
+
+            SendCommand("/ws \"Last Stand\" <t>", 3, false);
         }
 
     }

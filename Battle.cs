@@ -19,7 +19,7 @@ namespace FlipperD
 {
     public class Battle
     {
-
+        public volatile bool _autora = false;
         #region Properties
         /// <summary>
         ///  A list of Waypoints.
@@ -115,28 +115,39 @@ namespace FlipperD
 
         public void UseWeaponskills()
         {
-            if (fface.Player.TPCurrent > 1000)
+
+            if (fface.Target.HPPCurrent < 40)
             {
-                if (mode == Mode.Dynamis)
-                {
-                    SendCommand("/ws \"" + Program.mainform.uxDynamisWeaponskill.Text + "\" <t>", 2);
-                }
-                else
-                {
-                    if ((Program.mainform.uxAM3.Checked && IsAfflicted(StatusEffect.Aftermath_lvl3) &&
-                         fface.Player.TPCurrent < 3000) || !Program.mainform.uxAM3.Checked)
-                    {
-                        if (Program.mainform.uxWaitFor2000TP.Checked && fface.Player.TPCurrent >= 2000)
-                            SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
-                        else if (!Program.mainform.uxWaitFor2000TP.Checked)
-                            SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
-                    }
-                    else if (Program.mainform.uxAM3.Checked && fface.Player.TPCurrent == 3000 && !IsAfflicted(StatusEffect.Aftermath_lvl3))
-                    {
-                        SendCommand("/ws \"" + Program.mainform.uxAMWS.Text + "\" <t>", 2);
-                    }
-                }
+                SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
             }
+
+            //if (fface.Player.TPCurrent > 1000)
+            //{
+            //    if (mode == Mode.Dynamis)
+            //    {
+            //        SendCommand("/ws \"" + Program.mainform.uxDynamisWeaponskill.Text + "\" <t>", 2);
+            //    }
+            //    else
+            //    {
+            //        if ((Program.mainform.uxAM3.Checked && IsAfflicted(StatusEffect.Aftermath_lvl3) &&
+            //             fface.Player.TPCurrent < 3000) || !Program.mainform.uxAM3.Checked)
+            //        {
+            //            if (Program.mainform.uxWaitFor2000TP.Checked && fface.Player.TPCurrent >= 2000)
+            //                SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
+            //            else if (!Program.mainform.uxWaitFor2000TP.Checked)
+            //            {
+            //                if (fface.Target.HPPCurrent < 35)
+            //                {
+            //                    SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
+            //                }
+            //            }
+            //        }
+            //        else if (Program.mainform.uxAM3.Checked && fface.Player.TPCurrent == 3000 && !IsAfflicted(StatusEffect.Aftermath_lvl3))
+            //        {
+            //            SendCommand("/ws \"" + Program.mainform.uxAMWS.Text + "\" <t>", 2);
+            //        }
+            //    }
+            //}
         }
 
         public void Healing()
@@ -204,7 +215,15 @@ namespace FlipperD
 
         public void UseAbilities()
         {
-
+            if (fface.Player.MainJob == Job.RNG && Ready(AbilityList.Unlimited_Shot))
+            {
+                UseAbility("Double Shot", AbilityList.Unlimited_Shot, 3, false);
+            }
+            if (fface.Player.MainJob == Job.RNG && (fface.Player.TPCurrent < 1000 || fface.Target.HPPCurrent > 40))
+            {
+                SendCommand("/equip ammo \"Steel Bullet\"",0);
+                SendCommand("/ra <t>", (int)Program.mainform.rngDelay.Value);
+            }
             if (fface.Player.MainJob == Job.RDM)
             {
                 if (!IsAfflicted(StatusEffect.Haste) && Ready(SpellList.Haste_II))
@@ -339,7 +358,7 @@ namespace FlipperD
                         UseAbility("Violent Flourish", AbilityList.Flourishes_I, 2, true);
                 }
             }
-            if (fface.Player.MainJob == Job.WAR || fface.Player.SubJob == Job.WAR)
+            if ((fface.Player.MainJob == Job.WAR || fface.Player.SubJob == Job.WAR) && fface.Player.MainJob != Job.RNG)
             {
                 if (Ready(AbilityList.Berserk) && !Program.mainform.chkAntiBerserk.Checked)
                     UseAbility(AbilityList.Berserk);
@@ -407,6 +426,7 @@ namespace FlipperD
                 fface.Navigator.FaceHeading(id);
                 WriteLog($"Facing ({id}) and /ra'ing!");
                 Thread.Sleep(1000);
+                SendCommand("/equip ammo \"Steel Bullet\"", 0);
                 SendCommand("/ra <t>", 5);
             }
 
@@ -2085,6 +2105,8 @@ namespace FlipperD
                     if (fface.Player.Status == Status.Fighting && fface.NPC.IsClaimed(target) && CanStillAttack(target))
                         UseAbilities();
 
+
+
                     // use weaponskills
                     if (fface.Player.Status == Status.Fighting && (mode != Mode.Dynamis || (mode == Mode.Dynamis && TargetStaggered) || (mode == Mode.Dynamis && !EligibleTime(monster))))
                     {
@@ -2118,7 +2140,7 @@ namespace FlipperD
                 target = 0;
                 RangedTarget = 0;
                 _cantSee = false;
-
+                _autora = false;
 
                 Thread.Sleep(1);
             }
