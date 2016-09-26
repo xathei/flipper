@@ -201,6 +201,14 @@ namespace Flipper.Classes
             return results;
         }
 
+        public override void UseAbilities()
+        {
+            if (Ready(AbilityList.Radial_Arcana) && _fface.Player.MPPCurrent <= 50)
+            {
+                UseAbility(AbilityList.Radial_Arcana);
+            }
+        }
+
         #region Helper
 
         private double RadianToDegree(double radians)
@@ -232,4 +240,6 @@ namespace Flipper.Classes
         #endregion
 
     }
+
+    
 }
