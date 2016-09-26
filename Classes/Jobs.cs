@@ -189,6 +189,10 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
+            SendCommand("/ma \"Amchuchu\" <me>");
+            Thread.Sleep(7000);
+            //SendCommand("/ma \"Elivira\" <me>");
+            //Thread.Sleep(7000);
             //SendCommand("/ma \"Joachim\" <me>");
             //Thread.Sleep(7000);
             SendCommand("/ma \"Ulmia\" <me>");

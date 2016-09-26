@@ -113,6 +113,8 @@ namespace Flipper.Classes
                 if (!IsAfflicted(StatusEffect.Warcry) && Ready(AbilityList.Warcry))
                     UseAbility(AbilityList.Warcry, 2, false);
 
+                if (!IsAfflicted(StatusEffect.Aggressor) && Ready(AbilityList.Aggressor))
+                    UseAbility(AbilityList.Aggressor, 2, false);
 
                 if (Ready(AbilityList.Berserk))
                    UseAbility(AbilityList.Berserk, 2, false);

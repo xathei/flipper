@@ -1039,6 +1039,18 @@ namespace FlipperD
             }*/
             Debug.WriteLine(fface.Timer.GetAbilityRecast(AbilityList.Ward));
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            IJob job = new Bard(fface, Content.Ambuscade);
+
+            while (true)
+            {
+                job.UseSpells();
+
+                Thread.Sleep(10);
+            }
+        }
     }
 
     public class TargetInfo
