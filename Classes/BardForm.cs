@@ -64,6 +64,8 @@ namespace Flipper.Classes
                 pianBalladIII.Value = characterAction.PianissimoBalladIII;
             }
 
+            brdCbStageMode.Checked = _jobSettings.SelfActions.Perform;
+
             // Check if abilities are set.
             brdCbTroubadour.Checked = _jobSettings.SelfActions.Troubadour;
             brdCbNightingale.Checked = _jobSettings.SelfActions.Nightingale;
@@ -133,6 +135,8 @@ namespace Flipper.Classes
                     character.PianissimoBalladIII = (bool?)row.Cells[2].Value ?? false;
                 }
             }
+
+            _jobSettings.SelfActions.Perform = brdCbStageMode.Checked;
 
             // Set the abilities.
             _jobSettings.SelfActions.Troubadour = brdCbTroubadour.Checked;
