@@ -116,7 +116,7 @@ namespace FlipperD
         public void UseWeaponskills()
         {
 
-            if (fface.Target.HPPCurrent < 40)
+            if (fface.Target.HPPCurrent < 50)
             {
                 SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
             }
@@ -219,7 +219,7 @@ namespace FlipperD
             {
                 UseAbility("Double Shot", AbilityList.Unlimited_Shot, 3, false);
             }
-            if (fface.Player.MainJob == Job.RNG && (fface.Player.TPCurrent < 1000 || fface.Target.HPPCurrent > 40))
+            if (fface.Player.MainJob == Job.RNG && (fface.Player.TPCurrent < 1000 || fface.Target.HPPCurrent > 50))
             {
                 SendCommand("/equip ammo \"Steel Bullet\"",0);
                 SendCommand("/ra <t>", (int)Program.mainform.rngDelay.Value);

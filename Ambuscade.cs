@@ -372,6 +372,7 @@ namespace Flipper
             WriteLog("[TASK] >> IDLE. Waiting for a new task...");
             _inTask = false;
         }
+        //amb2
 
         public bool HasKeyItem()
         {
