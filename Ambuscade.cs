@@ -351,7 +351,7 @@ namespace Flipper
                         WriteLog($"[TASK] >> PERFORMING ({task}) ...");
                         ObtainKI();
                         client.Send("DOCK_KI");
-                        WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
+                        WriteLog($"[REPLY] >> TASK COMPLETED ({task}) (Everyone has a KI!)");
 
                         break;
                     }
@@ -359,8 +359,17 @@ namespace Flipper
                     {
                         WriteLog($"[TASK] >> PERFORMING ({task}) ...");
                         _KeyCapped = true;
-                        if (!job.Engages())
+                        if (Combat.InCombat)
                         {
+                            WriteLog("[TASK INFO] I'm in Combat, and attempting to stop Combat!");
+                        }
+                        else
+                        {
+                            WriteLog("[TASK INFO] I'm not currently in combat! .. Waiting for CappedKI to Complete");
+                        }
+                        if (!job.Engages() && Combat.InCombat)
+                        {
+                            WriteLog("[TASK INFO INNER] Attempting to Interrupt Combat...");
                             Combat.Interrupt();
                         }
                         WriteLog($"[REPLY] >> TASK COMPLETED ({task})");
@@ -375,10 +384,7 @@ namespace Flipper
 
         public bool HasKeyItem()
         {
-            if (_Leader && _hasKeyItem && _KeyCapped)
-                return true;
-
-            if (!_Leader && _hasKeyItem && _KeyCapped)
+            if (_hasKeyItem && _KeyCapped)
                 return true;
 
             return false;
@@ -437,6 +443,7 @@ namespace Flipper
                 Thread.Sleep(1);
             }
             done:
+            fface.Navigator.Reset();
             return true;
         }
 

@@ -163,7 +163,7 @@ namespace Flipper
 
                 while (path.Any() && job.CanStillAttack(target) && DistanceTo(target) > (monster.HitBox*1.5) && _fighting)
                 {
-                    if (!fface.NPC.IsClaimed(target))
+                    if (!fface.NPC.IsClaimed(target) && _fighting)
                     {
                         Target(target);
                         job.UseClaim();
@@ -243,7 +243,7 @@ namespace Flipper
 
                     job.UseSpells();
                 }
-                else if (fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO || fface.Player.MainJob == Job.BRD)
+                else if ((fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO || fface.Player.MainJob == Job.BRD) && _fighting)
                 {
                     fface.Navigator.Reset();
                     job.UseSpells();
@@ -298,6 +298,8 @@ namespace Flipper
         {
             return fface.Navigator.DistanceTo(id);
         }
+
+        public static bool InCombat => _fighting;
 
         /// <summary>
         /// Target's the specifid target. Disengages target if it does not match the passed ID.
