@@ -577,9 +577,33 @@ namespace FlipperD
         {
             List<TargetInfo> results = new List<TargetInfo>();
 
-            for (short i = 0; i < 768; i++)
+            for (short i = 0; i < 4092; i++)
             {
-                if (fface.NPC.Name(i).ToLower().Contains(name.ToLower()) && fface.NPC.Distance(i) < distance && IsRendered(i) && fface.NPC.HPPCurrent(i) == 100 && fface.NPC.Status(i) != Status.Dead1 && fface.NPC.Status(i) != Status.Dead2)
+                if (fface.NPC.Name(i).ToLower().Contains(name.ToLower()) && fface.NPC.Distance(i) < distance && IsRendered(i) && fface.NPC.HPPCurrent(i) > 0 && fface.NPC.Status(i) != Status.Dead1 && fface.NPC.Status(i) != Status.Dead2)
+                {
+                    TargetInfo found = new TargetInfo
+                    {
+                        Id = i,
+                        Name = fface.NPC.Name(i),
+                        Status = fface.NPC.Status(i),
+                        Distance = fface.NPC.Distance(i),
+                        IsRendered = IsRendered(i)
+                    };
+                    results.Add(found);
+                }
+            }
+
+            return results;
+        }
+
+
+        public List<TargetInfo> FindTarget(int claimedId = 0)
+        {
+            List<TargetInfo> results = new List<TargetInfo>();
+
+            for (short i = 0; i < 4092; i++)
+            {
+                if (fface.NPC.Distance(i) < 50 && IsRendered(i) && fface.NPC.HPPCurrent(i) > 0 && fface.NPC.ClaimedID(i) == claimedId)
                 {
                     TargetInfo found = new TargetInfo
                     {
@@ -1013,22 +1037,23 @@ namespace FlipperD
 
         private void button7_Click(object sender, EventArgs e)
         {
-            //fface.Windower.SendKey(KeyCode.NP_Number4,false);
-            //fface.Windower.SendKey(KeyCode.NP_Number6, false);
-            //fface.Windower.SendKey(KeyCode.NP_Number2, false);
+            fface.Windower.SendKey(KeyCode.NP_Number4, false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
+            fface.Windower.SendKey(KeyCode.NP_Number8, false);
 
-            IJob job = new RuneFencer(fface, Content.Ambuscade);
-            Flipper.Monster mob = new Flipper.Monster()
-            {
-                HitBox = 2.5,
-                MonsterName = "Ashen Tiger",
-                TimeSpecific = false
-            };
+            //IJob job = new Thief(fface, Content.Ambuscade);
+            //Flipper.Monster mob = new Flipper.Monster()
+            //{
+            //    HitBox = 5,
+            //    MonsterName = "Colkhab",
+            //    TimeSpecific = false
+            //};
 
-            Combat.SetInstance = fface;
-            Combat.SetJob = job;
-            Combat.FailType fail = Combat.FailType.NoFail;
-            Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
+            //Combat.SetInstance = fface;
+            //Combat.SetJob = job;
+            //Combat.FailType fail = Combat.FailType.NoFail;
+            //Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
         }
 
         private void RUNTestbtn_Click(object sender, EventArgs e)
@@ -1065,6 +1090,77 @@ namespace FlipperD
                 job.UseSpells();
 
                 Thread.Sleep(10);
+            }
+        }
+
+        private volatile int assistIndex = 0;
+        private volatile int assistingCoreID = 0;
+        private volatile bool _assisting = true;
+
+        private void AssistButton_Click(object sender, EventArgs e)
+        {
+            if (AssistButton.Text == "Assist")
+            {
+                _assisting = true;
+                AssistButton.Text = "Stop Assist";
+                Thread A = new Thread(Assist);
+                A.Start();
+            }
+            else
+            {
+                _assisting = false;
+                Combat.Interrupt();
+                fface.Windower.SendKey(KeyCode.NP_Number2, false);
+                fface.Windower.SendKey(KeyCode.NP_Number4, false);
+                fface.Windower.SendKey(KeyCode.NP_Number6, false);
+                AssistButton.Text = "Assist";
+            }
+        }
+
+        private void Assist()
+        {
+            var t = FindTarget(AssistName.Text);
+            assistIndex = t[0].Id;
+            assistingCoreID = Convert.ToInt32(AssistServerID.Text);
+
+            IJob job = new Jobs();
+
+            if (fface.Player.MainJob == Job.THF)
+            {
+                job = new Thief(fface, Content.Ambuscade);
+            }
+            else if (fface.Player.MainJob == Job.GEO)
+            {
+                job = new Geomancer(fface, Content.Ambuscade);
+            }
+
+            Combat.FailType fail = Combat.FailType.NoFail;
+            Combat.SetInstance = fface;
+            Combat.SetJob = job;
+
+            while (_assisting)
+            {
+                while (fface.NPC.Status(assistIndex) != Status.Fighting)
+                {
+                    if (fface.NPC.Distance(assistIndex) >= 4)
+                    {
+                        fface.Navigator.DistanceTolerance = 3.5;
+                        fface.Navigator.UseNewMovement = true;
+                        fface.Navigator.GotoNPC(assistIndex, 5000);
+                    }
+                    Thread.Sleep(1);
+                }
+
+                var targets = FindTarget(assistingCoreID);
+
+                while (!targets.Any())
+                {
+                    targets = FindTarget(assistingCoreID);
+                    Thread.Sleep(1000);
+                }
+                Combat.Fight(targets[0].Id, new Flipper.Monster(), Combat.Mode.None, out fail);
+                fface.Navigator.Reset();
+                Thread.Sleep(3000);
             }
         }
     }

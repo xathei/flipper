@@ -189,11 +189,22 @@ namespace Flipper
             // battle routine
             while (job.CanStillAttack(target) && _fighting)
             {
+
+                while (fface.Player.Status == Status.Fighting && fface.Target.ID != target)
+                {
+                    fface.Windower.SendString("/attackoff");
+                    Thread.Sleep(3000);
+                    fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+                    Thread.Sleep(1000);
+                }
+
                 // TARGET
                 Target(target);
 
                 // FACE TARGET
                 fface.Navigator.FaceHeading(target);
+
+
 
                 // CLAIM
                 if (!fface.NPC.IsClaimed(target) && _fighting)
@@ -267,6 +278,9 @@ namespace Flipper
             if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
 
             _fighting = false;
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
+            fface.Windower.SendKey(KeyCode.NP_Number4, false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
 
             Black.Clear();
             return true;

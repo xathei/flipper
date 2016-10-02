@@ -158,7 +158,7 @@ namespace Flipper.Classes
                 SendCommand("/ws \"Savage Blade\" <t>", 3, false);
             }
 
-            if (IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent >= 2000)
+            if (IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent >= 1000)
             {
                 SendCommand("/ws \"Savage Blade\" <t>", 3, false);
 

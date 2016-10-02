@@ -162,6 +162,12 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.Misc2 = new System.Windows.Forms.TabPage();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.AssistName = new System.Windows.Forms.TextBox();
+            this.AssistButton = new System.Windows.Forms.Button();
+            this.AssistServerID = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.RUNTestbtn = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -178,7 +184,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.button8 = new System.Windows.Forms.Button();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1638,6 +1643,11 @@
             // 
             // Misc2
             // 
+            this.Misc2.Controls.Add(this.label19);
+            this.Misc2.Controls.Add(this.label18);
+            this.Misc2.Controls.Add(this.AssistName);
+            this.Misc2.Controls.Add(this.AssistButton);
+            this.Misc2.Controls.Add(this.AssistServerID);
             this.Misc2.Controls.Add(this.button8);
             this.Misc2.Controls.Add(this.RUNTestbtn);
             this.Misc2.Controls.Add(this.button7);
@@ -1650,9 +1660,63 @@
             this.Misc2.Text = "Misc. 2";
             this.Misc2.UseVisualStyleBackColor = true;
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(308, 84);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(159, 17);
+            this.label19.TabIndex = 14;
+            this.label19.Text = "Assist\'s Player Name:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(326, 114);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(141, 17);
+            this.label18.TabIndex = 13;
+            this.label18.Text = "Assist\'s Server ID:";
+            // 
+            // AssistName
+            // 
+            this.AssistName.Location = new System.Drawing.Point(473, 81);
+            this.AssistName.Name = "AssistName";
+            this.AssistName.Size = new System.Drawing.Size(245, 24);
+            this.AssistName.TabIndex = 12;
+            this.AssistName.Text = "Dazusu";
+            // 
+            // AssistButton
+            // 
+            this.AssistButton.Location = new System.Drawing.Point(471, 19);
+            this.AssistButton.Name = "AssistButton";
+            this.AssistButton.Size = new System.Drawing.Size(130, 46);
+            this.AssistButton.TabIndex = 10;
+            this.AssistButton.Text = "Assist";
+            this.AssistButton.UseVisualStyleBackColor = true;
+            this.AssistButton.Click += new System.EventHandler(this.AssistButton_Click);
+            // 
+            // AssistServerID
+            // 
+            this.AssistServerID.Location = new System.Drawing.Point(473, 111);
+            this.AssistServerID.Name = "AssistServerID";
+            this.AssistServerID.Size = new System.Drawing.Size(247, 24);
+            this.AssistServerID.TabIndex = 9;
+            this.AssistServerID.Text = "80841";
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(103, 101);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "button8";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // RUNTestbtn
             // 
-            this.RUNTestbtn.Location = new System.Drawing.Point(450, 45);
+            this.RUNTestbtn.Location = new System.Drawing.Point(22, 101);
             this.RUNTestbtn.Name = "RUNTestbtn";
             this.RUNTestbtn.Size = new System.Drawing.Size(75, 23);
             this.RUNTestbtn.TabIndex = 7;
@@ -1818,16 +1882,6 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(476, 168);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 23);
-            this.button8.TabIndex = 8;
-            this.button8.Text = "button8";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1889,6 +1943,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.Misc2.ResumeLayout(false);
+            this.Misc2.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.Logging.ResumeLayout(false);
@@ -2052,6 +2107,11 @@
         private System.Windows.Forms.Button RUNTestbtn;
         public System.Windows.Forms.NumericUpDown rngDelay;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button AssistButton;
+        private System.Windows.Forms.TextBox AssistServerID;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox AssistName;
     }
 }
 

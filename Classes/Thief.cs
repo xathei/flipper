@@ -90,9 +90,9 @@ namespace Flipper.Classes
             }
 
             // stand behind the mob.
-            if (_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            if (_content == Content.Ambuscade && _fface.Player.Zone != Zone.Cape_Teriggan)
             {
-                while (Math.Abs(GetSADifference(_fface.Target.ID)) > 10)
+                while (Math.Abs(GetSADifference(_fface.Target.ID)) > 10 && CanStillAttack(_fface.Target.ID) && _fface.Target.HPPCurrent > 0)
                 {
                     _fface.Windower.SendKey(KeyCode.NP_Number4, true);
                     Thread.Sleep(50);
@@ -148,22 +148,6 @@ namespace Flipper.Classes
                 {
                     SendCommand("/ja \"Perfect Dodge\" <me>");
                 }
-
-                //if (_fface.Player.SubJob == Job.DNC)
-                //{
-                //    if (_fface.Player.TPCurrent >= 500)
-                //    {
-                //        UseAbility("Curing Waltz III", AbilityList.Waltzes, 3, false);
-                //    }
-                //    else if (_fface.Player.TPCurrent >= 350)
-                //    {
-                //        UseAbility("Curing Waltz II", AbilityList.Waltzes, 3, false);
-                //    }
-                //    else if (_fface.Player.TPCurrent >= 200)
-                //    {
-                //        UseAbility("Curing Waltz", AbilityList.Waltzes, 3, false);
-                //    }
-                //}
             }
         }
 
@@ -174,31 +158,6 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-            //// Check if Bullt is not on cooldown.
-            //if (Ready(AbilityList.Bully))
-            //{
-            //    // Use bully on the target enemy.
-            //    UseAbility(AbilityList.Bully, 2, true);
-            //    // Set the internal timer to 30 seconds.
-            //    _bullyTimer = 180;
-            //    // Sleep the thread for 1500 ms.
-            //    Thread.Sleep(1500);
-            //}
-            //else
-            //{
-            //    // If bully is not ready, update the timer value by getting the recast.
-            //    _bullyTimer = _fface.Timer.GetAbilityRecast(AbilityList.Bully);
-            //}
-
-            //// If the recast time for Bully is greater than 155 seconds and Sneak Attack is ready.
-            //if (_bullyTimer >= 155 && Ready(AbilityList.Sneak_Attack))
-            //{
-            //    // Use Sneak Attack.
-            //    UseAbility(AbilityList.Sneak_Attack, 1);
-            //    // Sleep the thread for 1500 ms.
-            //    Thread.Sleep(1500);
-            //}
-
             var mobHead = _fface.Target.PosH;
             var myHead = _fface.Player.PosH;
 

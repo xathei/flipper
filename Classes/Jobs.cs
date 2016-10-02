@@ -99,7 +99,7 @@ namespace Flipper.Classes
             }
 
             // move back from the target
-            if (DistanceTo(id) < (monster.HitBox*0.65) && CanStillAttack(id))
+            if (DistanceTo(id) < (monster.HitBox*0.65) && CanStillAttack(id) && _fface.Player.Status == Status.Fighting)
             {
                 _fface.Windower.SendKey(KeyCode.NP_Number2, true);
                 Thread.Sleep(50);
