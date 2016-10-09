@@ -108,7 +108,7 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
-            if (_fface.Player.Zone != Zone.Cape_Teriggan)
+            if (_fface.Player.Zone != Zone.Cape_Teriggan | _fface.Player.Zone != Zone.Den_of_Rancor)
             {
                 double targetDistanceFromLuopan = 0;
                 List<TargetInfo> luopan = FindTargetAll("luopan", 30);
@@ -168,6 +168,22 @@ namespace Flipper.Classes
                         Thread.Sleep(2500);
                         UseAbility(AbilityList.Life_Cycle, 2, false);
                     }
+            }
+            if (_fface.Player.SubJob == Job.WHM)
+            {
+                foreach(Player player in Players)
+                {
+                    foreach(StatusEffect e in player.Effects)
+                    {
+                        if (e == StatusEffect.Attack_Down)
+                        {
+                            if (Ready(SpellList.Erase))
+                            {
+                                UseSpell(SpellList.Erase, 4, player.Name);
+                            }
+                        }
+                    }
+                }
             }
         }
 
