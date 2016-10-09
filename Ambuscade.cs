@@ -63,6 +63,19 @@ namespace Flipper
 
             // Load Job Class to handle battle.
             LoadJobClass();
+
+            job.GainEffect += Job_GainEffect;
+            job.LoseEffect += Job_LoseEffect;
+        }
+
+        private void Job_LoseEffect(StatusEffect effect)
+        {
+            client.Send($"BUFF_LOSE {(int)effect} {effect}");
+        }
+
+        private void Job_GainEffect(StatusEffect effect)
+        {
+            client.Send($"BUFF_GAIN {(int)effect} {effect}");
         }
 
         private void LoadJobClass()
@@ -227,6 +240,16 @@ namespace Flipper
 
             string[] token = text.Split(' ');
 
+            if (token[0] == "GAIN_BUFF")
+            {
+                job.MemberGainEffect(token[1], JobRole.Damage, (StatusEffect)Convert.ToInt32(token[2]));
+            }
+
+            if (token[0] == "LOSE_BUFF")
+            {
+                job.MemberLoseEffect(token[1], JobRole.Damage, (StatusEffect)Convert.ToInt32(token[2]));
+            }
+
             if (text != "PING!")
             {
                 //WriteLog("[DEBUG_S>>] " + text);
@@ -304,6 +327,11 @@ namespace Flipper
         {
             if (!_ambuscade)
                 return;
+
+            if (!job.Tracking())
+            {
+                job.TrackBuffs(true);
+            }
 
             switch (task)
             {
@@ -477,6 +505,8 @@ namespace Flipper
                     Thread.Sleep(100);
                 _proceed = false;
                 Thread.Sleep(1000);
+
+                job.TrackBuffs(true);
 
                 if (_KeyCapped && _initialKeyItem)
                 {

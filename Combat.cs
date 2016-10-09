@@ -144,6 +144,7 @@ namespace Flipper
             _fighting = true;
             float targetX = 0;
             float targetZ = 0;
+            job.SetBattle(true);
 
             fface.Navigator.Reset();
 
@@ -275,13 +276,12 @@ namespace Flipper
                 }
             }
 
-            if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
-
-            _fighting = false;
             fface.Windower.SendKey(KeyCode.NP_Number2, false);
             fface.Windower.SendKey(KeyCode.NP_Number4, false);
             fface.Windower.SendKey(KeyCode.NP_Number6, false);
-
+            job.SetBattle(false);
+            _fighting = false;
+            if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
             Black.Clear();
             return true;
         }

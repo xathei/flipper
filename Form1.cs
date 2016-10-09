@@ -1042,18 +1042,43 @@ namespace FlipperD
             fface.Windower.SendKey(KeyCode.NP_Number2, false);
             fface.Windower.SendKey(KeyCode.NP_Number8, false);
 
-            //IJob job = new Thief(fface, Content.Ambuscade);
-            //Flipper.Monster mob = new Flipper.Monster()
-            //{
-            //    HitBox = 5,
-            //    MonsterName = "Colkhab",
-            //    TimeSpecific = false
-            //};
+            Thread c = new Thread(DoCombat);
+            c.Start();
+        }
 
-            //Combat.SetInstance = fface;
-            //Combat.SetJob = job;
-            //Combat.FailType fail = Combat.FailType.NoFail;
-            //Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
+        private void DoCombat()
+        {
+            IJob job = new Thief(fface, Content.Ambuscade);
+            Flipper.Monster mob = new Flipper.Monster()
+            {
+                HitBox = 5,
+                MonsterName = "Greater Manticore",
+                TimeSpecific = false
+            };
+
+            job.LoseEffect += Job_LoseEffect;
+            job.GainEffect += Job_GainEffect;
+
+            Combat.SetInstance = fface;
+            Combat.SetJob = job;
+            Combat.FailType fail = Combat.FailType.NoFail;
+            Combat.Fight(fface.Target.ID, mob, Combat.Mode.None, out fail);
+        }
+
+        private void Job_GainEffect(StatusEffect effect)
+        {
+            uxLog.Invoke((MethodInvoker) delegate
+            {
+                uxLog.Items.Add($"Gained: {effect}");
+            });
+        }
+
+        private void Job_LoseEffect(StatusEffect effect)
+        {
+            uxLog.Invoke((MethodInvoker) delegate
+            {
+                uxLog.Items.Add($"Lost {effect}");
+            });
         }
 
         private void RUNTestbtn_Click(object sender, EventArgs e)
@@ -1158,7 +1183,7 @@ namespace FlipperD
                     targets = FindTarget(assistingCoreID);
                     Thread.Sleep(1000);
                 }
-                Combat.Fight(targets[0].Id, new Flipper.Monster(), Combat.Mode.None, out fail);
+                Combat.Fight(targets[0].Id, new Flipper.Monster() { HitBox = 3, MonsterName = "Yilan" }, Combat.Mode.None, out fail);
                 fface.Navigator.Reset();
                 Thread.Sleep(3000);
             }

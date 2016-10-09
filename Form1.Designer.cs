@@ -184,6 +184,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.rngAimForDistance = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1074,6 +1077,9 @@
             // 
             // Ambuscade
             // 
+            this.Ambuscade.Controls.Add(this.label21);
+            this.Ambuscade.Controls.Add(this.label20);
+            this.Ambuscade.Controls.Add(this.rngAimForDistance);
             this.Ambuscade.Controls.Add(this.rngDelay);
             this.Ambuscade.Controls.Add(this.uxAmbuscadeServer);
             this.Ambuscade.Controls.Add(this.groupBox13);
@@ -1093,11 +1099,16 @@
             // rngDelay
             // 
             this.rngDelay.Location = new System.Drawing.Point(546, 274);
+            this.rngDelay.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.rngDelay.Name = "rngDelay";
             this.rngDelay.Size = new System.Drawing.Size(203, 24);
             this.rngDelay.TabIndex = 13;
             this.rngDelay.Value = new decimal(new int[] {
-            5,
+            4700,
             0,
             0,
             0});
@@ -1882,6 +1893,32 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
+            // rngAimForDistance
+            // 
+            this.rngAimForDistance.Location = new System.Drawing.Point(546, 244);
+            this.rngAimForDistance.Name = "rngAimForDistance";
+            this.rngAimForDistance.Size = new System.Drawing.Size(203, 24);
+            this.rngAimForDistance.TabIndex = 14;
+            this.rngAimForDistance.Text = "5.5";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(422, 279);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(118, 17);
+            this.label20.TabIndex = 15;
+            this.label20.Text = "/ra delay in ms:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(391, 247);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(149, 17);
+            this.label21.TabIndex = 16;
+            this.label21.Text = "rng trueshot yalms:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -1926,6 +1963,7 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.Ambuscade.ResumeLayout(false);
+            this.Ambuscade.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).EndInit();
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
@@ -2112,6 +2150,9 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox AssistName;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        public System.Windows.Forms.TextBox rngAimForDistance;
     }
 }
 
