@@ -77,7 +77,7 @@ namespace FlipperD
             uxTabs.TabPages.Remove(UnityTab);
             uxTabs.TabPages.Remove(Misc);
             //uxTabs.TabPages.Remove(Misc2);
-            uxTabs.TabPages.Remove(Voidwatch);
+            //uxTabs.TabPages.Remove(Voidwatch);
             uxAmbuscadeServer.SelectedIndex = 0;
             cmbMode.SelectedIndex = 0;
             ambDifficulty.SelectedIndex = 3;
@@ -299,153 +299,174 @@ namespace FlipperD
 
         private void uxUnity_Click(object sender, EventArgs e)
         {
-            Thread Uni = new Thread(Unity);
-            Uni.Start();
+            if (uxUnity.Text == "Start Voidwatch")
+            {
+                unity = true;
+                uxUnity.Text = "Stop Voidwatch";
+                Thread Uni = new Thread(Unity);
+                Uni.Start();
+            }
+            else
+            {
+                unity = false;
+                uxUnity.Text = "Start Voidwatch";
+                fface.Windower.SendString("/echo Unity will stop after this current round...");
+                MessageBox.Show("Unity will stop after this current round...");
+
+            }
         }
 
+        public void LoadJobClass()
+        {
+            switch (fface.Player.MainJob)
+            {
+                case Job.THF:
+                    job = new Thief(fface, Content.Voidwatch);
+                    break;
+                case Job.PLD:
+                    job = new Paladin(fface, Content.Voidwatch);
+                    break;
+                case Job.BLU:
+                    job = new BlueMage(fface, Content.Voidwatch);
+                    break;
+                case Job.WHM:
+                    job = new WhiteMage(fface, Content.Voidwatch);
+                    break;
+                case Job.GEO:
+                    job = new Geomancer(fface, Content.Voidwatch);
+                    break;
+                case Job.BRD:
+                    job = new Bard(fface, Content.Voidwatch);
+                    break;
+                case Job.RNG:
+                    job = new Ranger(fface, Content.Voidwatch);
+                    break;
+                case Job.RUN:
+                    job = new RuneFencer(fface, Content.Voidwatch);
+                    break;
+            }
+        }
+
+        public IJob job;
+        public volatile bool unity = true;
         private void Unity()
         {
-            bool unity = true;
+
+            LoadJobClass();
             while (unity)
             {
 
                 fface.Windower.SendString("/echo ============= New Cycle.... ==============");
-                if (uxFightOnry.Checked)
+
+                // target planar
+                List<TargetInfo> planars = new List<TargetInfo>();
+
+                while (!planars.Any())
                 {
-                    List<TargetInfo> targets = new List<TargetInfo>();
-
-                    while (!targets.Any())
-                    {
-                        targets = FindTarget("Planar", 15);
-                        Thread.Sleep(100);
-                    }
-
-                    targets = targets.OrderBy(x => x.Distance).ToList();
-
-                    if (targets.Any())
-                    {
-                        TargetInfo t = targets[0];
-
-                        if (t.Distance > 5.5)
-                        {
-                            fface.Navigator.DistanceTolerance = 4;
-                            fface.Navigator.GotoNPC(t.Id);
-                        }
-
-                        while (fface.Target.ID != t.Id)
-                        {
-                            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(100);
-                            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(100);
-                            fface.Target.SetNPCTarget(t.Id);
-                            Thread.Sleep(100);
-                            fface.Navigator.FaceHeading(t.Id);
-                            Thread.Sleep(500);
-                            fface.Windower.SendString("/target <t>");
-                        }
-
-                        fface.Windower.SendString("/item \"Rubicund Cell\" <t>");
-                        Thread.Sleep(1000);
-                    }
-                }
-                else if (!uxFightOnry.Checked)
-                { 
-
-                List<TargetInfo> targets = new List<TargetInfo>();
-
-                while (!targets.Any())
-                {
-                    targets = FindTarget("Planar",15);
+                    planars = FindTarget("Planar", 15);
                     Thread.Sleep(100);
                 }
 
-                targets = targets.OrderBy(x => x.Distance).ToList();
-                Thread.Sleep(100);
-                    if (targets.Any())
+                TargetInfo rift = planars[0];
+
+                if (rift.Distance > 5)
+                {
+                    fface.Navigator.DistanceTolerance = 4;
+                    fface.Navigator.GotoNPC(rift.Id, 4000);
+                }
+
+                while (fface.Target.ID != rift.Id || fface.Target.Name != "Planar Rift")
+                {
+                    fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+                    Thread.Sleep(100);
+                    fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+                    Thread.Sleep(500);
+                    fface.Target.SetNPCTarget(rift.Id);
+                    Thread.Sleep(500);
+                    fface.Target.SetNPCTarget(rift.Id);
+                    fface.Windower.SendString("/target <t>");
+                    Thread.Sleep(100);
+                    fface.Windower.SendString("/lockon");
+                    Thread.Sleep(5000);
+                }
+
+                int rubicund = (int)vwRubicundCellNum.Value;
+                int cobalt = (int) vwCobaltCellNumber.Value;
+
+                while (rubicund > 0 && HasItem(3435))
+                {
+                    rubicund--;
+                    fface.Windower.SendString("/item \"Rubicund Cell\" <t>");
+                    Thread.Sleep(1000);
+                }
+
+                while (cobalt > 0 && HasItem(3434))
+                {
+                    cobalt--;
+                    fface.Windower.SendString("/item \"Cobalt Cell\" <t>");
+                    Thread.Sleep(1000);
+                }
+
+                if (vwLeader.Checked)
+                {
+                    int displacer = (int) vwDisplacersNum.Value;
+                    while (displacer > 0 && HasItem(3853))
                     {
-                        TargetInfo t = targets[0];
-
-                        if (t.Distance > 5.5)
-                        {
-                            fface.Navigator.DistanceTolerance = 4;
-                            fface.Navigator.GotoNPC(t.Id);
-                        }
-
-                        while (fface.Target.ID != t.Id)
-                        {
-                            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(100);
-                            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(100);
-                            fface.Target.SetNPCTarget(t.Id);
-                            Thread.Sleep(100);
-                            fface.Navigator.FaceHeading(t.Id);
-                            Thread.Sleep(500);
-                            fface.Windower.SendString("/target <t>");
-                        }
-
-                        fface.Windower.SendString("/item \"Rubicund Cell\" <t>");
-                        Thread.Sleep(800);
+                        displacer--;
                         fface.Windower.SendString("/item \"Phase Displacer\" <t>");
-                        Thread.Sleep(800);
-                        fface.Windower.SendString("/item \"Phase Displacer\" <t>");
-                        Thread.Sleep(800);
-                        fface.Windower.SendString("/item \"Phase Displacer\" <t>");
-                        Thread.Sleep(3000);
-
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                        Thread.Sleep(700);
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                        Thread.Sleep(700);
-
-                        while (!fface.Menu.IsOpen || fface.Menu.DialogID != 306)
-                        {
-                            Thread.Sleep(50);
-                        }
-
-                        while (fface.Menu.DialogOptionIndex != 1)
-                        {
-                            fface.Windower.SendKeyPress(KeyCode.DownArrow);
-                            Thread.Sleep(500);
-                        }
-
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-
-                        while (!fface.Menu.IsOpen || fface.Menu.DialogID != 294)
-                        {
-                            Thread.Sleep(50);
-                        }
-
-                        while (fface.Menu.DialogOptionIndex != 0)
-                        {
-                            fface.Windower.SendKeyPress(KeyCode.UpArrow);
-                            Thread.Sleep(500);
-                        }
-
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-
-                        while (!fface.Menu.IsOpen || fface.Menu.DialogID != 295)
-                        {
-                            Thread.Sleep(50);
-                        }
-
-                        while (fface.Menu.DialogOptionIndex != 3)
-                        {
-                            fface.Windower.SendKeyPress(KeyCode.DownArrow);
-                            Thread.Sleep(500);
-                        }
-
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-
+                        Thread.Sleep(1000);
                     }
+
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
+                    Thread.Sleep(700);
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
+                    Thread.Sleep(700);
+
+                    while (!fface.Menu.IsOpen || fface.Menu.DialogID != 306)
+                    {
+                        Thread.Sleep(50);
+                    }
+
+                    while (fface.Menu.DialogOptionIndex != 1)
+                    {
+                        fface.Windower.SendKeyPress(KeyCode.DownArrow);
+                        Thread.Sleep(500);
+                    }
+
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
+
+                    while (!fface.Menu.IsOpen || fface.Menu.DialogID != 294)
+                    {
+                        Thread.Sleep(50);
+                    }
+
+                    while (fface.Menu.DialogOptionIndex != 0)
+                    {
+                        fface.Windower.SendKeyPress(KeyCode.UpArrow);
+                        Thread.Sleep(500);
+                    }
+
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
+
+                    while (!fface.Menu.IsOpen || fface.Menu.DialogID != 295)
+                    {
+                        Thread.Sleep(50);
+                    }
+
+                    while (fface.Menu.DialogOptionIndex != 2)
+                    {
+                        fface.Windower.SendKeyPress(KeyCode.DownArrow);
+                        Thread.Sleep(500);
+                    }
+
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
                 }
 
                     List<TargetInfo> mobs = new List<TargetInfo>();
 
                     while (!mobs.Any())
                     {
-                        mobs = FindTarget("Aello");
+                        mobs = FindTarget(vwTargetName.Text);
                         Thread.Sleep(100);
                     }
 
@@ -460,64 +481,13 @@ namespace FlipperD
                         fface.Windower.SendString("/item \"Dusty Wing\" <me>");
                         Thread.Sleep(4200);
 
-                        TargetInfo mob = mobs[0];
-                        while (fface.Target.ID != mob.Id)
-                        {
+                        TargetInfo target = mobs[0];
 
-                            fface.Target.SetNPCTarget(mob.Id);
-                            Thread.Sleep(500);
-                            fface.Windower.SendString("/target <t>");
-                            Thread.Sleep(500);
-                        }
-
-                        fface.Windower.SendString("/attack <t>");
-                        Thread.Sleep(100);
-                        fface.Navigator.FaceHeading(mob.Id);
-                        Thread.Sleep(2000);
-
-                        while (fface.NPC.HPPCurrent(mob.Id) > 0 && fface.NPC.Status(mob.Id) != Status.Dead1 &&
-                               fface.NPC.Status(mob.Id) != Status.Dead2)
-                        {
-                            if (fface.Player.TPCurrent > 1000)
-                            {
-                                if (fface.Player.MainJob == Job.PLD)
-                                {
-                                    if (fface.Player.MainJob == Job.PLD && !IsAfflicted(StatusEffect.Aftermath_lvl3))
-                                    {
-                                        if (fface.Player.TPCurrent >= 3000)
-                                        {
-                                            fface.Windower.SendString($"/ws \"Atonement\" <t>");
-                                            Thread.Sleep(1000);
-                                        }
-                                        else
-                                        {
-                                            Thread.Sleep(100);
-                                            continue;
-                                        }
-                                    }
-                                    if (uxUnityWS.Text == "Savage Blade" && fface.Player.TPCurrent < 1000)
-                                        continue;
-                                    else
-                                    {
-                                        fface.Windower.SendString($"/ws \"{uxUnityWS.Text}\" <t>");
-                                        Thread.Sleep(1000);
-                                    }
-                                }
-                                if (fface.Player.MainJob == Job.THF)
-                                {
-                                    fface.Windower.SendString($"/ws \"{uxUnityWS.Text}\" <t>");
-                                    Thread.Sleep(1000);
-                                }
-                                if (fface.Player.MainJob == Job.BLU)
-                                {
-                                    fface.Windower.SendString($"/ws \"{uxUnityWS.Text}\" <t>");
-                                    Thread.Sleep(1000);
-                                }
-                                Thread.Sleep(100);
-                            }
-                        }
-
-                        Thread.Sleep(1500);
+                        Combat.SetInstance = fface;
+                        Combat.SetJob = job;
+                        Flipper.Monster m = new Flipper.Monster() {HitBox = 4, MonsterName = vwTargetName.Text};
+                        Combat.FailType f = Combat.FailType.NoFail;
+                        Combat.Fight(target.Id, m, Combat.Mode.None, out f);
 
                         List<TargetInfo> chests = new List<TargetInfo>();
 
@@ -528,25 +498,25 @@ namespace FlipperD
                         }
 
                         TargetInfo chest = chests[0];
-                        while (fface.Target.ID != chest.Id)
+                        while (fface.Target.ID != chest.Id && fface.Target.Name != "Riftworn Pyxis")
                         {
+                            fface.Navigator.FaceHeading(chest.Id);
                             Thread.Sleep(3000);
                             fface.Windower.SendKeyPress(KeyCode.EscapeKey);
                             Thread.Sleep(100);
                             fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(100);
+                            Thread.Sleep(500);
                             fface.Target.SetNPCTarget(chest.Id);
                             Thread.Sleep(500);
+                            fface.Target.SetNPCTarget(chest.Id);
                             fface.Windower.SendString("/target <t>");
-                            Thread.Sleep(500);
-                            fface.Windower.SendString("/target <t>");
-                            Thread.Sleep(500);
+                            Thread.Sleep(100);
+                            fface.Windower.SendString("/lockon");
+                            Thread.Sleep(5000);
                         }
 
                         fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                        Thread.Sleep(100);
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                        Thread.Sleep(2000);
+                        Thread.Sleep(4000);
                         fface.Windower.SendKeyPress(KeyCode.RightArrow);
                         Thread.Sleep(500);
                         fface.Windower.SendKeyPress(KeyCode.RightArrow);

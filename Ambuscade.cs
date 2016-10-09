@@ -506,7 +506,10 @@ namespace Flipper
                 _proceed = false;
                 Thread.Sleep(1000);
 
-                job.TrackBuffs(true);
+                if (!job.Tracking())
+                {
+                    job.TrackBuffs(true);
+                }
 
                 if (_KeyCapped && _initialKeyItem)
                 {
