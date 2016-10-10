@@ -63,7 +63,7 @@ namespace Flipper.Classes
         {
             if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
             {
-                WriteLog("[KITCHEN] Using Sublime Sushi");
+                //WriteLog("[KITCHEN] Using Sublime Sushi");
                 SendCommand("/item \"Sublime Sushi\" <me>", 4);
             }
 

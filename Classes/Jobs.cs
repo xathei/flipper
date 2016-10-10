@@ -51,7 +51,7 @@ namespace Flipper.Classes
             if (name == _fface.Player.Name)
                 return;
 
-            //WriteLog($"[Buffs] {name} LOST: {effect}");
+           // WriteLog($"[Buffs] {name} LOST: {effect}");
             Player player = Players.FirstOrDefault(x => x.Name == name);
 
             if (player == null)
@@ -339,12 +339,12 @@ namespace Flipper.Classes
             //Thread.Sleep(7000);
             //SendCommand("/ma \"Joachim\" <me>");
             //Thread.Sleep(7000);
-            //SendCommand("/ma \"Ulmia\" <me>");
-            //Thread.Sleep(7000);
-            SendCommand("/ma \"Apururu (UC)\" <me>");
+            SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
-            //SendCommand("/ma \"Koru-Moru\" <me>");
+            //SendCommand("/ma \"Apururu (UC)\" <me>");
             //Thread.Sleep(7000);
+            SendCommand("/ma \"Koru-Moru\" <me>");
+            Thread.Sleep(7000);
         }
 
         /// <summary>
