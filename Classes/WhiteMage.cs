@@ -39,8 +39,6 @@ namespace Flipper.Classes
                 CharacterFolder = _fface.Player.Name
             };
 
-            Melee = false;
-
             // Loop through each active party member in the party list.
             foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
             {
@@ -82,7 +80,11 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
-            return;
+            // Do not engage if we're inside the Ambuscade Area.
+            if (_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                return;
+
+            SendCommand("/attack <t>", 3);
         }
 
         public override bool CanStillAttack(int id)
