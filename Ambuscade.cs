@@ -245,18 +245,20 @@ namespace Flipper
         /// <param name="text">The string of data that was read, appended with \r\n.</param>
         private void ReadData(ClientInfo ci, string text)
         {
-            using (StreamWriter w = File.AppendText("log.txt"))
-            {
-                w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
-                w.WriteLine("---------------------");
-                WriteLog("[RAW]: " + text);
-                WriteLog("---------------------");
-            }
+
             text = text.Replace(Environment.NewLine, "|");
             string[] packets = text.Split('|');
             text = packets[0];
 
             string[] token = text.Split(' ');
+
+            using (StreamWriter w = File.AppendText("log.txt"))
+            {
+                w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
+                w.WriteLine("---------------------");
+                WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
+                WriteLog("---------------------");
+            }
 
             if (token[0] == "GAIN_BUFF")
             {
