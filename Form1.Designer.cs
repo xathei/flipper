@@ -88,10 +88,18 @@
             this.favouredWeaponskill = new System.Windows.Forms.TextBox();
             this.btnFarming = new System.Windows.Forms.Button();
             this.Voidwatch = new System.Windows.Forms.TabPage();
-            this.uxFightOnry = new System.Windows.Forms.CheckBox();
-            this.uxUnity = new System.Windows.Forms.Button();
+            this.label24 = new System.Windows.Forms.Label();
+            this.vwTargetName = new System.Windows.Forms.TextBox();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.uxUnityWS = new System.Windows.Forms.TextBox();
+            this.vwDisplacersNum = new System.Windows.Forms.NumericUpDown();
+            this.vwLeader = new System.Windows.Forms.CheckBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.vwRubicundCellNum = new System.Windows.Forms.NumericUpDown();
+            this.vwCobaltCellNumber = new System.Windows.Forms.NumericUpDown();
+            this.uxUnity = new System.Windows.Forms.Button();
             this.UnityTab = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.UnityItemContainerLabel = new System.Windows.Forms.Label();
@@ -108,6 +116,9 @@
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
             this.Ambuscade = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.rngAimForDistance = new System.Windows.Forms.TextBox();
             this.rngDelay = new System.Windows.Forms.NumericUpDown();
             this.uxAmbuscadeServer = new System.Windows.Forms.ComboBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
@@ -196,6 +207,11 @@
             this.smnGroup.SuspendLayout();
             this.networkGroup.SuspendLayout();
             this.Voidwatch.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.vwDisplacersNum)).BeginInit();
+            this.groupBox14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.vwRubicundCellNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vwCobaltCellNumber)).BeginInit();
             this.UnityTab.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -881,10 +897,11 @@
             // 
             // Voidwatch
             // 
-            this.Voidwatch.Controls.Add(this.uxFightOnry);
+            this.Voidwatch.Controls.Add(this.label24);
+            this.Voidwatch.Controls.Add(this.vwTargetName);
+            this.Voidwatch.Controls.Add(this.groupBox15);
+            this.Voidwatch.Controls.Add(this.groupBox14);
             this.Voidwatch.Controls.Add(this.uxUnity);
-            this.Voidwatch.Controls.Add(this.label1);
-            this.Voidwatch.Controls.Add(this.uxUnityWS);
             this.Voidwatch.Location = new System.Drawing.Point(4, 26);
             this.Voidwatch.Name = "Voidwatch";
             this.Voidwatch.Padding = new System.Windows.Forms.Padding(3);
@@ -893,41 +910,132 @@
             this.Voidwatch.Text = "Voidwatch";
             this.Voidwatch.UseVisualStyleBackColor = true;
             // 
-            // uxFightOnry
+            // label24
             // 
-            this.uxFightOnry.AutoSize = true;
-            this.uxFightOnry.Location = new System.Drawing.Point(128, 73);
-            this.uxFightOnry.Name = "uxFightOnry";
-            this.uxFightOnry.Size = new System.Drawing.Size(111, 21);
-            this.uxFightOnry.TabIndex = 3;
-            this.uxFightOnry.Text = "Attack Only";
-            this.uxFightOnry.UseVisualStyleBackColor = true;
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(151, 194);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(104, 17);
+            this.label24.TabIndex = 11;
+            this.label24.Text = "Target Name:";
             // 
-            // uxUnity
+            // vwTargetName
             // 
-            this.uxUnity.Location = new System.Drawing.Point(549, 62);
-            this.uxUnity.Name = "uxUnity";
-            this.uxUnity.Size = new System.Drawing.Size(144, 40);
-            this.uxUnity.TabIndex = 2;
-            this.uxUnity.Text = "Begin Voidwatch";
-            this.uxUnity.UseVisualStyleBackColor = true;
-            this.uxUnity.Click += new System.EventHandler(this.uxUnity_Click);
+            this.vwTargetName.Location = new System.Drawing.Point(261, 191);
+            this.vwTargetName.Name = "vwTargetName";
+            this.vwTargetName.Size = new System.Drawing.Size(345, 24);
+            this.vwTargetName.TabIndex = 10;
+            this.vwTargetName.Text = "Aello";
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.label1);
+            this.groupBox15.Controls.Add(this.vwDisplacersNum);
+            this.groupBox15.Controls.Add(this.vwLeader);
+            this.groupBox15.Location = new System.Drawing.Point(344, 6);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(405, 100);
+            this.groupBox15.TabIndex = 9;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Leader Settings";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 35);
+            this.label1.Location = new System.Drawing.Point(30, 63);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 17);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Weapon Skill";
+            this.label1.Size = new System.Drawing.Size(126, 17);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Use Displacers #";
             // 
-            // uxUnityWS
+            // vwDisplacersNum
             // 
-            this.uxUnityWS.Location = new System.Drawing.Point(128, 32);
-            this.uxUnityWS.Name = "uxUnityWS";
-            this.uxUnityWS.Size = new System.Drawing.Size(565, 24);
-            this.uxUnityWS.TabIndex = 0;
+            this.vwDisplacersNum.Enabled = false;
+            this.vwDisplacersNum.Location = new System.Drawing.Point(162, 61);
+            this.vwDisplacersNum.Name = "vwDisplacersNum";
+            this.vwDisplacersNum.Size = new System.Drawing.Size(205, 24);
+            this.vwDisplacersNum.TabIndex = 4;
+            this.vwDisplacersNum.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // vwLeader
+            // 
+            this.vwLeader.AutoSize = true;
+            this.vwLeader.Location = new System.Drawing.Point(162, 29);
+            this.vwLeader.Name = "vwLeader";
+            this.vwLeader.Size = new System.Drawing.Size(205, 21);
+            this.vwLeader.TabIndex = 3;
+            this.vwLeader.Text = "I\'m the leader / I will POP";
+            this.vwLeader.UseVisualStyleBackColor = true;
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.label22);
+            this.groupBox14.Controls.Add(this.label23);
+            this.groupBox14.Controls.Add(this.vwRubicundCellNum);
+            this.groupBox14.Controls.Add(this.vwCobaltCellNumber);
+            this.groupBox14.Location = new System.Drawing.Point(6, 6);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(332, 100);
+            this.groupBox14.TabIndex = 8;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Trade Settings";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(37, 31);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(163, 17);
+            this.label22.TabIndex = 6;
+            this.label22.Text = "Trade Rubicund Cell #";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(57, 61);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(143, 17);
+            this.label23.TabIndex = 7;
+            this.label23.Text = "Trade Cobalt Cell #";
+            // 
+            // vwRubicundCellNum
+            // 
+            this.vwRubicundCellNum.Location = new System.Drawing.Point(206, 29);
+            this.vwRubicundCellNum.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.vwRubicundCellNum.Name = "vwRubicundCellNum";
+            this.vwRubicundCellNum.Size = new System.Drawing.Size(120, 24);
+            this.vwRubicundCellNum.TabIndex = 4;
+            // 
+            // vwCobaltCellNumber
+            // 
+            this.vwCobaltCellNumber.Location = new System.Drawing.Point(206, 59);
+            this.vwCobaltCellNumber.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.vwCobaltCellNumber.Name = "vwCobaltCellNumber";
+            this.vwCobaltCellNumber.Size = new System.Drawing.Size(120, 24);
+            this.vwCobaltCellNumber.TabIndex = 5;
+            // 
+            // uxUnity
+            // 
+            this.uxUnity.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.uxUnity.Location = new System.Drawing.Point(574, 414);
+            this.uxUnity.Name = "uxUnity";
+            this.uxUnity.Size = new System.Drawing.Size(175, 45);
+            this.uxUnity.TabIndex = 2;
+            this.uxUnity.Text = "Start Voidwatch";
+            this.uxUnity.UseVisualStyleBackColor = true;
+            this.uxUnity.Click += new System.EventHandler(this.uxUnity_Click);
             // 
             // UnityTab
             // 
@@ -1074,6 +1182,9 @@
             // 
             // Ambuscade
             // 
+            this.Ambuscade.Controls.Add(this.label21);
+            this.Ambuscade.Controls.Add(this.label20);
+            this.Ambuscade.Controls.Add(this.rngAimForDistance);
             this.Ambuscade.Controls.Add(this.rngDelay);
             this.Ambuscade.Controls.Add(this.uxAmbuscadeServer);
             this.Ambuscade.Controls.Add(this.groupBox13);
@@ -1090,14 +1201,45 @@
             this.Ambuscade.Text = "Ambuscade";
             this.Ambuscade.UseVisualStyleBackColor = true;
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(391, 247);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(149, 17);
+            this.label21.TabIndex = 16;
+            this.label21.Text = "rng trueshot yalms:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(422, 279);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(118, 17);
+            this.label20.TabIndex = 15;
+            this.label20.Text = "/ra delay in ms:";
+            // 
+            // rngAimForDistance
+            // 
+            this.rngAimForDistance.Location = new System.Drawing.Point(546, 244);
+            this.rngAimForDistance.Name = "rngAimForDistance";
+            this.rngAimForDistance.Size = new System.Drawing.Size(203, 24);
+            this.rngAimForDistance.TabIndex = 14;
+            this.rngAimForDistance.Text = "5.5";
+            // 
             // rngDelay
             // 
             this.rngDelay.Location = new System.Drawing.Point(546, 274);
+            this.rngDelay.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.rngDelay.Name = "rngDelay";
             this.rngDelay.Size = new System.Drawing.Size(203, 24);
             this.rngDelay.TabIndex = 13;
             this.rngDelay.Value = new decimal(new int[] {
-            5,
+            4700,
             0,
             0,
             0});
@@ -1920,12 +2062,20 @@
             this.networkGroup.PerformLayout();
             this.Voidwatch.ResumeLayout(false);
             this.Voidwatch.PerformLayout();
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.vwDisplacersNum)).EndInit();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.vwRubicundCellNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vwCobaltCellNumber)).EndInit();
             this.UnityTab.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.Ambuscade.ResumeLayout(false);
+            this.Ambuscade.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rngDelay)).EndInit();
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
@@ -1992,8 +2142,6 @@
         public System.Windows.Forms.CheckBox uxCapacityRing;
         private System.Windows.Forms.TabPage Voidwatch;
         private System.Windows.Forms.Button uxUnity;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox uxUnityWS;
         public System.Windows.Forms.NumericUpDown uxCapacityCharges;
         public System.Windows.Forms.CheckBox uxNyzul;
         public System.Windows.Forms.CheckBox uxSpamWS;
@@ -2014,7 +2162,7 @@
         private System.Windows.Forms.Button button6;
         public System.Windows.Forms.TabControl uxTabs;
         private System.Windows.Forms.Button menuIndex;
-        public System.Windows.Forms.CheckBox uxFightOnry;
+        public System.Windows.Forms.CheckBox vwLeader;
         private System.Windows.Forms.GroupBox groupBox2;
         public System.Windows.Forms.Label uxBynebillCount;
         public System.Windows.Forms.Label uxWhiteshellCount;
@@ -2112,6 +2260,19 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox AssistName;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        public System.Windows.Forms.TextBox rngAimForDistance;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown vwDisplacersNum;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.NumericUpDown vwRubicundCellNum;
+        private System.Windows.Forms.NumericUpDown vwCobaltCellNumber;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox vwTargetName;
     }
 }
 

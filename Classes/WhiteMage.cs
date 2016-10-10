@@ -383,6 +383,21 @@ namespace Flipper.Classes
                                 // Add the current user to the dictionary and set their haste state to true.
                                 _regenStates.Add(partyMember.Value.Name, true);
                 }
+
+            // test shit!
+            foreach (Player player in Players)
+            {
+                foreach (StatusEffect e in player.Effects)
+                {
+                    if (e == StatusEffect.Attack_Down)
+                    {
+                        if (Ready(SpellList.Erase))
+                        {
+                            UseSpell(SpellList.Erase, 6, player.Name);
+                        }
+                    }
+                }
+            }
         }
 
         public override void UseWeaponskills()

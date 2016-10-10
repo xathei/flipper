@@ -63,6 +63,19 @@ namespace Flipper
 
             // Load Job Class to handle battle.
             LoadJobClass();
+
+            job.GainEffect += Job_GainEffect;
+            job.LoseEffect += Job_LoseEffect;
+        }
+
+        private void Job_LoseEffect(StatusEffect effect)
+        {
+            client.Send($"BUFF_LOSE {(int)effect} {effect}");
+        }
+
+        private void Job_GainEffect(StatusEffect effect)
+        {
+            client.Send($"BUFF_GAIN {(int)effect} {effect}");
         }
 
         private void LoadJobClass()
@@ -180,8 +193,19 @@ namespace Flipper
             }
             chatThread = new Thread(DoChat);
             chatThread.Start();
+
+            Thread Safe = new Thread(SafePong);
+            Safe.Start();
         }
 
+        public void SafePong()
+        {
+            while (true)
+            {
+                client.Send("PONG");
+                Thread.Sleep(3000);
+            }
+        }
 
         /// <summary>
         /// Event for the client connecting to the server.
@@ -221,11 +245,28 @@ namespace Flipper
         /// <param name="text">The string of data that was read, appended with \r\n.</param>
         private void ReadData(ClientInfo ci, string text)
         {
-            text = text.Replace("\r\n", "|");
+            using (StreamWriter w = File.AppendText("log.txt"))
+            {
+                w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
+                w.WriteLine("---------------------");
+                WriteLog("[RAW]: " + text);
+                WriteLog("---------------------");
+            }
+            text = text.Replace(Environment.NewLine, "|");
             string[] packets = text.Split('|');
             text = packets[0];
 
             string[] token = text.Split(' ');
+
+            if (token[0] == "GAIN_BUFF")
+            {
+                job.MemberGainEffect(token[1], JobRole.Damage, (StatusEffect)Convert.ToInt32(token[2]));
+            }
+
+            if (token[0] == "LOSE_BUFF")
+            {
+                job.MemberLoseEffect(token[1], JobRole.Damage, (StatusEffect)Convert.ToInt32(token[2]));
+            }
 
             if (text != "PING!")
             {
@@ -233,7 +274,7 @@ namespace Flipper
             }
 
             // Always reply to ping.
-            if (token[0] == "PING!")
+            if (token[0] == "PING!" || (packets.Length >= 2 && packets[1] == "PING!"))
             {
                 //WriteLog("[REPLY] >> PONG");
                 client.Send("PONG");
@@ -304,6 +345,11 @@ namespace Flipper
         {
             if (!_ambuscade)
                 return;
+
+            if (!job.Tracking())
+            {
+                job.TrackBuffs(true);
+            }
 
             switch (task)
             {
@@ -477,6 +523,11 @@ namespace Flipper
                     Thread.Sleep(100);
                 _proceed = false;
                 Thread.Sleep(1000);
+
+                if (!job.Tracking())
+                {
+                    job.TrackBuffs(true);
+                }
 
                 if (_KeyCapped && _initialKeyItem)
                 {

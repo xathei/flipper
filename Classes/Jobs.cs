@@ -17,12 +17,156 @@ namespace Flipper.Classes
         public bool Melee = true;
         public FFACE _fface;
         public Content _content;
+        private volatile bool _inBattle = false;
+
+        public bool InBattle()
+        {
+            return _inBattle;
+        }
+
+        public void SetBattle(bool battle)
+        {
+            _inBattle = battle;
+        }
+
+        public List<Player> Players = new List<Player>();
+
+        #region Events & Delegates
+
+        public delegate void GainEffectHandler(StatusEffect effect);
+        public delegate void LoseEffectHandler(StatusEffect effect);
+        public event GainEffectHandler GainEffect;
+        public event LoseEffectHandler LoseEffect;
+        public Thread Buffs;
+        private volatile bool _buffs = false;
+        private List<StatusEffect> _currentBuffs = new List<StatusEffect>();
+
+        #endregion
+
+
+        #region PartyMembers
+
+        public void MemberLoseEffect(string name, JobRole role, StatusEffect effect)
+        {
+            if (name == _fface.Player.Name)
+                return;
+
+           // WriteLog($"[Buffs] {name} LOST: {effect}");
+            Player player = Players.FirstOrDefault(x => x.Name == name);
+
+            if (player == null)
+            {
+                player = new Player();
+                player.Name = name;
+                Players.Add(player);
+            }
+
+            player.Role = role;
+            lock (player)
+            {
+                player._buffs.Remove(effect);
+            }
+        }
+
+        public void MemberGainEffect(string name, JobRole role, StatusEffect effect)
+        {
+            if (name == _fface.Player.Name)
+                return;
+
+            //WriteLog($"[Buffs] {name} GAIN: {effect}");
+            Player player = Players.FirstOrDefault(x => x.Name == name);
+
+            if (player == null)
+            {
+                player = new Player();
+                player.Name = name;
+                Players.Add(player);
+            }
+
+            player.Role = role;
+            lock (player)
+            {
+                player._buffs.Remove(effect);
+            }
+        }
+        #endregion
 
         public bool Engages()
         {
             return Melee;
         }
-           
+
+        public void TrackBuffs(bool track = true)
+        {
+            if (track)
+            {
+                _buffs = true;
+                Buffs = new Thread(WatchBuffs);
+                Buffs.Start();
+            }
+            else
+            {
+                _buffs = false;
+                Buffs = null;
+            }
+        }
+
+        public bool Tracking()
+        {
+            if (Buffs == null) return false;
+            if (_buffs == false) return false;
+            return true;
+        }
+
+
+        /// <summary>
+        /// Continually loops through active buffs; and invokes a LoseEffect or GainEffect event each time a buff is determined as being lost or gained.
+        /// </summary>
+        public void WatchBuffs()
+        {
+            while (_buffs)
+            {
+
+                List<StatusEffect> _lostBuffs = _currentBuffs.Where(x => true).ToList();
+                List<StatusEffect> _newBuffs = new List<StatusEffect>();
+
+                // Loop through all status effects on me
+                foreach (StatusEffect status in _fface.Player.StatusEffects)
+                {
+                    if (status == StatusEffect.Unknown || status == StatusEffect.KO)
+                        continue;
+
+                    // If I still have a certain buff; remove it from the _lostBuffs list, because I didn't lose it.
+                    if (_currentBuffs.Contains(status))
+                        _lostBuffs.Remove(status);
+
+                    // If my buff isn't in the _currentBuffs list, fire an event if the event is subscribed.
+                    if (!_currentBuffs.Contains(status))
+                    {
+                        GainEffect?.Invoke(status);
+                        _newBuffs.Add(status);
+                        
+                    }
+
+                    Thread.Sleep(100);
+                }
+
+                // Loop through all the effects I've lost
+                foreach (StatusEffect status in _lostBuffs)
+                {
+                    _currentBuffs.Remove(status);
+                    LoseEffect?.Invoke(status);
+                    Thread.Sleep(100);
+                }
+
+                // Add new buffs to the _currentBuffs list
+                var temp = _currentBuffs.Concat(_newBuffs).ToList();
+                _currentBuffs = temp;
+
+                Thread.Sleep(100);
+            }
+        }
+
         /// <summary>
         /// The furthest distance you can be from the enemy before abandoning battle.
         /// </summary>
@@ -62,7 +206,7 @@ namespace Flipper.Classes
             // Skip if the mob more than 5 yalms above or below us
             if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
             {
-                //WriteLog("[STOP!] The target is too far above or below.");
+                WriteLog("[STOP!] The target is too far above or below.");
                 return false;
             }
 
@@ -189,18 +333,18 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Amchuchu\" <me>");
-            Thread.Sleep(7000);
+            //SendCommand("/ma \"Amchuchu\" <me>");
+            //Thread.Sleep(7000);
             //SendCommand("/ma \"Elivira\" <me>");
             //Thread.Sleep(7000);
             //SendCommand("/ma \"Joachim\" <me>");
             //Thread.Sleep(7000);
-            //SendCommand("/ma \"Ulmia\" <me>");
-            //Thread.Sleep(7000);
-            SendCommand("/ma \"Apururu (UC)\" <me>");
+            SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
-            //SendCommand("/ma \"Koru-Moru\" <me>");
+            //SendCommand("/ma \"Apururu (UC)\" <me>");
             //Thread.Sleep(7000);
+            SendCommand("/ma \"Koru-Moru\" <me>");
+            Thread.Sleep(7000);
         }
 
         /// <summary>
@@ -361,7 +505,7 @@ namespace Flipper.Classes
 
 
         private Dictionary<string, DateTime> CommandsLog = new Dictionary<string, DateTime>();
-        private DateTime NextCommandAllowed = DateTime.MinValue;
+        public DateTime NextCommandAllowed = DateTime.MinValue;
 
         /// <summary>
         /// Sends commands to the server, and ensures commands are not spammed.

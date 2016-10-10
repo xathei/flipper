@@ -83,10 +83,24 @@ namespace Flipper.Classes
 
             if (_content == Content.Ambuscade)
             {
+                double aim = 0;
+
+                try
+                {
+                    aim = Convert.ToDouble(Program.mainform.rngAimForDistance.Text);
+                }
+                catch (Exception e)
+                {
+                    aim = 5.9;
+                }
+
+                var min = aim*0.95;
+                var max = aim*1.05;
+
                 if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
                 {
-                    int fail = 900;
-                    while (_fface.NPC.Distance(id) < 5 && fail > 0)
+                    int fail = 100;
+                    while (_fface.NPC.Distance(id) < min && fail > 0)
                     {
                         if (!_fface.Target.IsLocked)
                         {
@@ -95,11 +109,11 @@ namespace Flipper.Classes
                         }
                         fail--;
                         _fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                        Thread.Sleep(100);
+                        Thread.Sleep(50);
                         _fface.Windower.SendKey(KeyCode.NP_Number2, false);
                     }
                     fail = 1000;
-                    while (_fface.NPC.Distance(id) > 7 && fail > 0)
+                    while (_fface.NPC.Distance(id) > max && fail > 0)
                     {
                         if (!_fface.Target.IsLocked)
                         {
@@ -108,7 +122,7 @@ namespace Flipper.Classes
                         }
                         fail--;
                         _fface.Windower.SendKey(KeyCode.NP_Number8, true);
-                        Thread.Sleep(100);
+                        Thread.Sleep(50);
                         _fface.Windower.SendKey(KeyCode.NP_Number8, false);
                     }
                     if (_fface.Target.IsLocked)
@@ -161,18 +175,25 @@ namespace Flipper.Classes
             return true;
         }
 
-        private DateTime _lastShot = DateTime.MinValue;
+        private DateTime _nextShot = DateTime.MinValue;
 
         public override void UseAbilities()
         {
-            var delay = 5;
+
+            if (!IsAfflicted(StatusEffect.Velocity_Shot) && Ready(AbilityList.Velocity_Shot))
+            {
+                UseAbility(AbilityList.Velocity_Shot, 3, false);
+            }
+
+
+            var delay = 4900;
             try
             {
                 delay = Convert.ToInt32(Program.mainform.rngDelay.Value);
             }
             catch (Exception e)
             {
-                delay = 5;
+                delay = 4900;
             }
 
             // check ammo
@@ -202,47 +223,59 @@ namespace Flipper.Classes
                     UseAbility(AbilityList.Berserk, 2, false);
             }
 
-            if (Ready(AbilityList.Scavenge))
+            if (Ready(AbilityList.Scavenge) && _fface.Target.HPPCurrent < 25)
                 UseAbility(AbilityList.Scavenge, 2, false);
 
-            if (!IsAfflicted(StatusEffect.Velocity_Shot) && Ready(AbilityList.Velocity_Shot))
-            {
-                UseAbility(AbilityList.Velocity_Shot, 2, false);
-            }
+
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
+                if (Ready(AbilityList.Sharpshot) && Ready(AbilityList.Barrage))
+                {
+                    Thread.Sleep(2000);
+                    UseAbility(AbilityList.Sharpshot, 4, false);
+                    Thread.Sleep(4500);
+                    UseAbility(AbilityList.Barrage, 2, false);
+                    Thread.Sleep(2000);
+                }
+
                 if (!IsAfflicted(StatusEffect.Double_Shot) && Ready(AbilityList.Unlimited_Shot) && _fface.NPC.HPPCurrent(_fface.Target.ID) > 25)
                 {
                     UseAbility("Double Shot", AbilityList.Unlimited_Shot, 2, false);
                 }
-
-                if (Ready(AbilityList.Sharpshot) && Ready(AbilityList.Barrage))
-                {
-                    UseAbility(AbilityList.Sharpshot, 2, false);
-                    Thread.Sleep(2000);
-                    UseAbility(AbilityList.Barrage, 2, false);
-                    Thread.Sleep(2000);
-                }
             }
 
-            if (_fface.Player.TPCurrent <= 1000)
-                SendCommand("/ra <t>", delay);
+            if (DateTime.Now > _nextShot)
+            {
+                if ((!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent < 3000 &&
+                     _fface.Target.HPPCurrent > 50)
+                    ||
+                    _fface.Player.TPCurrent <= 1000)
+                {
+
+                    _nextShot = DateTime.Now.AddMilliseconds(delay);
+                    NextCommandAllowed = DateTime.Now.AddMilliseconds(delay);
+                    _fface.Windower.SendString("/ra <t>");
+                }
+            }
         }
 
 
         public override void UseWeaponskills()
         {
-            //if (!IsAfflicted(StatusEffect.Aftermath))
-            //{
-            //    SendCommand("/ws \"Coronach\" <t>", 3, false);
+            if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent == 3000 && _fface.Target.HPPCurrent > 50)
+            {
+                SendCommand("/ws \"Coronach\" <t>", 3, false);
+            }
+            else if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent >= 1000 &&
+                       _fface.Target.HPPCurrent <= 50)
+            {
+                SendCommand("/ws \"Coronach\" <t>", 3, false);
+            }
+            if (IsAfflicted(StatusEffect.Aftermath))
+            {
+                SendCommand("/ws \"Last Stand\" <t>", 3, false);
+            }
 
-            //}
-            //if (IsAfflicted(StatusEffect.Aftermath))
-            //{
-            //    SendCommand("/ws \"Last Stand\" <t>", 3, false);
-            //}
-
-            SendCommand("/ws \"Last Stand\" <t>", 3, false);
         }
 
     }
