@@ -156,6 +156,21 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
+            // test shit!
+            foreach (Player player in Players)
+            {
+                foreach (StatusEffect e in player.Effects)
+                {
+                    if (e == StatusEffect.Attack_Down)
+                    {
+                        if (Ready(SpellList.Erase))
+                        {
+                            UseSpell(SpellList.Erase, 6, player.Name);
+                        }
+                    }
+                }
+            }
+
             // Check to see if the player is currently not under the effect of 'Afflatus Solace' and that the ability is not on cooldown.
             if (!IsAfflicted(StatusEffect.Afflatus_Solace) && Ready(AbilityList.Afflatus_Solace))
                 if (UseAbility(AbilityList.Afflatus_Solace))
@@ -383,21 +398,6 @@ namespace Flipper.Classes
                                 // Add the current user to the dictionary and set their haste state to true.
                                 _regenStates.Add(partyMember.Value.Name, true);
                 }
-
-            // test shit!
-            foreach (Player player in Players)
-            {
-                foreach (StatusEffect e in player.Effects)
-                {
-                    if (e == StatusEffect.Attack_Down)
-                    {
-                        if (Ready(SpellList.Erase))
-                        {
-                            UseSpell(SpellList.Erase, 6, player.Name);
-                        }
-                    }
-                }
-            }
         }
 
         public override void UseWeaponskills()
