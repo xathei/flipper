@@ -1536,7 +1536,7 @@
             this.ambHomePoint.Name = "ambHomePoint";
             this.ambHomePoint.Size = new System.Drawing.Size(215, 24);
             this.ambHomePoint.TabIndex = 6;
-            this.ambHomePoint.Text = "Cape Teriggan #1.";
+            this.ambHomePoint.Text = "Den of Rancor #2.";
             // 
             // ambRoETarget
             // 
@@ -1544,7 +1544,7 @@
             this.ambRoETarget.Name = "ambRoETarget";
             this.ambRoETarget.Size = new System.Drawing.Size(215, 24);
             this.ambRoETarget.TabIndex = 0;
-            this.ambRoETarget.Text = "Greater Manticore";
+            this.ambRoETarget.Text = "Demonic Pugil";
             // 
             // Misc
             // 

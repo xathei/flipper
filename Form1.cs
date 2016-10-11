@@ -1128,6 +1128,10 @@ namespace FlipperD
             {
                 job = new Geomancer(fface, Content.Ambuscade);
             }
+            else if (fface.Player.MainJob == Job.RNG)
+            {
+                job = new Ranger(fface, Content.Ambuscade);
+            }
             else if (fface.Player.MainJob == Job.WHM)
             {
                 job = new WhiteMage(fface, Content.Ambuscade);
@@ -1159,7 +1163,7 @@ namespace FlipperD
                 }
                 Combat.Fight(targets[0].Id, new Flipper.Monster() { HitBox = 3, MonsterName = "Yilan" }, Combat.Mode.None, out fail);
                 fface.Navigator.Reset();
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
             }
         }
     }

@@ -227,7 +227,7 @@ namespace Flipper.Classes
                 UseAbility(AbilityList.Scavenge, 2, false);
 
 
-            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            if (_fface.Player.Zone != Zone.Den_of_Rancor)
             {
                 if (Ready(AbilityList.Sharpshot) && Ready(AbilityList.Barrage))
                 {
