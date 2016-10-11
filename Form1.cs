@@ -1042,21 +1042,21 @@ namespace FlipperD
             //Debug.WriteLine(fface.Timer.GetAbilityRecast(AbilityList.Ward));
         }
 
-        //private void button8_Click(object sender, EventArgs e)
-        //{
-        //    while (HasItem(6160))
-        //    {
-        //        fface.Windower.SendString("/item \"Barrels of Fun\" <me>");
-        //        Thread.Sleep(3000);
-        //    }
-        //}
+        private void button8_Click(object sender, EventArgs e)
+        {
+            while (HasItem(6160))
+            {
+                fface.Windower.SendString("/item \"Barrels of Fun\" <me>");
+                Thread.Sleep(3000);
+            }
+        }
 
         public bool HasItem(ushort itemId)
         {
             return fface.Item.GetInventoryItemCount(itemId) >= 1;
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        /*private void button8_Click(object sender, EventArgs e)
         {
             IJob job = new Bard(fface, Content.Ambuscade);
 
@@ -1066,7 +1066,7 @@ namespace FlipperD
 
                 Thread.Sleep(10);
             }
-        }
+        }*/
     }
 
     public class TargetInfo
