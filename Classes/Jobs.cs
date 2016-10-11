@@ -86,7 +86,7 @@ namespace Flipper.Classes
             player.Role = role;
             lock (player)
             {
-                player._buffs.Remove(effect);
+                player._buffs.Add(effect);
             }
         }
         #endregion

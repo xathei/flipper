@@ -1128,6 +1128,10 @@ namespace FlipperD
             {
                 job = new Geomancer(fface, Content.Ambuscade);
             }
+            else if (fface.Player.MainJob == Job.WHM)
+            {
+                job = new WhiteMage(fface, Content.Ambuscade);
+            }
 
             Combat.FailType fail = Combat.FailType.NoFail;
             Combat.SetInstance = fface;

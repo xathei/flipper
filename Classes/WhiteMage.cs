@@ -80,8 +80,8 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
-            // Do not engage if we're inside the Ambuscade Area.
-            if (_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            // Do not engage if we're inside the Specified Area.
+            if (_content == Content.Ambuscade && (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion || _fface.Player.Zone == Zone.Moh_Gates))
                 return;
 
             SendCommand("/attack <t>", 3);
@@ -156,21 +156,6 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
-            // test shit!
-            foreach (Player player in Players)
-            {
-                foreach (StatusEffect e in player.Effects)
-                {
-                    if (e == StatusEffect.Attack_Down)
-                    {
-                        if (Ready(SpellList.Erase))
-                        {
-                            UseSpell(SpellList.Erase, 6, player.Name);
-                        }
-                    }
-                }
-            }
-
             // Check to see if the player is currently not under the effect of 'Afflatus Solace' and that the ability is not on cooldown.
             if (!IsAfflicted(StatusEffect.Afflatus_Solace) && Ready(AbilityList.Afflatus_Solace))
                 if (UseAbility(AbilityList.Afflatus_Solace))
@@ -180,6 +165,59 @@ namespace Flipper.Classes
             if (_fface.Player.SubJob == Job.SCH && !IsAfflicted(StatusEffect.Light_Arts) && Ready(AbilityList.Light_Arts))
                 if (UseAbility(AbilityList.Light_Arts))
                     return;
+
+            // Check for player debuffs.
+            foreach (Player player in Players)
+            {
+                foreach (StatusEffect effect in player.Effects)
+                {
+                    switch (effect)
+                    {
+                        case StatusEffect.Curse:
+                            if (Ready(SpellList.Cursna))
+                                UseSpell(SpellList.Cursna, 6, player.Name);
+                            break;
+                        case StatusEffect.Petrification:
+                            if (Ready(SpellList.Stona))
+                                UseSpell(SpellList.Stona, 6, player.Name);
+                            break;
+                        case StatusEffect.Silence:
+                            if (Ready(SpellList.Silena))
+                                UseSpell(SpellList.Silena, 6, player.Name);
+                            break;
+                        case StatusEffect.Plague:
+                            if (Ready(SpellList.Viruna))
+                                UseSpell(SpellList.Viruna, 6, player.Name);
+                            break;
+                        case StatusEffect.Weight:
+                        case StatusEffect.Defense_Down:
+                        case StatusEffect.Magic_Def_Down:
+                        case StatusEffect.Evasion_Down:
+                        case StatusEffect.Magic_Evasion_Down:
+                        case StatusEffect.Dia:
+                        case StatusEffect.Flash:
+                        case StatusEffect.Attack_Down:
+                        case StatusEffect.Magic_Atk_Down:
+                        case StatusEffect.Bio:
+                        case StatusEffect.Bind:
+                            if (Ready(SpellList.Erase))
+                                UseSpell(SpellList.Erase, 6, player.Name);
+                            break;
+                        case StatusEffect.Paralysis:
+                            if (Ready(SpellList.Paralyna))
+                                UseSpell(SpellList.Paralyna, 6, player.Name);
+                            break;
+                        case StatusEffect.Blindness:
+                            if (Ready(SpellList.Blindna))
+                                UseSpell(SpellList.Blindna, 6, player.Name);
+                            break;
+                        case StatusEffect.Poison:
+                            if (Ready(SpellList.Poisona))
+                                UseSpell(SpellList.Poisona, 6, player.Name);
+                            break;
+                    }
+                }
+            }
 
             // Check if the player's SubJob is set to Scholar, is currently not under the effect of Aurorastorm and that the spell is not on cooldown.
             if (_fface.Player.SubJob == Job.SCH && !IsAfflicted(StatusEffect.Aurorastorm) && Ready(SpellList.Aurorastorm))
@@ -241,6 +279,10 @@ namespace Flipper.Classes
                 if (partyMember.Value.HPPCurrent <= 75 && Ready(SpellList.Cure_III))
                     UseSpell(SpellList.Cure_III, 5, partyMember.Value.Name);
             }
+
+            // Keep haste up on myself.
+            if (!IsAfflicted(StatusEffect.Haste) && Ready(SpellList.Haste))
+                UseSpell(SpellList.Haste, 8);
 
             // Check if Reraise is checked as a self action.
             if (WhiteMageSettings.SelfActions.Reraise)
@@ -351,53 +393,30 @@ namespace Flipper.Classes
                     UseSpell(WhiteMageSettings.Spells.BoostStatSpell, SpellList.Boost_VIT, 10);
             }
 
-            // Check if the player is not under the effect of Haste and if Haste is not on cooldown.
-            if (!IsAfflicted(StatusEffect.Haste) && Ready(SpellList.Haste))
-                // Check if the _hasteStates Dictionary contains more than one entry.
-                if (_hasteStates.Count > 1)
-                    // Clear the Dictionary.
-                    _hasteStates.Clear();
+            foreach (Player player in Players)
+            {
+                // Get the Character Data from the WhiteMageSettings.
+                WhiteMageCharacterActions character = WhiteMageSettings.CharacterActions.SingleOrDefault(x => x.Name == player.Name);
 
-            // Loop through each active party member in the party list.
-            foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
-                // Check if the Haste Spell is ready to be cast.
-                if (Ready(SpellList.Haste))
-                {
-                    // Get the Character Data from the WhiteMageSettings.
-                    WhiteMageCharacterActions character = WhiteMageSettings.CharacterActions .SingleOrDefault(x => x.Name == partyMember.Value.Name);
-                    // Check if the character was set.
-                    if (character != null)
-                        // Search for the party member's key in the dictionary and check to see if the value is false.
-                        if (!_hasteStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value && character.CastHasteOn)
-                            // Cast the spell on the target party member.
-                            if (UseSpell(SpellList.Haste, 8, partyMember.Value.Name))
-                                // Add the current user to the dictionary and set their haste state to true.
-                                _hasteStates.Add(partyMember.Value.Name, true);
-                }
+                // Check if the character was set.
+                if (character == null) continue;
 
-            // Check if the player is not under the effect of Haste and if Haste is not on cooldown.
-            if (!IsAfflicted(StatusEffect.Regen) && Ready(SpellList.Regen))
-                // Check if the _hasteStates Dictionary contains more than one entry.
-                if (_regenStates.Count > 1)
-                    // Clear the Dictionary.
-                    _regenStates.Clear();
+                // Check if the current player does not have haste, if we're supposed to cast haste on the player and if the spell is ready.
+                if (!player.Effects.Contains(StatusEffect.Haste) && character.CastHasteOn && Ready(SpellList.Haste))
+                    UseSpell(SpellList.Haste, 8, player.Name);
 
-            // Loop through each active party member in the party list.
-            foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
-                // Check if the Haste Spell is ready to be cast.
-                if (Ready(SpellList.Regen_IV))
-                {
-                    // Get the Character Data from the WhiteMageSettings.
-                    WhiteMageCharacterActions character = WhiteMageSettings.CharacterActions.SingleOrDefault(x => x.Name == partyMember.Value.Name);
-                    // Check if the character was set.
-                    if (character != null)
-                        // Search for the party member's key in the dictionary and check to see if the value is false.
-                        if (!_regenStates.SingleOrDefault(x => x.Key == partyMember.Value.Name).Value && character.CastRegenOn)
-                            // Cast the spell on the target party member.
-                            if (UseSpell(SpellList.Regen_IV, 8, partyMember.Value.Name))
-                                // Add the current user to the dictionary and set their haste state to true.
-                                _regenStates.Add(partyMember.Value.Name, true);
-                }
+                // Check if the current player does not have regen, if we're supposed to cast regen on the player and if the spell is ready.
+                if (!player.Effects.Contains(StatusEffect.Regen) && character.CastRegenOn && Ready(SpellList.Regen_IV))
+                    UseSpell(SpellList.Regen_IV, 8, player.Name);
+
+                // Check if the current player has protect effect and if the spell is ready.
+                if (!player.Effects.Contains(StatusEffect.Protect) && Ready(SpellList.Protect_V))
+                    UseSpell(SpellList.Protect_V, 8, player.Name);
+
+                // Check if the current player has shell effect and if the spell is ready.
+                if (!player.Effects.Contains(StatusEffect.Shell) && Ready(SpellList.Shell_V))
+                    UseSpell(SpellList.Shell_V, 8, player.Name);
+            }
         }
 
         public override void UseWeaponskills()
