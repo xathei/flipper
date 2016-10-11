@@ -144,6 +144,7 @@ namespace Flipper
             _fighting = true;
             float targetX = 0;
             float targetZ = 0;
+            job.SetBattle(true);
 
             fface.Navigator.Reset();
 
@@ -189,11 +190,22 @@ namespace Flipper
             // battle routine
             while (job.CanStillAttack(target) && _fighting)
             {
+
+                while (fface.Player.Status == Status.Fighting && fface.Target.ID != target)
+                {
+                    fface.Windower.SendString("/attackoff");
+                    Thread.Sleep(3000);
+                    fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+                    Thread.Sleep(1000);
+                }
+
                 // TARGET
                 Target(target);
 
                 // FACE TARGET
                 fface.Navigator.FaceHeading(target);
+
+
 
                 // CLAIM
                 if (!fface.NPC.IsClaimed(target) && _fighting)
@@ -264,10 +276,12 @@ namespace Flipper
                 }
             }
 
-            if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
-
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
+            fface.Windower.SendKey(KeyCode.NP_Number4, false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
+            job.SetBattle(false);
             _fighting = false;
-
+            if (!_fighting || fface.NPC.HPPCurrent(target) != 0) return false;
             Black.Clear();
             return true;
         }

@@ -115,39 +115,30 @@ namespace FlipperD
 
         public void UseWeaponskills()
         {
-
-            if (fface.Target.HPPCurrent < 40)
+            if (fface.Player.TPCurrent > 1000)
             {
-                SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
+                if (mode == Mode.Dynamis)
+                {
+                    SendCommand("/ws \"" + Program.mainform.uxDynamisWeaponskill.Text + "\" <t>", 2);
+                }
+                else
+                {
+                    if ((Program.mainform.uxAM3.Checked && IsAfflicted(StatusEffect.Aftermath_lvl3) &&
+                         fface.Player.TPCurrent < 3000) || !Program.mainform.uxAM3.Checked)
+                    {
+                        if (Program.mainform.uxWaitFor2000TP.Checked && fface.Player.TPCurrent >= 2000)
+                            SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
+                        else if (!Program.mainform.uxWaitFor2000TP.Checked)
+                        {
+                                SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
+                        }
+                    }
+                    else if (Program.mainform.uxAM3.Checked && fface.Player.TPCurrent == 3000 && !IsAfflicted(StatusEffect.Aftermath_lvl3))
+                    {
+                        SendCommand("/ws \"" + Program.mainform.uxAMWS.Text + "\" <t>", 2);
+                    }
+                }
             }
-
-            //if (fface.Player.TPCurrent > 1000)
-            //{
-            //    if (mode == Mode.Dynamis)
-            //    {
-            //        SendCommand("/ws \"" + Program.mainform.uxDynamisWeaponskill.Text + "\" <t>", 2);
-            //    }
-            //    else
-            //    {
-            //        if ((Program.mainform.uxAM3.Checked && IsAfflicted(StatusEffect.Aftermath_lvl3) &&
-            //             fface.Player.TPCurrent < 3000) || !Program.mainform.uxAM3.Checked)
-            //        {
-            //            if (Program.mainform.uxWaitFor2000TP.Checked && fface.Player.TPCurrent >= 2000)
-            //                SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
-            //            else if (!Program.mainform.uxWaitFor2000TP.Checked)
-            //            {
-            //                if (fface.Target.HPPCurrent < 35)
-            //                {
-            //                    SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
-            //                }
-            //            }
-            //        }
-            //        else if (Program.mainform.uxAM3.Checked && fface.Player.TPCurrent == 3000 && !IsAfflicted(StatusEffect.Aftermath_lvl3))
-            //        {
-            //            SendCommand("/ws \"" + Program.mainform.uxAMWS.Text + "\" <t>", 2);
-            //        }
-            //    }
-            //}
         }
 
         public void Healing()

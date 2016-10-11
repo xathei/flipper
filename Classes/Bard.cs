@@ -34,8 +34,6 @@ namespace Flipper.Classes
                 CharacterFolder = _fface.Player.Name
             };
 
-            Melee = false;
-
             // Check if the .json settings file exists.
             if (Utilities.IsFileValid(BardSettings.SettingsFolder + BardSettings.CharacterFolder + BardSettings.FileName))
                 BardSettings = JsonConvert.DeserializeObject<BardSettings>(Utilities.GetFileContents(BardSettings.SettingsFolder + BardSettings.CharacterFolder + BardSettings.FileName));
@@ -65,7 +63,11 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
-            return;
+            // Do not engage if we're inside the Ambuscade Area.
+            if (_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                return;
+
+            SendCommand("/attack <t>", 3);
         }
 
         public override bool CanStillAttack(int id)

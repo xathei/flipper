@@ -75,13 +75,13 @@ namespace Flipper.Classes
                     return false;
 
                 _fface.Navigator.Reset();
-                _fface.Navigator.DistanceTolerance = monster.HitBox * 0.5;
+                _fface.Navigator.DistanceTolerance = monster.HitBox * 0.95;
                 _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
 
             }
 
             bool wasLocked = true;
-            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            if (_fface.Player.Zone != Zone.Cape_Teriggan)
             {
                 var difference = GetSADifference(id);
                 while (difference < 66 || difference > 89)
@@ -108,7 +108,7 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
-            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+            if (_fface.Player.Zone != Zone.Cape_Teriggan | _fface.Player.Zone != Zone.Den_of_Rancor)
             {
                 double targetDistanceFromLuopan = 0;
                 List<TargetInfo> luopan = FindTargetAll("luopan", 30);
@@ -168,6 +168,22 @@ namespace Flipper.Classes
                         Thread.Sleep(2500);
                         UseAbility(AbilityList.Life_Cycle, 2, false);
                     }
+            }
+            if (_fface.Player.SubJob == Job.WHM)
+            {
+                foreach(Player player in Players)
+                {
+                    foreach(StatusEffect e in player.Effects)
+                    {
+                        if (e == StatusEffect.Attack_Down)
+                        {
+                            if (Ready(SpellList.Erase))
+                            {
+                                UseSpell(SpellList.Erase, 4, player.Name);
+                            }
+                        }
+                    }
+                }
             }
         }
 
