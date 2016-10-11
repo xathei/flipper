@@ -440,9 +440,9 @@ namespace Flipper
 
         public bool ObtainKI()
         {
-            Combat.LoadBlacklist(Zone.Cape_Teriggan);
-            Combat.LoadCoords(Zone.Cape_Teriggan);
-            Combat.LoadHotspots(Zone.Cape_Teriggan);
+            Combat.LoadBlacklist(fface.Player.Zone);
+            Combat.LoadCoords(fface.Player.Zone);
+            Combat.LoadHotspots(fface.Player.Zone);
             List<Hotspot> hotspots = Combat.GetHotspots();
             List<Node> path = new List<Node>();
             int hotspotIndex = 0;

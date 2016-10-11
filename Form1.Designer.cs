@@ -1421,7 +1421,7 @@
             this.ambTarget.Name = "ambTarget";
             this.ambTarget.Size = new System.Drawing.Size(203, 24);
             this.ambTarget.TabIndex = 0;
-            this.ambTarget.Text = "Lycaon";
+            this.ambTarget.Text = "Mnyiri";
             // 
             // ambStartButton
             // 
@@ -1510,7 +1510,7 @@
             this.ambRoEHitbox.Name = "ambRoEHitbox";
             this.ambRoEHitbox.Size = new System.Drawing.Size(215, 24);
             this.ambRoEHitbox.TabIndex = 2;
-            this.ambRoEHitbox.Text = "4.5";
+            this.ambRoEHitbox.Text = "3.0";
             // 
             // ambLblRoETarget
             // 
