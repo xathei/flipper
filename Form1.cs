@@ -390,7 +390,7 @@ namespace FlipperD
                     Thread.Sleep(5000);
                 }
 
-                int rubicund = (int)vwRubicundCellNum.Value;
+                int rubicund = (int) vwRubicundCellNum.Value;
                 int cobalt = (int) vwCobaltCellNumber.Value;
 
                 while (rubicund > 0 && HasItem(3435))
@@ -462,72 +462,79 @@ namespace FlipperD
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
                 }
 
-                    List<TargetInfo> mobs = new List<TargetInfo>();
+                List<TargetInfo> mobs = new List<TargetInfo>();
 
-                    while (!mobs.Any())
+                while (!mobs.Any())
+                {
+                    mobs = FindTarget(vwTargetName.Text);
+                    Thread.Sleep(100);
+                }
+
+                if (mobs.Any())
+                {
+                    fface.Windower.SendString("/item \"Stalwart's Tonic\" <me>");
+                    Thread.Sleep(4200);
+                    fface.Windower.SendString("/item \"Fanatic's Drink\" <me>");
+                    Thread.Sleep(4200);
+                    fface.Windower.SendString("/item \"Champion's Tonic\" <me>");
+                    Thread.Sleep(4200);
+                    fface.Windower.SendString("/item \"Dusty Wing\" <me>");
+                    Thread.Sleep(4200);
+
+                    TargetInfo target = mobs[0];
+
+                    Combat.SetInstance = fface;
+                    Combat.SetJob = job;
+                    Flipper.Monster m = new Flipper.Monster() {HitBox = 4, MonsterName = vwTargetName.Text};
+                    Combat.FailType f = Combat.FailType.NoFail;
+                    Combat.Fight(target.Id, m, Combat.Mode.None, out f);
+
+                    ChestFailed:
+
+                    List<TargetInfo> chests = new List<TargetInfo>();
+
+                    while (!chests.Any())
                     {
-                        mobs = FindTarget(vwTargetName.Text);
+                        chests = FindTarget("Riftworn", 15);
                         Thread.Sleep(100);
                     }
 
-                    if (mobs.Any())
+                    TargetInfo chest = chests[0];
+                    while (fface.Target.ID != chest.Id || fface.Target.Name != "Riftworn Pyxis")
                     {
-                        fface.Windower.SendString("/item \"Stalwart's Tonic\" <me>");
-                        Thread.Sleep(4200);
-                        fface.Windower.SendString("/item \"Fanatic's Drink\" <me>");
-                        Thread.Sleep(4200);
-                        fface.Windower.SendString("/item \"Champion's Tonic\" <me>");
-                        Thread.Sleep(4200);
-                        fface.Windower.SendString("/item \"Dusty Wing\" <me>");
-                        Thread.Sleep(4200);
-
-                        TargetInfo target = mobs[0];
-
-                        Combat.SetInstance = fface;
-                        Combat.SetJob = job;
-                        Flipper.Monster m = new Flipper.Monster() {HitBox = 4, MonsterName = vwTargetName.Text};
-                        Combat.FailType f = Combat.FailType.NoFail;
-                        Combat.Fight(target.Id, m, Combat.Mode.None, out f);
-
-                        List<TargetInfo> chests = new List<TargetInfo>();
-
-                        while (!chests.Any())
-                        {
-                            chests = FindTarget("Riftworn", 15);
-                            Thread.Sleep(100);
-                        }
-
-                        TargetInfo chest = chests[0];
-                        while (fface.Target.ID != chest.Id && fface.Target.Name != "Riftworn Pyxis")
-                        {
-                            fface.Navigator.FaceHeading(chest.Id);
-                            Thread.Sleep(3000);
-                            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(100);
-                            fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                            Thread.Sleep(500);
-                            fface.Target.SetNPCTarget(chest.Id);
-                            Thread.Sleep(500);
-                            fface.Target.SetNPCTarget(chest.Id);
-                            fface.Windower.SendString("/target <t>");
-                            Thread.Sleep(100);
-                            fface.Windower.SendString("/lockon");
-                            Thread.Sleep(5000);
-                        }
-
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                        Thread.Sleep(4000);
-                        fface.Windower.SendKeyPress(KeyCode.RightArrow);
+                        fface.Navigator.FaceHeading(chest.Id);
+                        Thread.Sleep(3000);
+                        fface.Windower.SendKeyPress(KeyCode.EscapeKey);
+                        Thread.Sleep(100);
+                        fface.Windower.SendKeyPress(KeyCode.EscapeKey);
                         Thread.Sleep(500);
-                        fface.Windower.SendKeyPress(KeyCode.RightArrow);
+                        fface.Target.SetNPCTarget(chest.Id);
                         Thread.Sleep(500);
-                        fface.Windower.SendKeyPress(KeyCode.RightArrow);
-                        Thread.Sleep(500);
-                        fface.Windower.SendKeyPress(KeyCode.RightArrow);
-                        Thread.Sleep(1500);
-                        fface.Windower.SendKeyPress(KeyCode.EnterKey);
+                        fface.Target.SetNPCTarget(chest.Id);
+                        fface.Windower.SendString("/target <t>");
+                        Thread.Sleep(100);
+                        fface.Windower.SendString("/lockon");
                         Thread.Sleep(1000);
                     }
+
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
+                    Thread.Sleep(4000);
+
+
+                    if (!fface.Menu.IsOpen)
+                        goto ChestFailed;
+
+                    fface.Windower.SendKeyPress(KeyCode.RightArrow);
+                    Thread.Sleep(500);
+                    fface.Windower.SendKeyPress(KeyCode.RightArrow);
+                    Thread.Sleep(500);
+                    fface.Windower.SendKeyPress(KeyCode.RightArrow);
+                    Thread.Sleep(500);
+                    fface.Windower.SendKeyPress(KeyCode.RightArrow);
+                    Thread.Sleep(1500);
+                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
+                    Thread.Sleep(1000);
+                }
             }
         }
 
