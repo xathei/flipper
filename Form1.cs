@@ -1139,6 +1139,10 @@ namespace FlipperD
             {
                 job = new Ranger(fface, Content.Ambuscade);
             }
+            else if (fface.Player.MainJob == Job.WHM)
+            {
+                job = new WhiteMage(fface, Content.Ambuscade);
+            }
 
             Combat.FailType fail = Combat.FailType.NoFail;
             Combat.SetInstance = fface;
