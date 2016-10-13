@@ -355,7 +355,7 @@ namespace FlipperD
             LoadJobClass();
             while (unity)
             {
-                if (!HasItem(3853) || fface.Item.InventoryCount >= 78)
+                if ((!HasItem(3853) && vwLeader.Checked) || fface.Item.InventoryCount >= 78)
                 {
                     fface.Windower.SendString("/p I'm done!");
                     Thread.Sleep(1000);
