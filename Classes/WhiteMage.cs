@@ -189,7 +189,6 @@ namespace Flipper.Classes
                             if (Ready(SpellList.Viruna))
                                 UseSpell(SpellList.Viruna, 6, player.Name);
                             break;
-                        case StatusEffect.Weight:
                         case StatusEffect.Defense_Down:
                         case StatusEffect.Magic_Def_Down:
                         case StatusEffect.Evasion_Down:
@@ -198,8 +197,10 @@ namespace Flipper.Classes
                         case StatusEffect.Flash:
                         case StatusEffect.Attack_Down:
                         case StatusEffect.Magic_Atk_Down:
+                        case StatusEffect.Slow:
                         case StatusEffect.Bio:
                         case StatusEffect.Bind:
+                        case StatusEffect.Weight:
                             if (Ready(SpellList.Erase))
                                 UseSpell(SpellList.Erase, 6, player.Name);
                             break;
