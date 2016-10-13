@@ -16,6 +16,50 @@ namespace Flipper.Classes
         private int _bullyTimer;
         private ThiefForm settingsForm = new ThiefForm();
 
+        /// <summary>
+        /// Determines if the character is still engaged and can still attack their target.
+        /// Called periodically during combat.
+        /// </summary>
+        /// <param name="id">The ID of your target</param>
+        public override bool CanStillAttack(int id)
+        {
+
+            if (!IsRendered(id))
+            {
+                //WriteLog("[STOP!] The target isn't rendered.");
+                return false;
+            }
+
+
+            //if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
+            //{
+            //    //WriteLog("[STOP!] The target is claimed to someone else.");
+            //    return false;
+            //}
+
+            // Skip if the mob more than 5 yalms above or below us
+            if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
+            {
+                WriteLog("[STOP!] The target is too far above or below.");
+                return false;
+            }
+
+            // Skip if the NPC's HP is 0
+            if (_fface.NPC.HPPCurrent(id) == 0)
+            {
+                //WriteLog("[STOP!] Target HP is 0 :(");
+                return false;
+            }
+
+            if (DistanceTo(id) > MaxDistance() && _fface.Player.Status == Status.Fighting)
+            {
+                //WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
+                return false;
+            }
+
+            return true;
+        }
+
 
         public Thief(FFACE instance, Content content)
         {
