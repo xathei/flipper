@@ -355,6 +355,12 @@ namespace FlipperD
             LoadJobClass();
             while (unity)
             {
+                if (!HasItem(3853) || fface.Item.InventoryCount >= 78)
+                {
+                    fface.Windower.SendString("/p I'm done!");
+                    Thread.Sleep(1000);
+                    break;
+                }
 
                 fface.Windower.SendString("/echo ============= New Cycle.... ==============");
 
@@ -500,6 +506,13 @@ namespace FlipperD
                     }
 
                     TargetInfo chest = chests[0];
+
+                    if (chest.Distance > 5)
+                    {
+                        fface.Navigator.DistanceTolerance = 4;
+                        fface.Navigator.GotoNPC(chest.Id, 4000);
+                    }
+
                     while (fface.Target.ID != chest.Id || fface.Target.Name != "Riftworn Pyxis")
                     {
                         fface.Navigator.FaceHeading(chest.Id);
