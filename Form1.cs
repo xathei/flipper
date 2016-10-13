@@ -1186,6 +1186,11 @@ namespace FlipperD
                 Thread.Sleep(1000);
             }
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            fface.Windower.SendString("/echo Menu ID:" + fface.Menu.DialogID);
+        }
     }
 
     public class TargetInfo
