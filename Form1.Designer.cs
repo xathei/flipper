@@ -196,6 +196,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1183,6 +1184,7 @@
             // 
             // Ambuscade
             // 
+            this.Ambuscade.Controls.Add(this.checkBox3);
             this.Ambuscade.Controls.Add(this.label21);
             this.Ambuscade.Controls.Add(this.label20);
             this.Ambuscade.Controls.Add(this.rngAimForDistance);
@@ -2036,6 +2038,16 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(394, 193);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(156, 21);
+            this.checkBox3.TabIndex = 17;
+            this.checkBox3.Text = "Preferred Stunner";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
@@ -2286,6 +2298,7 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox vwTargetName;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

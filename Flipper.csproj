@@ -100,6 +100,7 @@
     <Compile Include="Classes\BardForm.Designer.cs">
       <DependentUpon>BardForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\BlackMage.cs" />
     <Compile Include="Classes\BlueMage.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Ranger.cs" />

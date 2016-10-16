@@ -21,11 +21,11 @@ namespace Flipper.Classes
 
         public override bool CanStun()
         {
-            if (Ready(AbilityList.Shield_Bash))
-                return true;
+           // if (Ready(AbilityList.Shield_Bash))
+             //   return true;
 
-            if (_fface.Player.TPCurrent > 1000)
-                return true;
+            //if (_fface.Player.TPCurrent > 1000)
+            //    return true;
 
             return false;
         }

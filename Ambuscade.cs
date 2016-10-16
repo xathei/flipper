@@ -56,7 +56,7 @@ namespace Flipper
         private List<string> events = new List<string>()
         {
             "readies Hypnic Lamp",
-            "readies Bewitching Lantern"
+            "readies Bewitching"
         };
 
         public IJob JobClass => job;
@@ -111,6 +111,9 @@ namespace Flipper
                     break;
                 case Job.RUN:
                     job = new RuneFencer(fface, Content.Ambuscade);
+                    break;
+                case Job.BLM:
+                    job = new BlackMage(fface, Content.Ambuscade);
                     break;
             }
         }
