@@ -20,13 +20,16 @@ namespace Flipper.Classes
 
         public override bool CanStun()
         {
-            return true;
+            if (Ready(SpellList.Sudden_Lunge) && _fface.Player.MPCurrent >= 18 && !IsAfflicted(StatusEffect.Silence))
+                return true;
+            else
+                return false;
             // return true if your timers are up, you're not silenced, and your have MP
         }
 
         public override void DoStun()
         {
-            // write code to stun here
+           UseSpell(SpellList.Sudden_Lunge, 4, true);
         }
 
         public override void Warp()

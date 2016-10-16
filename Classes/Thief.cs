@@ -136,7 +136,7 @@ namespace Flipper.Classes
             // stand behind the mob.
             if (_content == Content.Ambuscade && _fface.Player.Zone != Zone.Cape_Teriggan)
             {
-                while (Math.Abs(GetSADifference(_fface.Target.ID)) > 10 && CanStillAttack(_fface.Target.ID) && _fface.Target.HPPCurrent > 0)
+                while (Math.Abs(GetSADifference(_fface.Target.ID)) > 170 && CanStillAttack(_fface.Target.ID) && _fface.Target.HPPCurrent > 0)//SAdifference to 170-180 to stand in front
                 {
                     _fface.Windower.SendKey(KeyCode.NP_Number4, true);
                     Thread.Sleep(50);
