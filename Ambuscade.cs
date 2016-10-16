@@ -222,11 +222,13 @@ namespace Flipper
                     if (!_canStun && job.CanStun())
                     {
                         _canStun = true;
+                        WriteLog("[STAHP!] Server => I CAN STUN!");
                         client.Send("STUN 1");
                     }
                     else if (_canStun && !job.CanStun())
                     {
                         _canStun = false;
+                        WriteLog("[STAHP!] Server => I CAN NOT STUN!");
                         client.Send("STUN 0");
                     }
                 }
@@ -242,7 +244,12 @@ namespace Flipper
             // It's my turn to stun! I'm gonna stun.
             if (_AwaitingStun)
             {
+                WriteLog("[STAHP] Matched (Stunning!...): " + match);
                 job.DoStun();
+            }
+            else
+            {
+                WriteLog("[STAHP] Matched (off doody): " + match);
             }
         }
 
