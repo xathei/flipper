@@ -19,6 +19,29 @@ namespace Flipper.Classes
         }
 
 
+        public override bool CanStun()
+        {
+            if (Ready(AbilityList.Shield_Bash))
+                return true;
+
+            if (_fface.Player.TPCurrent > 1000)
+                return true;
+
+            return false;
+        }
+
+        public override void DoStun()
+        {
+            if (Ready(AbilityList.Shield_Bash))
+            {
+                UseAbility(AbilityList.Shield_Bash, 2, true);
+            }
+            else if (_fface.Player.TPCurrent > 1000)
+            {
+                SendCommand("/ws \"Flat Blade\" <t>", 2);
+            }
+        }
+
         public override void Engage()
         {
             SendCommand("/attack <t>", 3);
@@ -197,7 +220,7 @@ namespace Flipper.Classes
                 }
             }
 
-            if (_fface.Player.Name == "Udoopudooo")
+            if (_fface.Player.Name == "Udoopudooo" || _fface.Player.Name == "Dirtaru")
             {
                 SendCommand("/ws \"Savage Blade\" <t>", 3, false);
             }

@@ -18,6 +18,17 @@ namespace Flipper.Classes
         public FFACE _fface;
         public Content _content;
         private volatile bool _inBattle = false;
+        public bool HaltActions = false;
+
+        public void SetHaltActions(bool actions)
+        {
+            HaltActions = actions;
+        }
+
+        public bool GetHaltActions()
+        {
+            return HaltActions;
+        }
 
         public bool InBattle()
         {
@@ -27,6 +38,11 @@ namespace Flipper.Classes
         public void SetBattle(bool battle)
         {
             _inBattle = battle;
+        }
+
+        public virtual bool CanStun()
+        {
+            return false;
         }
 
         public List<Player> Players = new List<Player>();
@@ -181,6 +197,11 @@ namespace Flipper.Classes
             {
                 return 20;
             }
+        }
+
+        public virtual void DoStun()
+        {
+            
         }
 
         /// <summary>
