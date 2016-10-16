@@ -31,7 +31,7 @@ namespace Flipper.Classes
 
         public override void DoStun()
         {
-            UseSpell(SpellList.Stun, 4, true);
+            SendCommand("/ma \"Sudden Lunge\" <t>", 4, true);
         }
 
         public override int MaxDistance()

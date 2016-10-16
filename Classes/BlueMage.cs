@@ -29,7 +29,7 @@ namespace Flipper.Classes
 
         public override void DoStun()
         {
-           UseSpell(SpellList.Sudden_Lunge, 4, true);
+            SendCommand("/ma \"Sudden Lunge\" <t>", 4, true);
         }
 
         public override void Warp()
@@ -151,7 +151,7 @@ namespace Flipper.Classes
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
                 var difference = GetSADifference(id);
-                while ((difference < 66 || difference > 89) && _fface.NPC.HPPCurrent(id) > 0)
+                while ((difference < 180 || difference > 170) && _fface.NPC.HPPCurrent(id) > 0)
                 {
                     if (!_fface.Target.IsLocked)
                     {
