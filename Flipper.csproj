@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Ambuscade.cs" />
     <Compile Include="Battle.cs" />
+    <Compile Include="Chat.cs" />
     <Compile Include="Classes\Bard.cs" />
     <Compile Include="Classes\BardForm.cs">
       <SubType>Form</SubType>

@@ -191,6 +191,11 @@ namespace Flipper
             while (job.CanStillAttack(target) && _fighting)
             {
 
+                if (job.GetHaltActions())
+                {
+                    Thread.Sleep(1);
+                }
+
                 while (fface.Player.Status == Status.Fighting && fface.Target.ID != target)
                 {
                     fface.Windower.SendString("/attackoff");

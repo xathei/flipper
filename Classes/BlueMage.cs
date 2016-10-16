@@ -18,6 +18,17 @@ namespace Flipper.Classes
             Melee = true;
         }
 
+        public override bool CanStun()
+        {
+            return true;
+            // return true if your timers are up, you're not silenced, and your have MP
+        }
+
+        public override void DoStun()
+        {
+            // write code to stun here
+        }
+
         public override void Warp()
         {
             _fface.Windower.SendString("//lua unload gearswap");

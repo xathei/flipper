@@ -31,6 +31,10 @@ namespace Flipper.Classes
         void SetBattle(bool battle);
         void TrackBuffs(bool track);
         bool Tracking();
+        void DoStun();
+        bool CanStun();
+        void SetHaltActions(bool actions);
+        bool GetHaltActions();
 
         // This event is fired when the user gains a status effect
         event Jobs.GainEffectHandler GainEffect;

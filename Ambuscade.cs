@@ -53,6 +53,12 @@ namespace Flipper
         public volatile bool _KeyCapped = false;
         public int PartyID = 0;
 
+        private List<string> events = new List<string>()
+        {
+            "readies Hypnic Lamp",
+            "readies Bewitching Lantern"
+        };
+
         public IJob JobClass => job;
         #endregion
 
@@ -157,6 +163,11 @@ namespace Flipper
             Combat.SetInstance = fface;
             Combat.SetJob = job;
 
+            Chat.SetInstance(fface);
+            Chat.SetMatches(events);
+            Chat.Watch(true);
+            Chat.FoundMatchHandler += Chat_FoundMatchHandler;
+
             // Network and Other Settings:
             _Leader = settings.Leader;
             _HumanPlayers = settings.PartyCount;
@@ -196,6 +207,43 @@ namespace Flipper
 
             Thread Safe = new Thread(SafePong);
             Safe.Start();
+
+            Thread Status = new Thread(DoReportStunStatus);
+            Status.Start();
+        }
+
+
+        private void DoReportStunStatus()
+        {
+            while (_ambuscade)
+            {
+                if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                {
+                    if (!_canStun && job.CanStun())
+                    {
+                        _canStun = true;
+                        client.Send("STUN 1");
+                    }
+                    else if (_canStun && !job.CanStun())
+                    {
+                        _canStun = false;
+                        client.Send("STUN 0");
+                    }
+                }
+                Thread.Sleep(1);
+            }
+        }
+
+        private bool _canStun = false;
+        private bool _AwaitingStun = false;
+
+        private void Chat_FoundMatchHandler(string match)
+        {
+            // It's my turn to stun! I'm gonna stun.
+            if (_AwaitingStun)
+            {
+                job.DoStun();
+            }
         }
 
         public void SafePong()
@@ -258,6 +306,18 @@ namespace Flipper
                 w.WriteLine("---------------------");
                 WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
                 WriteLog("---------------------");
+            }
+
+            if (token[0] == "AWAIT_STUN")
+            {
+                _AwaitingStun = true;
+                job.SetHaltActions(true);
+            }
+
+            if (token[0] == "STOP_AWAIT_STUN")
+            {
+                _AwaitingStun = false;
+                job.SetHaltActions(false);
             }
 
             if (token[0] == "GAIN_BUFF")

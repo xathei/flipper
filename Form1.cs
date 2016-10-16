@@ -386,14 +386,14 @@ namespace FlipperD
                     fface.Windower.SendKeyPress(KeyCode.EscapeKey);
                     Thread.Sleep(100);
                     fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                     fface.Target.SetNPCTarget(rift.Id);
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                     fface.Target.SetNPCTarget(rift.Id);
                     fface.Windower.SendString("/target <t>");
                     Thread.Sleep(100);
                     fface.Windower.SendString("/lockon");
-                    Thread.Sleep(5000);
+                    Thread.Sleep(600);
                 }
 
                 int rubicund = (int) vwRubicundCellNum.Value;
@@ -403,27 +403,27 @@ namespace FlipperD
                 {
                     rubicund--;
                     fface.Windower.SendString("/item \"Rubicund Cell\" <t>");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(900);
                 }
 
                 while (cobalt > 0 && HasItem(3434))
                 {
                     cobalt--;
                     fface.Windower.SendString("/item \"Cobalt Cell\" <t>");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(900);
                 }
 
                 if (vwLeader.Checked)
                 {
+                    Thread.Sleep(1000);
+
                     int displacer = (int) vwDisplacersNum.Value;
                     while (displacer > 0 && HasItem(3853))
                     {
                         displacer--;
                         fface.Windower.SendString("/item \"Phase Displacer\" <t>");
-                        Thread.Sleep(1000);
+                        Thread.Sleep(1500);
                     }
-
-                    fface.Windower.SendKeyPress(KeyCode.EnterKey);
                     Thread.Sleep(700);
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
                     Thread.Sleep(700);
@@ -436,7 +436,7 @@ namespace FlipperD
                     while (fface.Menu.DialogOptionIndex != 1)
                     {
                         fface.Windower.SendKeyPress(KeyCode.DownArrow);
-                        Thread.Sleep(500);
+                        Thread.Sleep(300);
                     }
 
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -449,7 +449,7 @@ namespace FlipperD
                     while (fface.Menu.DialogOptionIndex != 0)
                     {
                         fface.Windower.SendKeyPress(KeyCode.UpArrow);
-                        Thread.Sleep(500);
+                        Thread.Sleep(300);
                     }
 
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -462,7 +462,7 @@ namespace FlipperD
                     while (fface.Menu.DialogOptionIndex != 2)
                     {
                         fface.Windower.SendKeyPress(KeyCode.DownArrow);
-                        Thread.Sleep(500);
+                        Thread.Sleep(300);
                     }
 
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -481,8 +481,6 @@ namespace FlipperD
                     fface.Windower.SendString("/item \"Stalwart's Tonic\" <me>");
                     Thread.Sleep(4200);
                     fface.Windower.SendString("/item \"Fanatic's Drink\" <me>");
-                    Thread.Sleep(4200);
-                    fface.Windower.SendString("/item \"Champion's Tonic\" <me>");
                     Thread.Sleep(4200);
                     fface.Windower.SendString("/item \"Dusty Wing\" <me>");
                     Thread.Sleep(4200);
@@ -516,13 +514,13 @@ namespace FlipperD
                     while (fface.Target.ID != chest.Id || fface.Target.Name != "Riftworn Pyxis")
                     {
                         fface.Navigator.FaceHeading(chest.Id);
-                        Thread.Sleep(3000);
+                        Thread.Sleep(500);
                         fface.Windower.SendKeyPress(KeyCode.EscapeKey);
                         Thread.Sleep(100);
                         fface.Windower.SendKeyPress(KeyCode.EscapeKey);
-                        Thread.Sleep(500);
+                        Thread.Sleep(100);
                         fface.Target.SetNPCTarget(chest.Id);
-                        Thread.Sleep(500);
+                        Thread.Sleep(100);
                         fface.Target.SetNPCTarget(chest.Id);
                         fface.Windower.SendString("/target <t>");
                         Thread.Sleep(100);
@@ -533,20 +531,19 @@ namespace FlipperD
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
                     Thread.Sleep(4000);
 
-
                     if (!fface.Menu.IsOpen)
                         goto ChestFailed;
 
                     fface.Windower.SendKeyPress(KeyCode.RightArrow);
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     fface.Windower.SendKeyPress(KeyCode.RightArrow);
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     fface.Windower.SendKeyPress(KeyCode.RightArrow);
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     fface.Windower.SendKeyPress(KeyCode.RightArrow);
-                    Thread.Sleep(1500);
+                    Thread.Sleep(300);
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
             }
         }
@@ -743,7 +740,7 @@ namespace FlipperD
                 while (!junction.Any() && _unity)
                 {
                     junction = FindTarget("Ethereal Junc");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
 
                 var ej = junction[0];
@@ -763,11 +760,11 @@ namespace FlipperD
                     fface.Target.SetNPCTarget(ej.Id);
                     Thread.Sleep(100);
                     fface.Navigator.FaceHeading(ej.Id);
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                     fface.Windower.SendString("/target <t>");
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
 
                 fface.Windower.SendKeyPress(KeyCode.EnterKey);
 
