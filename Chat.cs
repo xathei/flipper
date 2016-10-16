@@ -39,6 +39,7 @@ namespace Flipper
             {
                 _activated = true;
                 ChatThread = new Thread(DoChat);
+                ChatThread.Start();
             }
             else
             {
