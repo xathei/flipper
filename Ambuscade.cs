@@ -56,7 +56,10 @@ namespace Flipper
         private List<string> events = new List<string>()
         {
             "readies Hypnic Lamp",
-            "readies Bewitching"
+            "readies Bewitching",
+            "readies Seismic",
+            "readies Leeching",
+            "readies Vile"
         };
 
         public IJob JobClass => job;
@@ -327,7 +330,7 @@ namespace Flipper
 
             if (token[0] == "STOP_AWAIT_STUN")
             {
-                WriteLog("[STAHP] =========== I -NOT- UP FOR STUN =======");
+                WriteLog("[STAHP] =========== I /NOT/ UP FOR STUN =======");
                 _AwaitingStun = false;
                 job.SetHaltActions(false);
             }

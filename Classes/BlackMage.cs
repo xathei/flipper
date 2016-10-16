@@ -116,7 +116,7 @@ namespace Flipper.Classes
             }
             if (_fface.Player.MPCurrent <= 200 && Ready(AbilityList.Convert) && (IsAfflicted(StatusEffect.Stoneskin) || _fface.Player.MPCurrent <= 100))
             {
-                UseSpell(SpellList.Stoneskin, 10, false);
+                UseAbility(AbilityList.Convert, 4, false);
             }
         }
 
