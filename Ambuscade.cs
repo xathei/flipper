@@ -171,8 +171,11 @@ namespace Flipper
 
             Chat.SetInstance(fface);
             Chat.SetMatches(events);
-            Chat.Watch(true);
             Chat.FoundMatchHandler += Chat_FoundMatchHandler;
+            Chat.Watch(true);
+
+            Thread Status = new Thread(DoReportStunStatus);
+            Status.Start();
 
             // Network and Other Settings:
             _Leader = settings.Leader;
@@ -214,8 +217,6 @@ namespace Flipper
             Thread Safe = new Thread(SafePong);
             Safe.Start();
 
-            Thread Status = new Thread(DoReportStunStatus);
-            Status.Start();
         }
 
 

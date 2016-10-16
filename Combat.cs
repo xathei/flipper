@@ -245,7 +245,7 @@ namespace Flipper
 
                 if (job.GetHaltActions())
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(2);
                     continue;
                 }
 
@@ -271,7 +271,7 @@ namespace Flipper
                     job.UseSpells();
                 }
 
-                Thread.Sleep(1);
+                Thread.Sleep(2);
             }
             Thread.Sleep(500);
             if (!_fighting && fface.Player.Status == Status.Fighting)
