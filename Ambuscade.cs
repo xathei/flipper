@@ -222,13 +222,13 @@ namespace Flipper
                     if (!_canStun && job.CanStun())
                     {
                         _canStun = true;
-                        WriteLog("[STAHP!] Server => I CAN STUN!");
+                        WriteLog("[STAHP!] Server => STUN AVAILABLE");
                         client.Send("STUN 1");
                     }
                     else if (_canStun && !job.CanStun())
                     {
                         _canStun = false;
-                        WriteLog("[STAHP!] Server => I CAN NOT STUN!");
+                        WriteLog("[STAHP!] Server => STUN DOWN!");
                         client.Send("STUN 0");
                     }
                 }
@@ -307,22 +307,24 @@ namespace Flipper
 
             string[] token = text.Split(' ');
 
-            using (StreamWriter w = File.AppendText("log.txt"))
-            {
-                w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
-                w.WriteLine("---------------------");
-                WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
-                WriteLog("---------------------");
-            }
+            //using (StreamWriter w = File.AppendText("log.txt"))
+            //{
+                //w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
+                //w.WriteLine("---------------------");
+                //WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
+                //WriteLog("---------------------");
+            //}
 
             if (token[0] == "AWAIT_STUN")
             {
+                WriteLog("[STAHP] =========== I AM UP FOR STUN =======");
                 _AwaitingStun = true;
                 job.SetHaltActions(true);
             }
 
             if (token[0] == "STOP_AWAIT_STUN")
             {
+                WriteLog("[STAHP] =========== I -NOT- UP FOR STUN =======");
                 _AwaitingStun = false;
                 job.SetHaltActions(false);
             }

@@ -108,8 +108,8 @@ namespace Flipper.Classes
 
             }
 
-            if (Ready(AbilityList.Shield_Bash))
-                UseAbility(AbilityList.Shield_Bash, 3, true);
+            //if (Ready(AbilityList.Shield_Bash))
+            //    UseAbility(AbilityList.Shield_Bash, 3, true);
 
 
         }

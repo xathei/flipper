@@ -358,11 +358,11 @@ namespace Flipper.Classes
             //Thread.Sleep(7000);
             //SendCommand("/ma \"Elivira\" <me>");
             //Thread.Sleep(7000);
-            SendCommand("/ma \"Zeid II\" <me>");
-            Thread.Sleep(7000);
+            //SendCommand("/ma \"Zeid II\" <me>");
+            //Thread.Sleep(7000);
             SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
-            SendCommand("/ma \"Qultada\" <me>");
+            SendCommand("/ma \"Apururu\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);
