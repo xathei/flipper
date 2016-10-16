@@ -29,7 +29,7 @@ namespace Flipper.Classes
 
         public override void DoStun()
         {
-           UseSpell(SpellList.Sudden_Lunge, 4, true);
+            SendCommand("/ma \"Sudden Lunge\" <t>", 4, true);
         }
 
         public override void Warp()
