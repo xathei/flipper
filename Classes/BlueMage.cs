@@ -151,7 +151,7 @@ namespace Flipper.Classes
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
                 var difference = GetSADifference(id);
-                while ((difference < 66 || difference > 89) && CanStillAttack(id))
+                while ((difference < 66 || difference > 89) && _fface.NPC.HPPCurrent(id) > 0)
                 {
                     if (!_fface.Target.IsLocked)
                     {
