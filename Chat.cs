@@ -57,13 +57,13 @@ namespace Flipper
 
             while (_activated)
             {
-
                 try { chat = _fface.Chat.GetNextLine().Text; }
                 catch { }
 
                 if (!string.IsNullOrEmpty(chat) && chat != prev)
                 {
                     // "chat"
+                    prev = chat;
 
                     if (_matches.Any(x => chat.Contains(x)))
                     {
