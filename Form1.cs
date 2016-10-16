@@ -1095,14 +1095,18 @@ namespace FlipperD
 
         private void button8_Click(object sender, EventArgs e)
         {
-            IJob job = new Bard(fface, Content.Ambuscade);
 
-            while (true)
-            {
-                job.UseSpells();
+            fface.Windower.SendKey(KeyCode.NP_Number2, false);
+            fface.Windower.SendKey(KeyCode.NP_Number4, false);
+            fface.Windower.SendKey(KeyCode.NP_Number6, false);
+            //IJob job = new Bard(fface, Content.Ambuscade);
 
-                Thread.Sleep(10);
-            }
+            //while (true)
+            //{
+            //    job.UseSpells();
+
+            //    Thread.Sleep(10);
+            //}
         }
 
         private volatile int assistIndex = 0;
