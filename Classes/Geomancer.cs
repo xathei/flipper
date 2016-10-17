@@ -31,7 +31,7 @@ namespace Flipper.Classes
 
         public override void DoStun()
         {
-            SendCommand("/ma \"Sudden Lunge\" <t>", 4, true);
+            SendCommand("/ma \"Stun\" <t>", 4, true);
         }
 
         public override int MaxDistance()
@@ -58,6 +58,8 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
+            if(_content != Content.Ambuscade)
+                SendCommand("/attack <t>", 3);
             return;
         }
 
@@ -239,6 +241,14 @@ namespace Flipper.Classes
             }
         }
 
+        public override void UseWeaponskills()
+        {
+            if (_fface.Player.TPCurrent >= 2000)
+            {
+                SendCommand("/ws \"Hexa Strike\" <t>", 3, false);
+
+            }
+        }
         #region Helper
 
         private double RadianToDegree(double radians)
