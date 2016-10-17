@@ -270,7 +270,7 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-
+            SendCommand("/ws \"Exenterator\" <t>", 3);
         }
 
         #region Helper Methods
