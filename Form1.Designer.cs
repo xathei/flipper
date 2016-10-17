@@ -173,6 +173,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.Misc2 = new System.Windows.Forms.TabPage();
+            this.button9 = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.AssistName = new System.Windows.Forms.TextBox();
@@ -195,7 +196,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.button9 = new System.Windows.Forms.Button();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1183,6 +1184,7 @@
             // 
             // Ambuscade
             // 
+            this.Ambuscade.Controls.Add(this.checkBox3);
             this.Ambuscade.Controls.Add(this.label21);
             this.Ambuscade.Controls.Add(this.label20);
             this.Ambuscade.Controls.Add(this.rngAimForDistance);
@@ -1804,6 +1806,16 @@
             this.Misc2.Text = "Misc. 2";
             this.Misc2.UseVisualStyleBackColor = true;
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(510, 285);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(239, 155);
+            this.button9.TabIndex = 15;
+            this.button9.Text = "button9";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // label19
             // 
             this.label19.AutoSize = true;
@@ -2026,15 +2038,15 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
             // 
-            // button9
+            // checkBox3
             // 
-            this.button9.Location = new System.Drawing.Point(510, 285);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(239, 155);
-            this.button9.TabIndex = 15;
-            this.button9.Text = "button9";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(394, 193);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(156, 21);
+            this.checkBox3.TabIndex = 17;
+            this.checkBox3.Text = "Preferred Stunner";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -2286,6 +2298,7 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox vwTargetName;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

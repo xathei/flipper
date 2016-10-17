@@ -18,6 +18,20 @@ namespace Flipper.Classes
             Melee = true;
         }
 
+        public override bool CanStun()
+        {
+            if (Ready(SpellList.Sudden_Lunge) && _fface.Player.MPCurrent >= 18 && !IsAfflicted(StatusEffect.Silence))
+                return true;
+            else
+                return false;
+            // return true if your timers are up, you're not silenced, and your have MP
+        }
+
+        public override void DoStun()
+        {
+            SendCommand("/ma \"Sudden Lunge\" <t>", 4, true);
+        }
+
         public override void Warp()
         {
             _fface.Windower.SendString("//lua unload gearswap");
@@ -137,7 +151,7 @@ namespace Flipper.Classes
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
             {
                 var difference = GetSADifference(id);
-                while (difference < 66 || difference > 89)
+                while ((difference < 66 || difference > 89) && _fface.NPC.HPPCurrent(id) > 0)
                 {
                     if (!_fface.Target.IsLocked)
                     {

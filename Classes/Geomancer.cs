@@ -20,6 +20,20 @@ namespace Flipper.Classes
             Melee = false;
         }
 
+        public override bool CanStun()
+        {
+            if (Ready(SpellList.Stun) && _fface.Player.MPCurrent >= 25 && !IsAfflicted(StatusEffect.Silence))
+                return true;
+            else
+                return false;
+            // return true if your timers are up, you're not silenced, and your have MP
+        }
+
+        public override void DoStun()
+        {
+            SendCommand("/ma \"Sudden Lunge\" <t>", 4, true);
+        }
+
         public override int MaxDistance()
         {
             if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)

@@ -136,7 +136,7 @@ namespace Flipper.Classes
             // stand behind the mob.
             if (_content == Content.Ambuscade && _fface.Player.Zone != Zone.Cape_Teriggan)
             {
-                while (Math.Abs(GetSADifference(_fface.Target.ID)) > 10 && CanStillAttack(_fface.Target.ID) && _fface.Target.HPPCurrent > 0)
+                while (Math.Abs(GetSADifference(_fface.Target.ID)) > 170 && CanStillAttack(_fface.Target.ID) && _fface.Target.HPPCurrent > 0)//SAdifference to 170-180 to stand in front
                 {
                     _fface.Windower.SendKey(KeyCode.NP_Number4, true);
                     Thread.Sleep(50);
@@ -219,6 +219,10 @@ namespace Flipper.Classes
                 if (_fface.Player.Name == "Dazuto")
                 {
                     SendCommand("/ws \"Evisceration\" <t>", 3);
+                }
+                else if (_fface.Player.Name == "Honeybooboo")
+                {
+                    SendCommand("/ws \"Shark Bite\" <t>", 3);
                 }
                 else
                 {

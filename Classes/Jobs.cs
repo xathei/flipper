@@ -18,6 +18,17 @@ namespace Flipper.Classes
         public FFACE _fface;
         public Content _content;
         private volatile bool _inBattle = false;
+        public bool HaltActions = false;
+
+        public void SetHaltActions(bool actions)
+        {
+            HaltActions = actions;
+        }
+
+        public bool GetHaltActions()
+        {
+            return HaltActions;
+        }
 
         public bool InBattle()
         {
@@ -27,6 +38,11 @@ namespace Flipper.Classes
         public void SetBattle(bool battle)
         {
             _inBattle = battle;
+        }
+
+        public virtual bool CanStun()
+        {
+            return false;
         }
 
         public List<Player> Players = new List<Player>();
@@ -183,6 +199,11 @@ namespace Flipper.Classes
             }
         }
 
+        public virtual void DoStun()
+        {
+            
+        }
+
         /// <summary>
         /// Determines if the character is still engaged and can still attack their target.
         /// Called periodically during combat.
@@ -333,15 +354,9 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            //SendCommand("/ma \"Amchuchu\" <me>");
-            //Thread.Sleep(7000);
-            //SendCommand("/ma \"Elivira\" <me>");
-            //Thread.Sleep(7000);
-            SendCommand("/ma \"Zeid II\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Ulmia\" <me>");
             Thread.Sleep(7000);
-            SendCommand("/ma \"Qultada\" <me>");
+            SendCommand("/ma \"Apururu (UC)\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");
             Thread.Sleep(7000);

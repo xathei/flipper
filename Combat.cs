@@ -243,8 +243,14 @@ namespace Flipper
                     _fighting = false;
                 }
 
+                if (job.GetHaltActions())
+                {
+                    Thread.Sleep(2);
+                    continue;
+                }
+
                 // PLAYER STUFF
-                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM && fface.Player.MainJob != Job.BRD)
+                if (fface.Player.Status == Status.Fighting && _fighting && fface.Player.MainJob != Job.GEO && fface.Player.MainJob != Job.WHM && fface.Player.MainJob != Job.BRD && fface.Player.MainJob != Job.BLM)
                 {
                     job.UseHeals();
 
@@ -255,13 +261,17 @@ namespace Flipper
 
                     job.UseSpells();
                 }
-                else if ((fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.GEO || fface.Player.MainJob == Job.BRD) && _fighting)
+                else if ((fface.Player.MainJob == Job.WHM || fface.Player.MainJob == Job.BLM || fface.Player.MainJob == Job.GEO || fface.Player.MainJob == Job.BRD) && _fighting)
                 {
                     fface.Navigator.Reset();
+
+                    if (fface.Player.MainJob == Job.BLM) 
+                        job.UseAbilities();
+
                     job.UseSpells();
                 }
 
-                Thread.Sleep(1);
+                Thread.Sleep(2);
             }
             Thread.Sleep(500);
             if (!_fighting && fface.Player.Status == Status.Fighting)

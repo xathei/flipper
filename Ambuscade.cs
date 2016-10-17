@@ -53,6 +53,15 @@ namespace Flipper
         public volatile bool _KeyCapped = false;
         public int PartyID = 0;
 
+        private List<string> events = new List<string>()
+        {
+            "readies Hypnic Lamp",
+            "readies Bewitching",
+            "readies Seismic",
+            "readies Leeching",
+            "readies Vile"
+        };
+
         public IJob JobClass => job;
         #endregion
 
@@ -106,6 +115,9 @@ namespace Flipper
                 case Job.RUN:
                     job = new RuneFencer(fface, Content.Ambuscade);
                     break;
+                case Job.BLM:
+                    job = new BlackMage(fface, Content.Ambuscade);
+                    break;
             }
         }
 
@@ -157,6 +169,14 @@ namespace Flipper
             Combat.SetInstance = fface;
             Combat.SetJob = job;
 
+            Chat.SetInstance(fface);
+            Chat.SetMatches(events);
+            Chat.FoundMatchHandler += Chat_FoundMatchHandler;
+            Chat.Watch(true);
+
+            Thread Status = new Thread(DoReportStunStatus);
+            Status.Start();
+
             // Network and Other Settings:
             _Leader = settings.Leader;
             _HumanPlayers = settings.PartyCount;
@@ -196,6 +216,48 @@ namespace Flipper
 
             Thread Safe = new Thread(SafePong);
             Safe.Start();
+
+        }
+
+
+        private void DoReportStunStatus()
+        {
+            while (_ambuscade)
+            {
+                if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                {
+                    if (!_canStun && job.CanStun())
+                    {
+                        _canStun = true;
+                        WriteLog("[STAHP!] Server => STUN AVAILABLE");
+                        client.Send("STUN 1");
+                    }
+                    else if (_canStun && !job.CanStun())
+                    {
+                        _canStun = false;
+                        WriteLog("[STAHP!] Server => STUN DOWN!");
+                        client.Send("STUN 0");
+                    }
+                }
+                Thread.Sleep(1);
+            }
+        }
+
+        private bool _canStun = false;
+        private bool _AwaitingStun = false;
+
+        private void Chat_FoundMatchHandler(string match)
+        {
+            // It's my turn to stun! I'm gonna stun.
+            if (_AwaitingStun)
+            {
+                WriteLog("[STAHP] Matched (Stunning!...): " + match);
+                job.DoStun();
+            }
+            else
+            {
+                WriteLog("[STAHP] Matched (off doody): " + match);
+            }
         }
 
         public void SafePong()
@@ -252,12 +314,26 @@ namespace Flipper
 
             string[] token = text.Split(' ');
 
-            using (StreamWriter w = File.AppendText("log.txt"))
+            //using (StreamWriter w = File.AppendText("log.txt"))
+            //{
+                //w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
+                //w.WriteLine("---------------------");
+                //WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
+                //WriteLog("---------------------");
+            //}
+
+            if (token[0] == "AWAIT_STUN")
             {
-                w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
-                w.WriteLine("---------------------");
-                WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
-                WriteLog("---------------------");
+                WriteLog("[STAHP] =========== I AM UP FOR STUN =======");
+                _AwaitingStun = true;
+                job.SetHaltActions(true);
+            }
+
+            if (token[0] == "STOP_AWAIT_STUN")
+            {
+                WriteLog("[STAHP] =========== I /NOT/ UP FOR STUN =======");
+                _AwaitingStun = false;
+                job.SetHaltActions(false);
             }
 
             if (token[0] == "GAIN_BUFF")
