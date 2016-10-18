@@ -220,11 +220,15 @@ namespace Flipper.Classes
                 {
                     SendCommand("/ws \"Evisceration\" <t>", 3);
                 }
-                else if (_fface.Player.Name == "Honeybooboo")
+                else if (_fface.Player.Name == "Honeybooboo" || _fface.Player.Name == "Crazie")
                 {
                     SendCommand("/ws \"Shark Bite\" <t>", 3);
                 }
-                else
+                else if (_fface.Player.Name == "Riddlex")
+                {
+                    SendCommand("/ws \"Mercy Stroke\" <t>", 3);
+                }
+                else 
                 {
                     SendCommand("/ws \"Rudra's Storm\" <t>", 3);
                 }
