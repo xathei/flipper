@@ -220,7 +220,7 @@ namespace Flipper.Classes
                 }
             }
 
-            if (_fface.Player.Name == "Udoopudooo" || _fface.Player.Name == "Dirtaru")
+            if (_fface.Player.Name == "Lawaan" || _fface.Player.Name == "Udoopudooo" || _fface.Player.Name == "Dirtaru")
             {
                 SendCommand("/ws \"Savage Blade\" <t>", 3, false);
             }

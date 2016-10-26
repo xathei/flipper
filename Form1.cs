@@ -344,6 +344,9 @@ namespace FlipperD
                 case Job.RUN:
                     job = new RuneFencer(fface, Content.Voidwatch);
                     break;
+                case Job.BLM:
+                    job = new BlackMage(fface, Content.Voidwatch);
+                    break;
             }
         }
 
