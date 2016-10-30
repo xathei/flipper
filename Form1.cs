@@ -347,6 +347,9 @@ namespace FlipperD
                 case Job.BLM:
                     job = new BlackMage(fface, Content.Voidwatch);
                     break;
+                case Job.RDM:
+                    job = new RedMage(fface, Content.Voidwatch);
+                    break;
             }
         }
 
@@ -360,7 +363,7 @@ namespace FlipperD
             {
                 if ((!HasItem(3853) && vwLeader.Checked) || fface.Item.InventoryCount >= 78)
                 {
-                    fface.Windower.SendString("/p I'm done!");
+                    fface.Windower.SendString("/echo I'm done!");
                     Thread.Sleep(1000);
                     break;
                 }
@@ -369,9 +372,16 @@ namespace FlipperD
 
                 // target planar
                 List<TargetInfo> planars = new List<TargetInfo>();
+                bool UsedTemp = false;
 
                 while (!planars.Any())
                 {
+                    if (!UsedTemp && chkUseTempBefore.Checked && !chkUseOnlyWing.Checked)
+                    {
+                        UseTempItems();
+                        UsedTemp = true;
+                    }
+
                     planars = FindTarget("Planar", 15);
                     Thread.Sleep(100);
                 }
@@ -399,8 +409,8 @@ namespace FlipperD
                     Thread.Sleep(600);
                 }
 
-                int rubicund = (int) vwRubicundCellNum.Value;
-                int cobalt = (int) vwCobaltCellNumber.Value;
+                int rubicund = (int)vwRubicundCellNum.Value;
+                int cobalt = (int)vwCobaltCellNumber.Value;
 
                 while (rubicund > 0 && HasItem(3435))
                 {
@@ -420,7 +430,7 @@ namespace FlipperD
                 {
                     Thread.Sleep(1000);
 
-                    int displacer = (int) vwDisplacersNum.Value;
+                    int displacer = (int)vwDisplacersNum.Value;
                     while (displacer > 0 && HasItem(3853))
                     {
                         displacer--;
@@ -462,7 +472,7 @@ namespace FlipperD
                         Thread.Sleep(50);
                     }
 
-                    while (fface.Menu.DialogOptionIndex != 2)
+                    while (fface.Menu.DialogOptionIndex != (int)vwDisplacersNum.Value)
                     {
                         fface.Windower.SendKeyPress(KeyCode.DownArrow);
                         Thread.Sleep(300);
@@ -481,18 +491,26 @@ namespace FlipperD
 
                 if (mobs.Any())
                 {
-                    fface.Windower.SendString("/item \"Stalwart's Tonic\" <me>");
-                    Thread.Sleep(4200);
-                    fface.Windower.SendString("/item \"Fanatic's Drink\" <me>");
-                    Thread.Sleep(4200);
+                    Random randObj = new Random();
+                    int RandomNumber = randObj.Next(500);
+                    Thread.Sleep(RandomNumber);
+
+                    if (!chkUseTempBefore.Checked && !chkUseOnlyWing.Checked)
+                    {
+                        UseTempItems();
+                        RandomNumber = randObj.Next(500);
+                        Thread.Sleep(4200 + RandomNumber);                        
+                    }
+
                     fface.Windower.SendString("/item \"Dusty Wing\" <me>");
-                    Thread.Sleep(4200);
+                    RandomNumber = randObj.Next(500);
+                    Thread.Sleep(4200 + RandomNumber);
 
                     TargetInfo target = mobs[0];
 
                     Combat.SetInstance = fface;
                     Combat.SetJob = job;
-                    Flipper.Monster m = new Flipper.Monster() {HitBox = 4, MonsterName = vwTargetName.Text};
+                    Flipper.Monster m = new Flipper.Monster() { HitBox = 4, MonsterName = vwTargetName.Text };
                     Combat.FailType f = Combat.FailType.NoFail;
                     Combat.Fight(target.Id, m, Combat.Mode.None, out f);
 
@@ -550,6 +568,33 @@ namespace FlipperD
                 }
             }
         }
+
+        private void UseTempItems()
+        {
+            Random randObj = new Random();
+            int RandomNumber;
+
+            RandomNumber = randObj.Next(2);
+            switch (RandomNumber)
+            {
+                case 0:
+                    fface.Windower.SendString("/item \"Stalwart's Tonic\" <me>");
+                    RandomNumber = randObj.Next(500);
+                    Thread.Sleep(4200 + RandomNumber);
+                    fface.Windower.SendString("/item \"Fanatic's Drink\" <me>");
+                    break;
+                case 1:
+                    fface.Windower.SendString("/item \"Fanatic's Drink\" <me>");
+                    RandomNumber = randObj.Next(500);
+                    Thread.Sleep(4200 + RandomNumber);
+                    fface.Windower.SendString("/item \"Stalwart's Tonic\" <me>");
+                    break;
+            }
+            RandomNumber = randObj.Next(500);
+            Thread.Sleep(4200 + RandomNumber);
+        }
+            
+
 
         public bool IsAfflicted(StatusEffect effect)
         {
@@ -1195,6 +1240,12 @@ namespace FlipperD
         {
             fface.Windower.SendString("/echo Menu ID:" + fface.Menu.DialogID);
         }
+
+        private void uxJobConfig_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 
     public class TargetInfo
