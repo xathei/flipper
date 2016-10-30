@@ -406,7 +406,7 @@ namespace FlipperD
                 {
                     rubicund--;
                     fface.Windower.SendString("/item \"Rubicund Cell\" <t>");
-                    Thread.Sleep(900);
+                    Thread.Sleep(300);
                 }
 
                 while (cobalt > 0 && HasItem(3434))
@@ -418,18 +418,18 @@ namespace FlipperD
 
                 if (vwLeader.Checked)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(300);
 
                     int displacer = (int) vwDisplacersNum.Value;
                     while (displacer > 0 && HasItem(3853))
                     {
                         displacer--;
                         fface.Windower.SendString("/item \"Phase Displacer\" <t>");
-                        Thread.Sleep(1500);
+                        Thread.Sleep(300);
                     }
-                    Thread.Sleep(700);
+                    Thread.Sleep(400);
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
-                    Thread.Sleep(700);
+                    Thread.Sleep(100);
 
                     while (!fface.Menu.IsOpen || fface.Menu.DialogID != 306)
                     {
@@ -439,7 +439,7 @@ namespace FlipperD
                     while (fface.Menu.DialogOptionIndex != 1)
                     {
                         fface.Windower.SendKeyPress(KeyCode.DownArrow);
-                        Thread.Sleep(300);
+                        Thread.Sleep(200);
                     }
 
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -452,7 +452,7 @@ namespace FlipperD
                     while (fface.Menu.DialogOptionIndex != 0)
                     {
                         fface.Windower.SendKeyPress(KeyCode.UpArrow);
-                        Thread.Sleep(300);
+                        Thread.Sleep(200);
                     }
 
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -462,10 +462,10 @@ namespace FlipperD
                         Thread.Sleep(50);
                     }
 
-                    while (fface.Menu.DialogOptionIndex != 2)
+                    while (fface.Menu.DialogOptionIndex != vwDisplacersNum.Value)
                     {
                         fface.Windower.SendKeyPress(KeyCode.DownArrow);
-                        Thread.Sleep(300);
+                        Thread.Sleep(200);
                     }
 
                     fface.Windower.SendKeyPress(KeyCode.EnterKey);
@@ -1159,6 +1159,14 @@ namespace FlipperD
             else if (fface.Player.MainJob == Job.WHM)
             {
                 job = new WhiteMage(fface, Content.Ambuscade);
+            }
+            else if (fface.Player.MainJob == Job.RNG)
+            {
+                job = new Ranger(fface, Content.Ambuscade);
+            }
+            else if (fface.Player.MainJob == Job.BLU)
+            {
+                job = new BlueMage(fface, Content.Ambuscade);
             }
 
             Combat.FailType fail = Combat.FailType.NoFail;

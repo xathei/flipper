@@ -116,6 +116,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.UnityItemStop1 = new System.Windows.Forms.TextBox();
             this.Ambuscade = new System.Windows.Forms.TabPage();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.rngAimForDistance = new System.Windows.Forms.TextBox();
@@ -196,7 +197,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.uxTabs.SuspendLayout();
             this.Dynamis.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -952,7 +952,6 @@
             // 
             // vwDisplacersNum
             // 
-            this.vwDisplacersNum.Enabled = false;
             this.vwDisplacersNum.Location = new System.Drawing.Point(162, 61);
             this.vwDisplacersNum.Name = "vwDisplacersNum";
             this.vwDisplacersNum.Size = new System.Drawing.Size(205, 24);
@@ -1203,6 +1202,16 @@
             this.Ambuscade.TabIndex = 8;
             this.Ambuscade.Text = "Ambuscade";
             this.Ambuscade.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(394, 193);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(156, 21);
+            this.checkBox3.TabIndex = 17;
+            this.checkBox3.Text = "Preferred Stunner";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // label21
             // 
@@ -2037,16 +2046,6 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(129, 23);
             this.toolStripStatusLabel1.Text = "Version 5.1.0.0";
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(394, 193);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(156, 21);
-            this.checkBox3.TabIndex = 17;
-            this.checkBox3.Text = "Preferred Stunner";
-            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
