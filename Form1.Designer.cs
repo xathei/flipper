@@ -88,7 +88,7 @@
             this.favouredWeaponskill = new System.Windows.Forms.TextBox();
             this.btnFarming = new System.Windows.Forms.Button();
             this.Voidwatch = new System.Windows.Forms.TabPage();
-            this.chkUseTempBefore = new System.Windows.Forms.CheckBox();
+            this.chkUseTempAfter = new System.Windows.Forms.CheckBox();
             this.chkUseOnlyWing = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.vwTargetName = new System.Windows.Forms.TextBox();
@@ -904,7 +904,7 @@
             // 
             // Voidwatch
             // 
-            this.Voidwatch.Controls.Add(this.chkUseTempBefore);
+            this.Voidwatch.Controls.Add(this.chkUseTempAfter);
             this.Voidwatch.Controls.Add(this.chkUseOnlyWing);
             this.Voidwatch.Controls.Add(this.label24);
             this.Voidwatch.Controls.Add(this.vwTargetName);
@@ -919,15 +919,15 @@
             this.Voidwatch.Text = "Voidwatch";
             this.Voidwatch.UseVisualStyleBackColor = true;
             // 
-            // chkUseTempBefore
+            // chkUseTempAfter
             // 
-            this.chkUseTempBefore.AutoSize = true;
-            this.chkUseTempBefore.Location = new System.Drawing.Point(261, 218);
-            this.chkUseTempBefore.Name = "chkUseTempBefore";
-            this.chkUseTempBefore.Size = new System.Drawing.Size(259, 17);
-            this.chkUseTempBefore.TabIndex = 12;
-            this.chkUseTempBefore.Text = "Use some temp items in-between poping";
-            this.chkUseTempBefore.UseVisualStyleBackColor = true;
+            this.chkUseTempAfter.AutoSize = true;
+            this.chkUseTempAfter.Location = new System.Drawing.Point(261, 218);
+            this.chkUseTempAfter.Name = "chkUseTempAfter";
+            this.chkUseTempAfter.Size = new System.Drawing.Size(202, 17);
+            this.chkUseTempAfter.TabIndex = 12;
+            this.chkUseTempAfter.Text = "Use temp items after mob dies";
+            this.chkUseTempAfter.UseVisualStyleBackColor = true;
             // 
             // chkUseOnlyWing
             // 
@@ -2332,7 +2332,7 @@
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox chkUseOnlyWing;
-        private System.Windows.Forms.CheckBox chkUseTempBefore;
+        private System.Windows.Forms.CheckBox chkUseTempAfter;
     }
 }
 
