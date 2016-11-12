@@ -81,6 +81,13 @@ namespace Flipper.Classes
                 {
                     UseAbility(AbilityList.Aggressor, 2, false);
                 }
+
+                if(Ready(AbilityList.Diffusion) && Ready(AbilityList.Unbridled_Learning))
+                {
+                    UseAbility(AbilityList.Diffusion, 2, false);
+                    UseAbility(AbilityList.Unbridled_Learning, 2, false);
+                    UseSpell(SpellList.Mighty_Guard, 5, false);
+                }
             }
         }
 

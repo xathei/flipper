@@ -143,53 +143,53 @@ namespace Flipper.Classes
                         Z = _fface.NPC.PosZ(monsterId),
                     });
                 }
-                    if (!IsAfflicted(StatusEffect.Geo_Fury) && Ready(SpellList.Indi_Fury))
+                if (!IsAfflicted(StatusEffect.Geo_Fury) && Ready(SpellList.Indi_Fury))
+                {
+                    UseSpell("Indi-Fury", SpellList.Indi_Fury, 10, false);
+                }
+                else if (Ready(SpellList.Geo_Frailty) &&
+                         (!FindTargetAll("luopan", 10).Any() || targetDistanceFromLuopan > 4))
+                {
+                    if (targetDistanceFromLuopan != 0 && targetDistanceFromLuopan > 4)
                     {
-                        UseSpell("Indi-Fury", SpellList.Indi_Fury, 10, false);
-                    }
-                    else if (Ready(SpellList.Geo_Frailty) &&
-                             (!FindTargetAll("luopan", 10).Any() || targetDistanceFromLuopan > 4))
-                    {
-                        if (targetDistanceFromLuopan != 0 && targetDistanceFromLuopan > 4)
-                        {
-                            UseAbility(AbilityList.Full_Circle, 2, false);
-                            Thread.Sleep(2500);
-
-
-                            if (Ready(AbilityList.Blaze_Glory))
-                                UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
-
-                            Thread.Sleep(2500);
-
-                            UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
-
-                            _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
-                        }
-                        else if (targetDistanceFromLuopan == 0)
-                        {
-
-                            if (Ready(AbilityList.Blaze_Glory))
-                                UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
-
-                            Thread.Sleep(2500);
-
-                            UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
-                            _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
-                        }
-                    }
-                    else if (FindTargetAll("luopan", 10).Any() && Ready(AbilityList.Dematerialize) &&
-                             Ready(AbilityList.Life_Cycle) && DateTime.Now > _useDematerializeAt)
-                    {
-                        UseAbility(AbilityList.Dematerialize, 2, false);
+                        UseAbility(AbilityList.Full_Circle, 2, false);
                         Thread.Sleep(2500);
-                        UseAbility(AbilityList.Life_Cycle, 2, false);
+
+
+                        if (Ready(AbilityList.Blaze_Glory))
+                            UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
+
+                        Thread.Sleep(2500);
+
+                        UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
+
+                        _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
                     }
+                    else if (targetDistanceFromLuopan == 0)
+                    {
+
+                        if (Ready(AbilityList.Blaze_Glory))
+                            UseAbility("Blaze of Glory", AbilityList.Blaze_Glory, 2, false);
+
+                        Thread.Sleep(2500);
+
+                        UseSpell("Geo-Frailty", SpellList.Geo_Frailty, 10, true);
+                        _useDematerializeAt = DateTime.Now.AddMinutes(1).AddSeconds(10);
+                    }
+                }
+                else if (FindTargetAll("luopan", 10).Any() && Ready(AbilityList.Dematerialize) &&
+                         Ready(AbilityList.Life_Cycle) && DateTime.Now > _useDematerializeAt)
+                {
+                    UseAbility(AbilityList.Dematerialize, 2, false);
+                    Thread.Sleep(2500);
+                    UseAbility(AbilityList.Life_Cycle, 2, false);
+                }
             }
             if (_fface.Player.SubJob == Job.WHM)
             {
-                foreach(Player player in Players)
+                foreach (Player player in Players)
                 {
-                    foreach(StatusEffect e in player.Effects)
+                    foreach (StatusEffect e in player.Effects)
                     {
                         if (e == StatusEffect.Attack_Down)
                         {
@@ -200,6 +200,24 @@ namespace Flipper.Classes
                         }
                     }
                 }
+            }
+            if (_fface.Player.SubJob == Job.RDM || _fface.Player.SubJob == Job.RDM)
+            {
+                foreach (KeyValuePair<byte, FFACE.PartyMemberTools> partyMember in _fface.PartyMember.Where(x => x.Value.Active))
+                {
+
+                    // If the party member's HP is equal or less than 50%, cast Cure IV.
+                    if (partyMember.Value.HPPCurrent <= 40 && Ready(SpellList.Cure_IV))
+                        UseSpell(SpellList.Cure_IV, 5, partyMember.Value.Name);
+
+                    // If the party member's HP is equal or less than 75%, cast Cure III.
+                    if (partyMember.Value.HPPCurrent <= 75 && Ready(SpellList.Cure_III))
+                        UseSpell(SpellList.Cure_III, 5, partyMember.Value.Name);
+                }
+
+                // Keep haste up on myself.
+                if (!IsAfflicted(StatusEffect.Haste) && Ready(SpellList.Haste))
+                    UseSpell(SpellList.Haste, 8);
             }
         }
 
