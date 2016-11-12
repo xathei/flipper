@@ -95,6 +95,11 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
+            if (_fface.Player.Name == "Elisel")
+            {
+                SendCommand("/ws \"Savage Blade\" <t>", 3, false);
+            }
+
             if (IsAfflicted(StatusEffect.Aftermath_lvl3) && _fface.Player.TPCurrent >= 2000 )
             {
                 SendCommand("/ws \"Savage Blade\" <t>", 3, false);

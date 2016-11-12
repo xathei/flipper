@@ -130,10 +130,11 @@ namespace FlipperD
                             SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
                         else if (!Program.mainform.uxWaitFor2000TP.Checked)
                         {
-                                SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
+                            SendCommand("/ws \"" + Program.mainform.favouredWeaponskill.Text + "\" <t>", 2);
                         }
                     }
-                    else if (Program.mainform.uxAM3.Checked && fface.Player.TPCurrent == 3000 && !IsAfflicted(StatusEffect.Aftermath_lvl3))
+                    else if (Program.mainform.uxAM3.Checked && fface.Player.TPCurrent == 3000 &&
+                             !IsAfflicted(StatusEffect.Aftermath_lvl3))
                     {
                         SendCommand("/ws \"" + Program.mainform.uxAMWS.Text + "\" <t>", 2);
                     }
@@ -204,8 +205,42 @@ namespace FlipperD
 
         }
 
+        public bool AfterKill()
+        {
+            if (Ready(SpellList.Dread_Spikes) && !IsAfflicted(StatusEffect.Dread_Spikes))
+            {
+                UseSpell(SpellList.Dread_Spikes, 6, false);
+                return true;
+            }
+
+            if (!IsAfflicted(StatusEffect.Endark) && Ready(SpellList.Endark))
+            {
+                SendCommand("/ma \"Endark II\" <me>", 6);
+                return true;
+            }
+
+            return false;
+        }
+
         public void UseAbilities()
         {
+
+            if (fface.Player.MainJob == Job.DRK)
+            {
+                if (Ready(AbilityList.Last_Resort) && IsAfflicted(StatusEffect.Protect))
+                    UseAbility(AbilityList.Last_Resort, 2, false);
+
+                if (fface.Player.HPPCurrent <= 50)
+                {
+                    if (Ready(AbilityList.Two_Hour))
+                        UseAbility("Blood Weapon", AbilityList.Two_Hour, 2, false);
+
+                    if (Ready(SpellList.Stun))
+                        UseSpell(SpellList.Stun, 4, true);
+                }
+
+            }
+
             if (fface.Player.MainJob == Job.RNG && Ready(AbilityList.Unlimited_Shot))
             {
                 UseAbility("Double Shot", AbilityList.Unlimited_Shot, 3, false);
@@ -351,7 +386,7 @@ namespace FlipperD
             }
             if ((fface.Player.MainJob == Job.WAR || fface.Player.SubJob == Job.WAR) && fface.Player.MainJob != Job.RNG)
             {
-                if (Ready(AbilityList.Berserk) && !Program.mainform.chkAntiBerserk.Checked)
+                if (Ready(AbilityList.Berserk) && !Program.mainform.chkAntiBerserk.Checked && IsAfflicted(StatusEffect.Protect))
                     UseAbility(AbilityList.Berserk);
 
                 else if (Ready(AbilityList.Warcry))
@@ -2105,6 +2140,11 @@ namespace FlipperD
                         UseWeaponskills();
                     }
 
+                    Thread.Sleep(1);
+                }
+
+                while (AfterKill())
+                {
                     Thread.Sleep(1);
                 }
 

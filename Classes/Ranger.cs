@@ -31,6 +31,44 @@ namespace Flipper.Classes
             }
         }
 
+        public override bool CanStillAttack(int id)
+        {
+            if (!IsRendered(id))
+            {
+                //WriteLog("[STOP!] The target isn't rendered.");
+                return false;
+            }
+
+
+            //if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
+            //{
+            //    //WriteLog("[STOP!] The target is claimed to someone else.");
+            //    return false;
+            //}
+
+            // Skip if the mob more than 5 yalms above or below us
+            if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
+            {
+                WriteLog("[STOP!] The target is too far above or below.");
+                return false;
+            }
+
+            // Skip if the NPC's HP is 0
+            if (_fface.NPC.HPPCurrent(id) == 0)
+            {
+                //WriteLog("[STOP!] Target HP is 0 :(");
+                return false;
+            }
+
+            if (DistanceTo(id) > MaxDistance() && _fface.Player.Status == Status.Fighting)
+            {
+                //WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
+                return false;
+            }
+
+            return true;
+        }
+
         public override void UseClaim()
         {
             if (Ready(AbilityList.Shadowbind))
@@ -81,97 +119,95 @@ namespace Flipper.Classes
         public override bool Position(int id, Monster monster, Combat.Mode mode)
         {
 
-            if (_content == Content.Ambuscade)
-            {
-                double aim = 0;
+            //if (_content == Content.Ambuscade)
+            //{
+                //double aim = 0;
 
-                try
-                {
-                    aim = Convert.ToDouble(Program.mainform.rngAimForDistance.Text);
-                }
-                catch (Exception e)
-                {
-                    aim = 5.9;
-                }
+                //try
+                //{
+                //    aim = Convert.ToDouble(Program.mainform.rngAimForDistance.Text);
+                //}
+                //catch (Exception e)
+                //{
+                //    aim = 5.9;
+                //}
 
-                var min = aim*0.95;
-                var max = aim*1.05;
+                //var min = aim*0.95;
+                //var max = aim*1.05;
 
-                if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
-                {
-                    int fail = 100;
-                    while (_fface.NPC.Distance(id) < min && fail > 0)
-                    {
-                        if (!_fface.Target.IsLocked)
-                        {
-                            _fface.Windower.SendString("/lockon");
-                            Thread.Sleep(500);
-                        }
-                        fail--;
-                        _fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                        Thread.Sleep(50);
-                        _fface.Windower.SendKey(KeyCode.NP_Number2, false);
-                    }
-                    fail = 1000;
-                    while (_fface.NPC.Distance(id) > max && fail > 0)
-                    {
-                        if (!_fface.Target.IsLocked)
-                        {
-                            _fface.Windower.SendString("/lockon");
-                            Thread.Sleep(500);
-                        }
-                        fail--;
-                        _fface.Windower.SendKey(KeyCode.NP_Number8, true);
-                        Thread.Sleep(50);
-                        _fface.Windower.SendKey(KeyCode.NP_Number8, false);
-                    }
-                    if (_fface.Target.IsLocked)
-                    {
-                        _fface.Windower.SendString("/lockon");
-                        Thread.Sleep(500);
-                    }
 
-                    bool wasLocked = true;
-                    var difference = GetSADifference(id);
-                    while (difference < 66 || difference > 89 && DistanceTo(id) <= 7)
-                    {
-                        if (!_fface.Target.IsLocked)
-                        {
-                            wasLocked = false;
-                            _fface.Windower.SendString("/lockon");
-                        }
-                        _fface.Windower.SendKey(KeyCode.NP_Number6, true);
-                        Thread.Sleep(80);
-                        _fface.Windower.SendKey(KeyCode.NP_Number6, false);
-                        difference = GetSADifference(id);
-                    }
-                    if (!wasLocked && _fface.Target.IsLocked)
-                    {
-                        _fface.Windower.SendString("/lockon");
-                    }
-                }
-            }
-            else
-            {
-                if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
-                {
-                    if (mode == Combat.Mode.Meshing && !Combat.IsPositionSafe(_fface.NPC.PosX(id), _fface.NPC.PosZ(id)))
-                        return false;
+                //    int fail = 100;
+                //    while (_fface.NPC.Distance(id) < min && fail > 0)
+                //    {
+                //        if (!_fface.Target.IsLocked)
+                //        {
+                //            _fface.Windower.SendString("/lockon");
+                //            Thread.Sleep(500);
+                //        }
+                //        fail--;
+                //        _fface.Windower.SendKey(KeyCode.NP_Number2, true);
+                //        Thread.Sleep(50);
+                //        _fface.Windower.SendKey(KeyCode.NP_Number2, false);
+                //    }
+                //    fail = 1000;
+                //    while (_fface.NPC.Distance(id) > max && fail > 0)
+                //    {
+                //        if (!_fface.Target.IsLocked)
+                //        {
+                //            _fface.Windower.SendString("/lockon");
+                //            Thread.Sleep(500);
+                //        }
+                //        fail--;
+                //        _fface.Windower.SendKey(KeyCode.NP_Number8, true);
+                //        Thread.Sleep(50);
+                //        _fface.Windower.SendKey(KeyCode.NP_Number8, false);
+                //    }
+                //    if (_fface.Target.IsLocked)
+                //    {
+                //        _fface.Windower.SendString("/lockon");
+                //        Thread.Sleep(500);
+                //    }
 
-                    _fface.Navigator.Reset();
-                    _fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
-                    _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
-                }
+                //    bool wasLocked = true;
+                //    var difference = GetSADifference(id);
+                //    while (difference < 66 || difference > 89 && DistanceTo(id) <= 7)
+                //    {
+                //        if (!_fface.Target.IsLocked)
+                //        {
+                //            wasLocked = false;
+                //            _fface.Windower.SendString("/lockon");
+                //        }
+                //        _fface.Windower.SendKey(KeyCode.NP_Number6, true);
+                //        Thread.Sleep(80);
+                //        _fface.Windower.SendKey(KeyCode.NP_Number6, false);
+                //        difference = GetSADifference(id);
+                //    }
+                //    if (!wasLocked && _fface.Target.IsLocked)
+                //    {
+                //        _fface.Windower.SendString("/lockon");
+                //    }
+            //}
+            //else
+            //{
+            //    if (DistanceTo(id) > monster.HitBox && CanStillAttack(id))
+            //    {
+            //        if (mode == Combat.Mode.Meshing && !Combat.IsPositionSafe(_fface.NPC.PosX(id), _fface.NPC.PosZ(id)))
+            //            return false;
 
-                // move back from the target
-                if (DistanceTo(id) < (monster.HitBox * 0.65) && CanStillAttack(id))
-                {
-                    _fface.Windower.SendKey(KeyCode.NP_Number2, true);
-                    Thread.Sleep(50);
-                    _fface.Windower.SendKey(KeyCode.NP_Number2, false);
+            //        _fface.Navigator.Reset();
+            //        _fface.Navigator.DistanceTolerance = (double)(monster.HitBox * 0.95);
+            //        _fface.Navigator.Goto(_fface.NPC.PosX(id), _fface.NPC.PosZ(id), false);
+            //    }
 
-                }
-            }
+            //    // move back from the target
+            //    if (DistanceTo(id) < (monster.HitBox * 0.65) && CanStillAttack(id))
+            //    {
+            //        _fface.Windower.SendKey(KeyCode.NP_Number2, true);
+            //        Thread.Sleep(50);
+            //        _fface.Windower.SendKey(KeyCode.NP_Number2, false);
+
+            //    }
+            //}
             return true;
         }
 
@@ -197,13 +233,15 @@ namespace Flipper.Classes
             }
 
             // check ammo
-            if (HasItem(21296))
+            if (HasItem(21296) && _fface.Item.GetEquippedItem(EquipSlot.Ammo).ID != 21296)
             {
-                _fface.Windower.SendString("/equip Ammo \"Chrono Bullet\"");
+                Thread.Sleep(1000);
+                _fface.Windower.SendString("/equip ammo \"Chrono Bullet\"");
             }
-            else if (HasItem(21327))
+            else if (HasItem(21327) && _fface.Item.GetEquippedItem(EquipSlot.Ammo).ID != 21327)
             {
-                _fface.Windower.SendString("/equip Ammo \"Eradicating Bullet\"");
+                Thread.Sleep(1000);
+                _fface.Windower.SendString("/equip ammo \"Eradicating bullet\"");
             } 
 
             if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
@@ -262,12 +300,7 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-            if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent == 3000 && _fface.Target.HPPCurrent > 50)
-            {
-                SendCommand("/ws \"Coronach\" <t>", 3, false);
-            }
-            else if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent >= 1000 &&
-                       _fface.Target.HPPCurrent <= 50)
+            if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent == 3000)
             {
                 SendCommand("/ws \"Coronach\" <t>", 3, false);
             }
