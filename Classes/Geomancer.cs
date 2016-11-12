@@ -20,6 +20,15 @@ namespace Flipper.Classes
             Melee = false;
         }
 
+        public override bool Engages()
+        {
+            if (_fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                return true;
+
+            return Melee;
+        }
+
+
         public override bool CanStun()
         {
             if (Ready(SpellList.Stun) && _fface.Player.MPCurrent >= 25 && !IsAfflicted(StatusEffect.Silence))
@@ -58,7 +67,7 @@ namespace Flipper.Classes
 
         public override void Engage()
         {
-            if(_content != Content.Ambuscade)
+            if(_fface.Player.Zone != Zone.Maquette_Abdhaljs_Legion)
                 SendCommand("/attack <t>", 3);
             return;
         }

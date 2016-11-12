@@ -107,7 +107,7 @@ namespace Flipper.Classes
         }
         #endregion
 
-        public bool Engages()
+        public virtual bool Engages()
         {
             return Melee;
         }
@@ -354,8 +354,6 @@ namespace Flipper.Classes
         /// </summary>
         public void SpawnTrusts()
         {
-            SendCommand("/ma \"Ulmia\" <me>");
-            Thread.Sleep(7000);
             SendCommand("/ma \"Apururu (UC)\" <me>");
             Thread.Sleep(7000);
             SendCommand("/ma \"Koru-Moru\" <me>");

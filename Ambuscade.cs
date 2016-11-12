@@ -488,6 +488,7 @@ namespace Flipper
                         if (Combat.InCombat)
                         {
                             WriteLog("[TASK INFO] I'm in Combat, and attempting to stop Combat!");
+                            Combat.Interrupt();
                         }
                         else
                         {
