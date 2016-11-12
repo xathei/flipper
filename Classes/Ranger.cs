@@ -31,6 +31,44 @@ namespace Flipper.Classes
             }
         }
 
+        public override bool CanStillAttack(int id)
+        {
+            if (!IsRendered(id))
+            {
+                //WriteLog("[STOP!] The target isn't rendered.");
+                return false;
+            }
+
+
+            //if (_fface.NPC.IsClaimed(id) && !PartyHasHate(id) && _fface.Player.Status != Status.Fighting)
+            //{
+            //    //WriteLog("[STOP!] The target is claimed to someone else.");
+            //    return false;
+            //}
+
+            // Skip if the mob more than 5 yalms above or below us
+            if (Math.Abs(Math.Abs(_fface.NPC.PosY(id)) - Math.Abs(_fface.Player.PosY)) > 15)
+            {
+                WriteLog("[STOP!] The target is too far above or below.");
+                return false;
+            }
+
+            // Skip if the NPC's HP is 0
+            if (_fface.NPC.HPPCurrent(id) == 0)
+            {
+                //WriteLog("[STOP!] Target HP is 0 :(");
+                return false;
+            }
+
+            if (DistanceTo(id) > MaxDistance() && _fface.Player.Status == Status.Fighting)
+            {
+                //WriteLog($"[STOP!] Distance: {DistanceTo(id)} > {MaxDistance()}");
+                return false;
+            }
+
+            return true;
+        }
+
         public override void UseClaim()
         {
             if (Ready(AbilityList.Shadowbind))
@@ -195,13 +233,15 @@ namespace Flipper.Classes
             }
 
             // check ammo
-            if (HasItem(21296))
+            if (HasItem(21296) && _fface.Item.GetEquippedItem(EquipSlot.Ammo).ID != 21296)
             {
-                _fface.Windower.SendString("/equip Ammo \"Chrono Bullet\"");
+                Thread.Sleep(1000);
+                _fface.Windower.SendString("/equip ammo \"Chrono Bullet\"");
             }
-            else if (HasItem(21327))
+            else if (HasItem(21327) && _fface.Item.GetEquippedItem(EquipSlot.Ammo).ID != 21327)
             {
-                _fface.Windower.SendString("/equip Ammo \"Eradicating Bullet\"");
+                Thread.Sleep(1000);
+                _fface.Windower.SendString("/equip ammo \"Eradicating bullet\"");
             } 
 
             if (HasItem(6468) && !IsAfflicted(StatusEffect.Food))
@@ -260,19 +300,14 @@ namespace Flipper.Classes
 
         public override void UseWeaponskills()
         {
-            //if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent == 3000 && _fface.Target.HPPCurrent > 50)
-            //{
-            //    SendCommand("/ws \"Coronach\" <t>", 3, false);
-            //}
-            //else if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent >= 1000 &&
-            //           _fface.Target.HPPCurrent <= 50)
-            //{
+            if (!IsAfflicted(StatusEffect.Aftermath) && _fface.Player.TPCurrent == 3000)
+            {
                 SendCommand("/ws \"Coronach\" <t>", 3, false);
-            //}
-            //if (IsAfflicted(StatusEffect.Aftermath))
-            //{
-            //    SendCommand("/ws \"Last Stand\" <t>", 3, false);
-            //}
+            }
+            if (IsAfflicted(StatusEffect.Aftermath))
+            {
+                SendCommand("/ws \"Last Stand\" <t>", 3, false);
+            }
 
         }
 

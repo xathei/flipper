@@ -195,8 +195,8 @@ namespace Flipper.Classes
             //    if (Ready(SpellList.Flash))
             //        UseSpell(SpellList.Flash, 5, true);
 
-            //if (Ready(SpellList.Reprisal))
-            //    UseSpell(SpellList.Reprisal, 5, false);
+            if (Ready(SpellList.Reprisal))
+                UseSpell(SpellList.Reprisal, 5, false);
 
             //if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
             //    if (Ready(SpellList.Phalanx) && !IsAfflicted(StatusEffect.Phalanx))

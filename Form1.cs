@@ -1083,11 +1083,11 @@ namespace FlipperD
 
         private void DoCombat()
         {
-            IJob job = new Thief(fface, Content.Ambuscade);
+            IJob job = new Ranger(fface, Content.Ambuscade);
             Flipper.Monster mob = new Flipper.Monster()
             {
                 HitBox = 5,
-                MonsterName = "Greater Manticore",
+                MonsterName = "Achuka",
                 TimeSpecific = false
             };
 
@@ -1205,6 +1205,14 @@ namespace FlipperD
             {
                 job = new WhiteMage(fface, Content.Ambuscade);
             }
+            else if (fface.Player.MainJob == Job.BLU)
+            {
+                job = new BlueMage(fface, Content.Ambuscade);
+            }
+            else if (fface.Player.MainJob == Job.PLD)
+            {
+                job = new Paladin(fface, Content.Ambuscade);
+            }
 
             Combat.FailType fail = Combat.FailType.NoFail;
             Combat.SetInstance = fface;
@@ -1246,6 +1254,10 @@ namespace FlipperD
 
         }
 
+        private void favouredWeaponskill_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class TargetInfo

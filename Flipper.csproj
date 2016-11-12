@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Classes\BlackMage.cs" />
     <Compile Include="Classes\BlueMage.cs" />
+    <Compile Include="Classes\DarkKnight.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Ranger.cs" />
     <Compile Include="Classes\RedMage.cs" />
