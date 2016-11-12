@@ -79,12 +79,12 @@ namespace Flipper
 
         private void Job_LoseEffect(StatusEffect effect)
         {
-            client.Send($"BUFF_LOSE {(int)effect} {effect}");
+            //client.Send($"BUFF_LOSE {(int)effect} {effect}");
         }
 
         private void Job_GainEffect(StatusEffect effect)
         {
-            client.Send($"BUFF_GAIN {(int)effect} {effect}");
+            //client.Send($"BUFF_GAIN {(int)effect} {effect}");
         }
 
         private void LoadJobClass()
@@ -224,21 +224,21 @@ namespace Flipper
         {
             while (_ambuscade)
             {
-                if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
-                {
-                    if (!_canStun && job.CanStun())
-                    {
-                        _canStun = true;
-                        WriteLog("[STAHP!] Server => STUN AVAILABLE");
-                        client.Send("STUN 1");
-                    }
-                    else if (_canStun && !job.CanStun())
-                    {
-                        _canStun = false;
-                        WriteLog("[STAHP!] Server => STUN DOWN!");
-                        client.Send("STUN 0");
-                    }
-                }
+                //if (fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion)
+                //{
+                //    if (!_canStun && job.CanStun())
+                //    {
+                //        _canStun = true;
+                //        WriteLog("[STAHP!] Server => STUN AVAILABLE");
+                //        client.Send("STUN 1");
+                //    }
+                //    else if (_canStun && !job.CanStun())
+                //    {
+                //        _canStun = false;
+                //        WriteLog("[STAHP!] Server => STUN DOWN!");
+                //        client.Send("STUN 0");
+                //    }
+                //}
                 Thread.Sleep(1);
             }
         }
@@ -248,16 +248,16 @@ namespace Flipper
 
         private void Chat_FoundMatchHandler(string match)
         {
-            // It's my turn to stun! I'm gonna stun.
-            if (_AwaitingStun)
-            {
-                WriteLog("[STAHP] Matched (Stunning!...): " + match);
-                job.DoStun();
-            }
-            else
-            {
-                WriteLog("[STAHP] Matched (off doody): " + match);
-            }
+            //// It's my turn to stun! I'm gonna stun.
+            //if (_AwaitingStun)
+            //{
+            //    WriteLog("[STAHP] Matched (Stunning!...): " + match);
+            //    job.DoStun();
+            //}
+            //else
+            //{
+            //    WriteLog("[STAHP] Matched (off doody): " + match);
+            //}
         }
 
         public void SafePong()
@@ -314,27 +314,29 @@ namespace Flipper
 
             string[] token = text.Split(' ');
 
+            WriteLog($"[RAW]: {text}");
+
             //using (StreamWriter w = File.AppendText("log.txt"))
             //{
-                //w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
-                //w.WriteLine("---------------------");
-                //WriteLog("[RAW]: " + text + (token[0].Contains("BUFF") ? ((StatusEffect)Convert.ToInt32(token[2])).ToString() : ""));
-                //WriteLog("---------------------");
+            //w.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss tt") + "]: " + text);
+            //w.WriteLine("---------------------");
+
+            //WriteLog("---------------------");
             //}
 
-            if (token[0] == "AWAIT_STUN")
-            {
-                WriteLog("[STAHP] =========== I AM UP FOR STUN =======");
-                _AwaitingStun = true;
-                job.SetHaltActions(true);
-            }
+            //if (token[0] == "AWAIT_STUN")
+            //{
+            //    WriteLog("[STAHP] =========== I AM UP FOR STUN =======");
+            //    _AwaitingStun = true;
+            //    job.SetHaltActions(true);
+            //}
 
-            if (token[0] == "STOP_AWAIT_STUN")
-            {
-                WriteLog("[STAHP] =========== I /NOT/ UP FOR STUN =======");
-                _AwaitingStun = false;
-                job.SetHaltActions(false);
-            }
+            //if (token[0] == "STOP_AWAIT_STUN")
+            //{
+            //    WriteLog("[STAHP] =========== I /NOT/ UP FOR STUN =======");
+            //    _AwaitingStun = false;
+            //    job.SetHaltActions(false);
+            //}
 
             if (token[0] == "GAIN_BUFF")
             {
@@ -523,6 +525,16 @@ namespace Flipper
             List<Node> path = new List<Node>();
             int hotspotIndex = 0;
 
+            List<Monster> targets = new List<Monster>();
+
+            targets.Add(roeTargetMonster);
+            targets.Add(new Monster()
+            {
+                HitBox = 4.5,
+                MonsterName = "Korrigan",
+                TimeSpecific = false
+            });
+
 
             while (!HasKeyItem() && _ambuscade)
             {
@@ -548,14 +560,19 @@ namespace Flipper
 
                 while (path.Any() && !HasKeyItem() && _ambuscade)
                 {
-                    _targetId = Combat.FindTarget(50, roeTargetMonster.MonsterName);
-                    if (_targetId > 0 && !HasKeyItem())
+                    foreach (Monster m in targets)
                     {
-                        fface.Navigator.Reset();
-                        Fight(_targetId, Combat.Mode.Meshing);
-                        _targetId = 0;
-                        goto NewPath;
+                        _targetId = Combat.FindTarget(50, m.MonsterName);
+
+                        if (_targetId > 0 && !HasKeyItem())
+                        {
+                            fface.Navigator.Reset();
+                            Fight(_targetId, Combat.Mode.Meshing);
+                            _targetId = 0;
+                            goto NewPath;
+                        }
                     }
+
                     fface.Navigator.HeadingTolerance = 1;
                     fface.Navigator.DistanceTolerance = 0.7;
                     targetx = path[0].X;

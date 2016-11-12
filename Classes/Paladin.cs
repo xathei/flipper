@@ -102,14 +102,14 @@ namespace Flipper.Classes
                 if (!IsAfflicted(StatusEffect.Warcry) && Ready(AbilityList.Warcry))
                     UseAbility(AbilityList.Warcry, 2, false);
 
-                //if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
-                //    if (Ready(AbilityList.Provoke))
-                //        UseAbility(AbilityList.Provoke, 2, true);
+                if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
+                    if (Ready(AbilityList.Provoke))
+                        UseAbility(AbilityList.Provoke, 2, true);
 
             }
 
-            //if (Ready(AbilityList.Shield_Bash))
-            //    UseAbility(AbilityList.Shield_Bash, 3, true);
+            if (Ready(AbilityList.Shield_Bash))
+                UseAbility(AbilityList.Shield_Bash, 3, true);
 
 
         }
@@ -191,20 +191,20 @@ namespace Flipper.Classes
 
         public override void UseSpells()
         {
-            //if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
-            //    if (Ready(SpellList.Flash))
-            //        UseSpell(SpellList.Flash, 5, true);
+            if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
+                if (Ready(SpellList.Flash))
+                    UseSpell(SpellList.Flash, 5, true);
 
             if (Ready(SpellList.Reprisal))
                 UseSpell(SpellList.Reprisal, 5, false);
 
-            //if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
-            //    if (Ready(SpellList.Phalanx) && !IsAfflicted(StatusEffect.Phalanx))
-            //        UseSpell(SpellList.Phalanx, 6, false);
+            if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
+                if (Ready(SpellList.Phalanx) && !IsAfflicted(StatusEffect.Phalanx))
+                    UseSpell(SpellList.Phalanx, 6, false);
 
-            //if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
-            //    if (Ready(SpellList.Crusade) && !IsAfflicted(StatusEffect.Enmity_Boost))
-            //        UseSpell(SpellList.Crusade, 6, false);
+            if ((_content == Content.Ambuscade && _fface.Player.Zone == Zone.Maquette_Abdhaljs_Legion) || _content != Content.Ambuscade)
+                if (Ready(SpellList.Crusade) && !IsAfflicted(StatusEffect.Enmity_Boost))
+                    UseSpell(SpellList.Crusade, 6, false);
 
             if (!IsAfflicted(StatusEffect.Enlight))
                 SendCommand("/ma \"Enlight II\" <me>", 6);
